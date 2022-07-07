@@ -10,8 +10,14 @@ const ReportHours: NextPage = () => {
   const [lastNameInvalid, setLastNameInvalid] = useState(true)
   const [dateIsEmpty, setDateIsEmpty] = useState(true)
 
+  const dateInputRef = useRef<HTMLInputElement>(null)
+
   const invokeFirstNameErrorStyles = useRef<Function>(null)
+  const clearFirstNameInput = useRef<Function>(null)
+
   const invokeLastNameErrorStyles = useRef<Function>(null)
+  const clearLastNameInput = useRef<Function>(null)
+  
   const invokeDateErrorStyles = useRef<Function>(null)
 
   const invokeErrorStyles = (flag: boolean, ref: RefObject<Function>) => {
@@ -31,6 +37,19 @@ const ReportHours: NextPage = () => {
     } else {
       // TODO: handle form submission
       console.log('submitted')
+      if (
+        clearFirstNameInput.current !== null &&
+        clearLastNameInput.current !== null
+      ) {
+        clearFirstNameInput.current()
+        clearLastNameInput.current()
+      }
+
+      dateInputRef.current!.value = ''
+
+      setFirstNameInvalid(true)
+      setLastNameInvalid(true)
+      setDateIsEmpty(true)
     }
   }
 
@@ -45,6 +64,7 @@ const ReportHours: NextPage = () => {
         </h1>
         <p className="mb-5 text-2xl">!נא להכניס פרטים מדויקים</p>
         <Input
+          clear={clearFirstNameInput}
           formSubmittedWithErrorHandler={invokeFirstNameErrorStyles}
           label="שם פרטי"
           name="firstName"
@@ -54,6 +74,7 @@ const ReportHours: NextPage = () => {
           setError={setFirstNameInvalid}
         />
         <Input
+          clear={clearLastNameInput}
           formSubmittedWithErrorHandler={invokeLastNameErrorStyles}
           label="שם משפחה"
           name="lastName"
@@ -69,6 +90,7 @@ const ReportHours: NextPage = () => {
           text2="הוסף הסעות"
         />
         <DateAndHours
+          ref={dateInputRef}
           setIsEmpty={setDateIsEmpty}
           formSubmittedWithErrorHandler={invokeDateErrorStyles}
         />
