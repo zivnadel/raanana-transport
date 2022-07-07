@@ -1,15 +1,21 @@
 import { FaChevronLeft } from 'react-icons/fa'
 
 interface Props {
-  text: string
+  children: React.ReactNode
   chevron: boolean
+  type?: "button" | "submit" | "reset" | undefined;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const Button = ({ text, chevron }: Props) => {
+const Button = ({ children, chevron, type, onClick }: Props) => {
   return (
-    <a className="p-4 mt-10 rounded-full w-44 bg-gradient-to-r from-primary to-red-500 hover:opacity-80">
-      {text} {chevron && <FaChevronLeft className="inline" />}
-    </a>
+    <button
+      type={type}
+      onClick={onClick}
+      className="p-4 mt-10 text-center rounded-full w-44 bg-gradient-to-r from-primary to-red-500 hover:opacity-80"
+    >
+      {children} {chevron && <FaChevronLeft className="inline" />}
+    </button>
   )
 }
 

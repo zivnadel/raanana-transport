@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { FaBus } from 'react-icons/fa'
 import NavButton from './ui/buttons/NavButton'
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   return (
     <nav className="fixed flex w-full flex-col items-center justify-center bg-black bg-opacity-[65%] py-5 px-7 text-white md:flex-row-reverse md:items-center md:justify-end md:py-4">
       <Link href="/">
@@ -13,13 +13,13 @@ const Navbar: React.FC = () => {
       </Link>
       <ul className="flex flex-row">
         <li>
-          <NavButton text="בית" href="#" />
+          <NavButton text="בית" href="/" />
         </li>
         <li>
-          <NavButton text="דיווח שעות" href="#" />
+          <NavButton text="דיווח שעות" href="/report-hours" />
         </li>
         <li>
-          <NavButton text="לוח הבקרה" href="#" />
+          <NavButton text="לוח הבקרה" href="/control-panel" />
         </li>
       </ul>
     </nav>

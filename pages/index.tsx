@@ -13,7 +13,7 @@ const Home: NextPage = () => {
       <p className="text-2xl">
         .לחצו על הכפתור למטה או על הכפתור בתפריט למעבר לטופס הדיווח
       </p>
-      <LinkButton text="דיווח שעות" href="#" chevron={true} />
+      <LinkButton text="דיווח שעות" href="/report-hours" chevron={true} />
     </div>
   )
 }
