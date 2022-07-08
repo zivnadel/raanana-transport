@@ -1,32 +1,92 @@
-import React from 'react'
-import { Dispatch, SetStateAction, useState } from 'react'
+import React, { Suspense, useImperativeHandle } from 'react'
+import { Dispatch, SetStateAction, useState, useRef } from 'react'
 
 interface Props {
   setIsEmpty: Dispatch<SetStateAction<boolean>>
+  setHour: Dispatch<SetStateAction<string>>
   formSubmittedWithErrorHandler: any
+  hideHourSelect: any
 }
 
 const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
-  ({ setIsEmpty, formSubmittedWithErrorHandler }, ref) => {
+  (
+    { setIsEmpty, setHour, formSubmittedWithErrorHandler, hideHourSelect },
+    ref
+  ) => {
     // This is used so at first, there is an error (because fields are empty), so it
     // is not possible to submit the form, but styles are not yet shows because the
     // user didn't get a chance to fill the form.
     const [showErrorStyles, setShowErrorStyles] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('שדה זה הינוי חובה')
 
-    const [showHours, setShowHours] = useState(false)
+    // loading state for fetching
+    const [isLoading, setIsLoading] = useState(false)
+
+    const dateInputRef = useRef<HTMLInputElement>(null)
+
+    // forwarded ref
+    useImperativeHandle(ref, () => dateInputRef.current!)
+
+    const [hours, setHours] = useState<string[]>([])
 
     // this call being invoked from parent
     formSubmittedWithErrorHandler.current = setShowErrorStyles.bind(null, true)
+    hideHourSelect.current = setHours.bind(null, [])
 
-    const dateChangedHandler = () => {
-      setShowErrorStyles(false)
+    const fetchDates = async () => {
+      // setIsEmpty is actually indicator for error so this is used to prevent users from
+      // submitting form while the fetching in happening
+      setIsEmpty(true)
+      setIsLoading(true)
+
+      const response = await fetch(
+        `/api/dates?date=${
+          new Date(dateInputRef.current?.value!).getDay() + 1
+        }`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      const data = await response.json()
+
       setIsEmpty(false)
+      setShowErrorStyles(false)
+      setIsLoading(false)
+
+      return setHours(data.dates.hours)
+    }
+
+    const dateChangedHandler = async () => {
+      // TODO: upgrade datepicker to also block holidays and so on
+      const day = new Date(dateInputRef.current!.value).getDay() + 1
+      if (day === 6 || day === 7) {
+        setErrorMessage('בימי שישי ושבת אין הסעות! הכנס תאריך מתאים')
+        setShowErrorStyles(true)
+
+        // setIsEmpty is actually indicator for error so
+        setIsEmpty(true)
+      } else {
+        setErrorMessage('שדה זה הינו חובה')
+        setShowErrorStyles(false)
+        setIsEmpty(false)
+        fetchDates()
+      }
+    }
+
+    const hourListChangedHandler = (
+      event: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+      setHour(event.target.value)
     }
 
     return (
       <div className="flex flex-col items-center justify-center w-10/12">
         <input
-          ref={ref}
+          ref={dateInputRef}
           onChange={dateChangedHandler}
           type="date"
           min="2022-09-01"
@@ -38,26 +98,35 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
           } appearance-none focus:outline-none focus:ring-0`}
           placeholder="Select date"
         />
+        {isLoading && (
+          <p
+            id="standard_error_help"
+            className="block w-full mt-2 text-xs text-right text-primary"
+          >
+            ...טוען שעות
+          </p>
+        )}
         {showErrorStyles && (
           <p
             id="standard_error_help"
             className="block w-full mt-2 text-xs text-right text-red-600"
           >
-            שדה זה הינו חובה
+            {errorMessage}
           </p>
         )}
         {/* Will show hours conditinally after receieving date info from db */}
-        {showHours && (
+        {hours.length !== 0 && (
           <select
+            onChange={hourListChangedHandler}
+            defaultValue="morning"
             id="chooseHour"
             className="w-full px-0 py-3 m-2 text-sm text-right text-gray-900 bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:border-primary focus:outline-none focus:ring-0"
           >
-            {/* Will be changed programatically */}
-            <option selected value="morning">
-              בוקר
-            </option>
-            <option value="15:30">15:30</option>
-            <option value="17:00">17:00</option>
+            {hours.map((hour) => (
+              <option key={hour} value={hour}>
+                {hour === 'morning' ? 'בוקר' : hour}
+              </option>
+            ))}
           </select>
         )}
       </div>

@@ -1,42 +1,49 @@
+import React, { Dispatch, SetStateAction } from 'react'
+
 interface Props {
-    id1: string;
-    text1: string;
-    id2: string;
-    text2: string;
+  setAction: Dispatch<SetStateAction<string>>
+  action: string
 }
 
-const DoubleRadioGroup = ({ id1, text1, id2, text2}: Props) => {
+const DoubleRadioGroup = ({ action, setAction }: Props) => {
+  const handleActionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAction(event.target.value)
+  }
+
   return (
     <div className="flex">
       <div className="flex flex-row-reverse items-end p-5 mr-4">
         <input
-          defaultChecked
-          id={id1}
+          onChange={handleActionChange}
+          checked={action === 'ADD'}
+          id="addRides"
           type="radio"
-          value=""
+          value="ADD"
           name="double-radio-group"
           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
         />
         <label
-          htmlFor={id1}
+          htmlFor="addRides"
           className="mr-2 text-sm font-medium text-gray-900 dark:text-gray-300"
         >
-          {text1}
+          הוסף הסעות
         </label>
       </div>
       <div className="flex flex-row-reverse items-center mr-4">
         <input
-          id={id2}
+          onChange={handleActionChange}
+          checked={action === 'REMOVE'}
+          id="removeRides"
           type="radio"
-          value=""
+          value="REMOVE"
           name="double-radio-group"
           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
         />
         <label
-          htmlFor={id2}
+          htmlFor="removeRides"
           className="mr-2 text-sm font-medium text-gray-900 dark:text-gray-300"
         >
-          {text2}
+          הסר הסעות
         </label>
       </div>
     </div>
