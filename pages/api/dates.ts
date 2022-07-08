@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '../../lib/mongodb'
 
+// This function retrieves a date from the database.
+// If no date was specified, it returns all dates.
 const getDates = async (day: string | undefined) => {
   try {
     const { db } = await connectToDatabase()
@@ -16,17 +18,18 @@ const getDates = async (day: string | undefined) => {
   }
 }
 
+// This function adds a date to the database
 const addDate = async (newDate: any) => {
   try {
     const { db } = await connectToDatabase()
     const response = await db.collection('dates').insertOne(newDate)
-    console.log('Data inserted')
     return response
   } catch (error: any) {
     throw new Error(error)
   }
 }
 
+// MongoDB Handler function
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -34,7 +37,6 @@ export default async function handler(
   switch (req.method) {
     case 'GET': {
       const { date } = req.query
-      console.log(date.toString());
       const dates = await getDates(date.toString())
       return res.status(200).json({ dates })
     }

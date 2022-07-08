@@ -1,9 +1,9 @@
 import { NextPage } from 'next'
 import { RefObject, useRef, useState } from 'react'
 import Button from '../components/ui/buttons/Button'
-import Input from '../components/ui/form/Input'
-import DoubleRadioGroup from '../components/ui/form/DoubleRadioGroup'
-import DateAndHours from '../components/ui/form/DateAndHours'
+import Input from '../components/reportHours/Input'
+import DoubleRadioGroup from '../components/reportHours/DoubleRadioGroup'
+import DateAndHours from '../components/reportHours/DateAndHours'
 
 // IMPORTANT: This form uses state mechanism of multiple refs and states for storing
 // and managing values. This is a bit bloated but works well !-MAY-! change in the future
@@ -83,10 +83,10 @@ const ReportHours: NextPage = () => {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center">
+    <div className="flex items-center justify-center h-screen">
       <form
         onSubmit={submitReportHoursHandler}
-        className="w-12/12 m-3 mt-32 flex h-5/6 flex-col items-center rounded-3xl p-2 text-center md:mt-5 md:w-4/12"
+        className="flex flex-col items-center p-2 m-3 mt-32 text-center w-12/12 h-5/6 rounded-3xl md:mt-5 md:w-4/12"
       >
         <h1 className="mt-10 mb-5 text-3xl font-semibold text-primary md:mt-24">
           דיווח על עדכון ושינוי שעות ההסעה
