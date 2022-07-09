@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import { RefObject, useRef, useState } from 'react'
 import Button from '../components/ui/buttons/Button'
-import Input from '../components/reportHours/Input'
+import ReportHoursInput from '../components/reportHours/ReportHoursInput'
 import DoubleRadioGroup from '../components/reportHours/DoubleRadioGroup'
 import DateAndHours from '../components/reportHours/DateAndHours'
 
@@ -92,7 +92,7 @@ const ReportHours: NextPage = () => {
           דיווח על עדכון ושינוי שעות ההסעה
         </h1>
         <p className="mb-5 text-2xl">!נא להכניס פרטים מדויקים</p>
-        <Input
+        <ReportHoursInput
           ref={firstNameInputRef}
           clear={clearFirstNameInput}
           formSubmittedWithErrorHandler={invokeFirstNameErrorStyles}
@@ -103,7 +103,7 @@ const ReportHours: NextPage = () => {
           errorMessage="הכנס שם פרטי תקין"
           setError={setFirstNameInvalid}
         />
-        <Input
+        <ReportHoursInput
           ref={lastNameInputRef}
           clear={clearLastNameInput}
           formSubmittedWithErrorHandler={invokeLastNameErrorStyles}

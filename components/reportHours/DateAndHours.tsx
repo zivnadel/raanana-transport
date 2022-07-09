@@ -115,7 +115,7 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
           </p>
         )}
         {/* Will show hours conditinally after receieving date info from db */}
-        {hours.length !== 0 && (
+        {hours.length !== 0 && !isLoading && !showErrorStyles && (
           <select
             onChange={hourListChangedHandler}
             defaultValue="morning"

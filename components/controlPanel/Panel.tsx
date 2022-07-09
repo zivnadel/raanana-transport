@@ -1,12 +1,19 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { FaChevronDown } from 'react-icons/fa'
+import DashboardContext from '../../store/dashboardContext/dashboard-context';
 import PanelButton from '../ui/buttons/PanelButton'
 
 const Panel = () => {
+  const dashboardContext = useContext(DashboardContext);
   const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   const toggleMobileMenuClickedHandler = () => {
     setShowMobileMenu((prevState) => !prevState)
+  }
+
+  const openPricesButtonClicked = () => {
+    dashboardContext!.setShowPrices(true);
+    setShowMobileMenu(false);
   }
 
   return (
@@ -31,7 +38,7 @@ const Panel = () => {
           className="py-1 text-sm text-gray-700 md:flex md:w-full md:justify-center md:py-0"
           aria-labelledby="dropdownDefault"
         >
-          <PanelButton>מחירון</PanelButton>
+          <PanelButton onClick={openPricesButtonClicked}>מחירון</PanelButton>
           <PanelButton>שינוי סיסמא</PanelButton>
           <PanelButton>עדכון לו&quot;ז</PanelButton>
           <PanelButton>עריכת פרטי תלמיד</PanelButton>

@@ -19,7 +19,7 @@ const Navbar = () => {
           <NavButton text="דיווח שעות" href="/report-hours" />
         </li>
         <li>
-          <NavButton text="לוח הבקרה" href="/control-panel" />
+          <NavButton text="לוח הבקרה" href="/dashboard" />
         </li>
       </ul>
     </nav>

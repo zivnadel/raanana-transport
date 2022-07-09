@@ -11,7 +11,7 @@ interface Props {
   clear: any
 }
 
-const Input = forwardRef<HTMLInputElement, Props>(
+const ReportHoursInput = forwardRef<HTMLInputElement, Props>(
   (
     {
       label,
@@ -82,6 +82,6 @@ const Input = forwardRef<HTMLInputElement, Props>(
   }
 )
 
-Input.displayName = 'Custom Input'
+ReportHoursInput.displayName = 'Custom Complex Input'
 
-export default Input
+export default ReportHoursInput

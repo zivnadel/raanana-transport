@@ -37,11 +37,15 @@ export default async function handler(
   switch (req.method) {
     case 'GET': {
       const { date } = req.query
-      const dates = await getDates(date.toString())
+      const dates = await getDates(date.toString()).catch((error) =>
+        res.status(500).json({ message: error.message })
+      )
       return res.status(200).json({ dates })
     }
     case 'POST': {
-      const response = await addDate(req.body)
+      const response = await addDate(req.body).catch((error) =>
+        res.status(500).json({ message: error.message })
+      )
       res.status(200).json({ response })
     }
     default: {
