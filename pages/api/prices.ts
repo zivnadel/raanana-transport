@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '../../lib/mongodb'
 
 import Cors from 'cors'
-import PricesObjectType from '../../types/PricesObjectType'
 
 const getPrices = async () => {
   try {
