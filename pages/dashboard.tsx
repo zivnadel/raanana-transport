@@ -1,6 +1,6 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import ActiveWindow from '../components/controlPanel/ActiveWindow'
-import Panel from '../components/controlPanel/Panel'
+import ActiveWindow from '../components/dashboard/ActiveWindow'
+import Panel from '../components/dashboard/Panel'
 import { connectToDatabase } from '../lib/mongodb'
 import { DashboardContextProvider } from '../store/DashboardContext'
 
