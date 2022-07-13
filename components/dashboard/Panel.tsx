@@ -1,24 +1,24 @@
-import { useContext, useState } from 'react'
-import { FaChevronDown } from 'react-icons/fa'
-import { DashboardContext } from '../../store/DashboardContext'
-import PanelButton from '../ui/buttons/PanelButton'
+import { useContext, useState } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
+import { DashboardContext } from '../../store/DashboardContext';
+import PanelButton from '../ui/buttons/PanelButton';
 
 const Panel: React.FC = () => {
   const dashboardContext = useContext(DashboardContext);
-  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const toggleMobileMenuClickedHandler = () => {
-    setShowMobileMenu((prevState) => !prevState)
-  }
+    setShowMobileMenu((prevState) => !prevState);
+  };
 
   const openPricesButtonClicked = () => {
-    dashboardContext!.action({ type: "setShowPrices", payload: true })
+    dashboardContext!.action({ type: 'setShowPrices', payload: true });
     setShowMobileMenu(false);
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center text-center">
-      <h1 className="mb-2 text-3xl font-semibold mt-36 text-primary md:mt-20">
+      <h1 className="mb-2 mt-36 text-3xl font-semibold text-primary md:mt-20">
         לוח הבקרה
       </h1>
       <button
@@ -30,8 +30,9 @@ const Panel: React.FC = () => {
         תפריט <FaChevronDown className="ml-2" />
       </button>
       <div
-        className={`z-10 flex-col ${showMobileMenu ? 'flex' : 'hidden'
-          } w-44 divide-y divide-gray-100 rounded bg-white shadow md:flex md:w-full md:divide-y-0 md:bg-transparent md:shadow-none`}
+        className={`z-10 flex-col ${
+          showMobileMenu ? 'flex' : 'hidden'
+        } w-44 divide-y divide-gray-100 rounded bg-white shadow md:flex md:w-full md:divide-y-0 md:bg-transparent md:shadow-none`}
       >
         <ul
           className="py-1 text-sm text-gray-700 md:flex md:w-full md:justify-center md:py-0"
@@ -45,7 +46,7 @@ const Panel: React.FC = () => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Panel
+export default Panel;

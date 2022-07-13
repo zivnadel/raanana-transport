@@ -1,9 +1,9 @@
-import { NextPage } from 'next'
-import { RefObject, useRef, useState } from 'react'
-import Button from '../components/ui/buttons/Button'
-import ReportHoursInput from '../components/reportHours/ReportHoursInput'
-import DoubleRadioGroup from '../components/reportHours/DoubleRadioGroup'
-import DateAndHours from '../components/reportHours/DateAndHours'
+import { NextPage } from 'next';
+import { RefObject, useRef, useState } from 'react';
+import Button from '../components/ui/buttons/Button';
+import ReportHoursInput from '../components/reportHours/ReportHoursInput';
+import DoubleRadioGroup from '../components/reportHours/DoubleRadioGroup';
+import DateAndHours from '../components/reportHours/DateAndHours';
 
 // IMPORTANT: This form uses state mechanism of multiple refs and states for storing
 // and managing values. This is a bit bloated but works well !-MAY-! change in the future
@@ -11,44 +11,44 @@ import DateAndHours from '../components/reportHours/DateAndHours'
 
 const ReportHours: NextPage = () => {
   // States for managing validation of form
-  const [firstNameInvalid, setFirstNameInvalid] = useState(true)
-  const [lastNameInvalid, setLastNameInvalid] = useState(true)
-  const [dateIsEmpty, setDateIsEmpty] = useState(true)
+  const [firstNameInvalid, setFirstNameInvalid] = useState(true);
+  const [lastNameInvalid, setLastNameInvalid] = useState(true);
+  const [dateIsEmpty, setDateIsEmpty] = useState(true);
 
   // Refs to collect submitted data
-  const firstNameInputRef = useRef<HTMLInputElement>(null)
-  const lastNameInputRef = useRef<HTMLInputElement>(null)
-  const dateInputRef = useRef<HTMLInputElement>(null)
+  const firstNameInputRef = useRef<HTMLInputElement>(null);
+  const lastNameInputRef = useRef<HTMLInputElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   // States to collect the chosen action and hour
-  const [action, setAction] = useState('REMOVE')
-  const [hour, setHour] = useState('morning')
+  const [action, setAction] = useState('REMOVE');
+  const [hour, setHour] = useState('morning');
 
   // Ref function to occur changes on the input fields (childs)
-  const invokeFirstNameErrorStyles = useRef<Function>(null)
-  const clearFirstNameInput = useRef<Function>(null)
+  const invokeFirstNameErrorStyles = useRef<Function>(null);
+  const clearFirstNameInput = useRef<Function>(null);
 
-  const invokeLastNameErrorStyles = useRef<Function>(null)
-  const clearLastNameInput = useRef<Function>(null)
+  const invokeLastNameErrorStyles = useRef<Function>(null);
+  const clearLastNameInput = useRef<Function>(null);
 
-  const invokeDateErrorStyles = useRef<Function>(null)
-  const hideHourSelect = useRef<Function>(null)
+  const invokeDateErrorStyles = useRef<Function>(null);
+  const hideHourSelect = useRef<Function>(null);
 
   const invokeErrorStyles = (flag: boolean, ref: RefObject<Function>) => {
     if (flag && ref.current !== null) {
-      ref.current()
+      ref.current();
     }
-  }
+  };
 
   const submitReportHoursHandler = (
     event: React.FormEvent<HTMLFormElement>
   ) => {
-    event.preventDefault()
+    event.preventDefault();
     if (firstNameInvalid || lastNameInvalid || dateIsEmpty) {
       // form invalid
-      invokeErrorStyles(firstNameInvalid, invokeFirstNameErrorStyles)
-      invokeErrorStyles(lastNameInvalid, invokeLastNameErrorStyles)
-      invokeErrorStyles(dateIsEmpty, invokeDateErrorStyles)
+      invokeErrorStyles(firstNameInvalid, invokeFirstNameErrorStyles);
+      invokeErrorStyles(lastNameInvalid, invokeLastNameErrorStyles);
+      invokeErrorStyles(dateIsEmpty, invokeDateErrorStyles);
     } else {
       // TODO: handle form submission
       console.log({
@@ -59,34 +59,34 @@ const ReportHours: NextPage = () => {
         action: action,
         date: dateInputRef.current?.value,
         hour: hour,
-      })
+      });
       if (
         clearFirstNameInput.current !== null &&
         clearLastNameInput.current !== null &&
         hideHourSelect.current !== null
       ) {
         // clearing name inputs
-        clearFirstNameInput.current()
-        clearLastNameInput.current()
+        clearFirstNameInput.current();
+        clearLastNameInput.current();
         // hiding the hours select
-        hideHourSelect.current()
+        hideHourSelect.current();
       }
 
       // clearing date input
-      dateInputRef.current!.value = ''
+      dateInputRef.current!.value = '';
 
       // resetting the states
-      setFirstNameInvalid(true)
-      setLastNameInvalid(true)
-      setDateIsEmpty(true)
+      setFirstNameInvalid(true);
+      setLastNameInvalid(true);
+      setDateIsEmpty(true);
     }
-  }
+  };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex h-screen items-center justify-center">
       <form
         onSubmit={submitReportHoursHandler}
-        className="flex flex-col items-center p-2 m-3 mt-32 text-center w-12/12 h-5/6 rounded-3xl md:mt-5 md:w-4/12"
+        className="w-12/12 m-3 mt-32 flex h-5/6 flex-col items-center rounded-3xl p-2 text-center md:mt-5 md:w-4/12"
       >
         <h1 className="mt-10 mb-5 text-3xl font-semibold text-primary md:mt-24">
           דיווח על עדכון ושינוי שעות ההסעה
@@ -127,7 +127,7 @@ const ReportHours: NextPage = () => {
         </Button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default ReportHours
+export default ReportHours;

@@ -1,18 +1,18 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction } from 'react';
 
 interface Props {
-  setAction: Dispatch<SetStateAction<string>>
-  action: string
+  setAction: Dispatch<SetStateAction<string>>;
+  action: string;
 }
 
 const DoubleRadioGroup: React.FC<Props> = ({ action, setAction }) => {
   const handleActionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAction(event.target.value)
-  }
+    setAction(event.target.value);
+  };
 
   return (
     <div className="flex">
-      <div className="flex flex-row-reverse items-end p-5 mr-4">
+      <div className="mr-4 flex flex-row-reverse items-end p-5">
         <input
           onChange={handleActionChange}
           checked={action === 'ADD'}
@@ -20,7 +20,7 @@ const DoubleRadioGroup: React.FC<Props> = ({ action, setAction }) => {
           type="radio"
           value="ADD"
           name="double-radio-group"
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+          className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
         />
         <label
           htmlFor="addRides"
@@ -29,7 +29,7 @@ const DoubleRadioGroup: React.FC<Props> = ({ action, setAction }) => {
           הוסף הסעות
         </label>
       </div>
-      <div className="flex flex-row-reverse items-center mr-4">
+      <div className="mr-4 flex flex-row-reverse items-center">
         <input
           onChange={handleActionChange}
           checked={action === 'REMOVE'}
@@ -37,7 +37,7 @@ const DoubleRadioGroup: React.FC<Props> = ({ action, setAction }) => {
           type="radio"
           value="REMOVE"
           name="double-radio-group"
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+          className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
         />
         <label
           htmlFor="removeRides"
@@ -47,7 +47,7 @@ const DoubleRadioGroup: React.FC<Props> = ({ action, setAction }) => {
         </label>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DoubleRadioGroup
+export default DoubleRadioGroup;

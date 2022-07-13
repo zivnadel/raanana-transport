@@ -1,14 +1,14 @@
-import React, { useState, Dispatch, SetStateAction, forwardRef } from 'react'
+import React, { useState, Dispatch, SetStateAction, forwardRef } from 'react';
 
 interface Props {
-  label: string
-  name: string
-  type: string
-  regex: RegExp
-  errorMessage: string
-  setError: Dispatch<SetStateAction<boolean>>
-  formSubmittedWithErrorHandler: any
-  clear: any
+  label: string;
+  name: string;
+  type: string;
+  regex: RegExp;
+  errorMessage: string;
+  setError: Dispatch<SetStateAction<boolean>>;
+  formSubmittedWithErrorHandler: any;
+  clear: any;
 }
 
 const ReportHoursInput = forwardRef<HTMLInputElement, Props>(
@@ -25,27 +25,27 @@ const ReportHoursInput = forwardRef<HTMLInputElement, Props>(
     },
     ref
   ) => {
-    const [inputValue, setInputValue] = useState('')
+    const [inputValue, setInputValue] = useState('');
     // This is used so at first, there is an error (because fields are empty), so it
     // is not possible to submit the form, but styles are not yet shows because the
     // user didn't get a chance to fill the form.
-    const [showErrorStyles, setShowErrorStyles] = useState(false)
+    const [showErrorStyles, setShowErrorStyles] = useState(false);
 
     // this call being invoked from parent
-    formSubmittedWithErrorHandler.current = setShowErrorStyles.bind(null, true)
-    clear.current = setInputValue.bind(null, '')
+    formSubmittedWithErrorHandler.current = setShowErrorStyles.bind(null, true);
+    clear.current = setInputValue.bind(null, '');
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(event.target.value)
-      setError(!regex.test(event.target.value))
-      setShowErrorStyles(!regex.test(event.target.value))
+      setInputValue(event.target.value);
+      setError(!regex.test(event.target.value));
+      setShowErrorStyles(!regex.test(event.target.value));
       if (event.target.value === '') {
-        errorMessage = 'שדה זה הינו חובה'
+        errorMessage = 'שדה זה הינו חובה';
       }
-    }
+    };
 
     return (
-      <div className="relative z-0 w-10/12 m-3">
+      <div className="relative z-0 m-3 w-10/12">
         <input
           ref={ref}
           onChange={inputChangeHandler}
@@ -72,16 +72,16 @@ const ReportHoursInput = forwardRef<HTMLInputElement, Props>(
         {showErrorStyles && (
           <p
             id="standard_error_help"
-            className="mt-2 text-xs text-right text-red-600"
+            className="mt-2 text-right text-xs text-red-600"
           >
             {errorMessage}
           </p>
         )}
       </div>
-    )
+    );
   }
-)
+);
 
-ReportHoursInput.displayName = 'Custom Complex Input'
+ReportHoursInput.displayName = 'Custom Complex Input';
 
-export default ReportHoursInput
+export default ReportHoursInput;
