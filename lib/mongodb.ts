@@ -28,6 +28,7 @@ export async function connectToDatabase() {
 
   // set the connection options
   const opts: any = {
+    connectTimeoutMS: 60000,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }

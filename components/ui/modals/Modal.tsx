@@ -1,8 +1,4 @@
-interface Props {
-  children?: React.ReactNode
-}
-
-const Modal = ({ children }: Props) => {
+const Modal: React.FC = ({ children }) => {
   return (
     // Modal backdrop
     <div className="fixed top-0 left-0 right-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto bg-gray-600 bg-opacity-40 md:inset-0">

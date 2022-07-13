@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '../../lib/mongodb'
+import Cors from 'cors'
 
 // This function retrieves a date from the database.
 // If no date was specified, it returns all dates.
@@ -29,11 +30,28 @@ const addDate = async (newDate: any) => {
   }
 }
 
+const cors = Cors({
+  origin: process.env.WEBSITE_URL,
+})
+
+function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: typeof cors) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
+      return resolve(result)
+    })
+  })
+}
+
 // MongoDB Handler function
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await runMiddleware(req, res, cors)
+
   switch (req.method) {
     case 'GET': {
       const { date } = req.query

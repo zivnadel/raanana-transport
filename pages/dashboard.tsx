@@ -1,15 +1,33 @@
-import { NextPage } from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import ActiveWindow from '../components/controlPanel/ActiveWindow'
 import Panel from '../components/controlPanel/Panel'
-import DashboardContextProvider from '../store/dashboardContext/DashboardContextProvider'
+import { connectToDatabase } from '../lib/mongodb'
+import { DashboardContextProvider } from '../store/DashboardContext'
 
-const Dashboard: NextPage = () => {
+const Dashboard: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ initialPrices }) => {
   return (
     <DashboardContextProvider>
       <Panel />
-      <ActiveWindow />
+      <ActiveWindow initialPrices={initialPrices}/>
     </DashboardContextProvider>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    try {
+      const { db } = await connectToDatabase();
+      const initialPrices = await db.collection('prices').find().toArray()
+
+      delete initialPrices[0]._id
+
+      return {
+        props: {
+          initialPrices: JSON.parse(JSON.stringify(initialPrices[0]))
+        }
+      }
+    } catch (error: any) {
+      throw new Error(error)
+    }
 }
 
 export default Dashboard

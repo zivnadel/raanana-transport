@@ -1,4 +1,4 @@
-import React, { Suspense, useImperativeHandle } from 'react'
+import React, { ForwardRefExoticComponent, useImperativeHandle } from 'react'
 import { Dispatch, SetStateAction, useState, useRef } from 'react'
 
 interface Props {
@@ -91,11 +91,10 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
           type="date"
           min="2022-09-01"
           max="2023-06-20"
-          className={`mb-2 block w-full border-0 border-b-2 bg-transparent px-0 py-3 text-right text-sm text-gray-900 ${
-            showErrorStyles
+          className={`mb-2 block w-full border-0 border-b-2 bg-transparent px-0 py-3 text-right text-sm text-gray-900 ${showErrorStyles
               ? 'border-secondary text-secondary focus:border-secondary'
               : 'border-gray-500 focus:border-primary'
-          } appearance-none focus:outline-none focus:ring-0`}
+            } appearance-none focus:outline-none focus:ring-0`}
           placeholder="Select date"
         />
         {isLoading && (

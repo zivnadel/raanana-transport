@@ -5,7 +5,7 @@ interface Props {
   action: string
 }
 
-const DoubleRadioGroup = ({ action, setAction }: Props) => {
+const DoubleRadioGroup: React.FC<Props> = ({ action, setAction }) => {
   const handleActionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAction(event.target.value)
   }
