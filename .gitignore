@@ -8,7 +8,6 @@
 # testing
 /coverage
 
-
 # next.js
 /.next/
 /out/
@@ -36,3 +35,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# prettier
+prettier.config.js
+
+# eslint
+.eslintrc.json
