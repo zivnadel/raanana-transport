@@ -1,9 +1,9 @@
 import { useContext, useState } from 'react'
 import { FaChevronDown } from 'react-icons/fa'
-import DashboardContext from '../../store/dashboardContext/dashboard-context';
+import { DashboardContext } from '../../store/DashboardContext'
 import PanelButton from '../ui/buttons/PanelButton'
 
-const Panel = () => {
+const Panel: React.FC = () => {
   const dashboardContext = useContext(DashboardContext);
   const [showMobileMenu, setShowMobileMenu] = useState(false)
 
@@ -12,7 +12,7 @@ const Panel = () => {
   }
 
   const openPricesButtonClicked = () => {
-    dashboardContext!.setShowPrices(true);
+    dashboardContext!.action({ type: "setShowPrices", payload: true })
     setShowMobileMenu(false);
   }
 
@@ -30,9 +30,8 @@ const Panel = () => {
         תפריט <FaChevronDown className="ml-2" />
       </button>
       <div
-        className={`z-10 flex-col ${
-          showMobileMenu ? 'flex' : 'hidden'
-        } w-44 divide-y divide-gray-100 rounded bg-white shadow md:flex md:w-full md:divide-y-0 md:bg-transparent md:shadow-none`}
+        className={`z-10 flex-col ${showMobileMenu ? 'flex' : 'hidden'
+          } w-44 divide-y divide-gray-100 rounded bg-white shadow md:flex md:w-full md:divide-y-0 md:bg-transparent md:shadow-none`}
       >
         <ul
           className="py-1 text-sm text-gray-700 md:flex md:w-full md:justify-center md:py-0"
