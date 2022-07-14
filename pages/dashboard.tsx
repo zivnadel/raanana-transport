@@ -5,7 +5,6 @@ import {
 } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
-import LoginModal from "../components/auth/LoginModal";
 import UnauthorizedModal from "../components/auth/UnauthorizedModal";
 import ActiveWindow from "../components/dashboard/ActiveWindow";
 import Panel from "../components/dashboard/Panel";
@@ -18,22 +17,20 @@ const Dashboard: NextPage<
 > = ({ initialPrices }) => {
 	const { data: session } = useSession();
 
-	if (!session) {
-		return <LoginModal />;
-	}
-	if (
-		session.user &&
-		session.user.email !== process.env.NEXT_PUBLIC_EMAIL_OF_ADMIN
-	) {
-		return <UnauthorizedModal />;
+	if (session && session.user) {
+		if (session.user.email === process.env.NEXT_PUBLIC_EMAIL_OF_ADMIN) {
+			return (
+				<DashboardContextProvider>
+					<Panel />
+					<ActiveWindow initialPrices={initialPrices} />
+				</DashboardContextProvider>
+			);
+		} else {
+			return <UnauthorizedModal />;
+		}
 	}
 
-	return (
-		<DashboardContextProvider>
-			<Panel />
-			<ActiveWindow initialPrices={initialPrices} />
-		</DashboardContextProvider>
-	);
+	return <></>;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -46,8 +43,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 		if (!session) {
 			return {
-				props: {
-					session,
+				redirect: {
+					permanent: false,
+					destination: "/login",
 				},
 			};
 		}
@@ -67,7 +65,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		throw new Error(error);
 	}
 };
-
-Dashboard.displayName = "Dashboard";
 
 export default Dashboard;

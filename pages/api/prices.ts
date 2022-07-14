@@ -28,7 +28,7 @@ const putPrices = async (prices: string) => {
 };
 
 const cors = Cors({
-	origin: process.env.WEBSITE_URL,
+	origin: process.env.VERCEL_URL,
 });
 
 function runMiddleware(

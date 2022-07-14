@@ -1,0 +1,69 @@
+import {
+	GetServerSideProps,
+	InferGetServerSidePropsType,
+	NextPage,
+} from "next";
+import { unstable_getServerSession } from "next-auth";
+import { getProviders, signIn } from "next-auth/react";
+import { useRouter } from "next/router";
+import Button from "../components/ui/buttons/Button";
+import CloseModalButton from "../components/ui/buttons/CloseModalButton";
+import Modal from "../components/ui/modals/Modal";
+import { authOptions } from "./api/auth/[...nextauth]";
+
+const Login: NextPage<
+	InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ providers }) => {
+	const router = useRouter();
+
+	return (
+		<Modal>
+			<CloseModalButton
+				onClick={() => {
+					router.push("/");
+				}}
+			/>
+			<h1 className="m-5 text-center text-3xl font-semibold text-primary">
+				לחץ למעבר לדף ההתחברות
+			</h1>
+			<div className="w-full text-center">
+				{Object.values(providers).map((provider: any) => (
+					<div key={provider.name}>
+						<Button
+							className="my-5"
+							onClick={() =>
+								signIn(provider.id, { callbackUrl: "/dashboard" })
+							}>
+							התחבר באמצעות {provider.name}
+						</Button>
+					</div>
+				))}
+			</div>
+		</Modal>
+	);
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	const providers = await getProviders();
+
+	const session = await unstable_getServerSession(
+		context.req,
+		context.res,
+		authOptions
+	);
+
+	if (session) {
+		return {
+			redirect: {
+				permanent: false,
+				destination: "/",
+			},
+		};
+	}
+
+	return {
+		props: { providers },
+	};
+};
+
+export default Login;
