@@ -37,12 +37,13 @@ const Panel: React.FC = () => {
 					className="py-1 text-sm text-gray-700 md:flex md:w-full md:justify-center md:py-0"
 					aria-labelledby="dropdownDefault">
 					<PanelButton onClick={openPricesButtonClicked}>מחירון</PanelButton>
-					<PanelButton onClick={() => signOut({ callbackUrl: "/" })}>
-						התנתקות
-					</PanelButton>
 					<PanelButton>עדכון לו&quot;ז</PanelButton>
+          <PanelButton>צפה בנתוני השבוע</PanelButton>
 					<PanelButton>עריכת פרטי תלמיד</PanelButton>
 					<PanelButton>הוספת\הסרת תלמיד</PanelButton>
+          <PanelButton onClick={() => signOut({ callbackUrl: "/" })}>
+						התנתקות
+					</PanelButton>
 				</ul>
 			</div>
 		</div>
