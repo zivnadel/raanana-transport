@@ -3,6 +3,7 @@ import {
 	InferGetServerSidePropsType,
 	NextPage,
 } from "next";
+import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import LoginModal from "../components/auth/LoginModal";
 import UnauthorizedModal from "../components/auth/UnauthorizedModal";
@@ -10,11 +11,13 @@ import ActiveWindow from "../components/dashboard/ActiveWindow";
 import Panel from "../components/dashboard/Panel";
 import clientPromise from "../lib/mongodb";
 import { DashboardContextProvider } from "../store/DashboardContext";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 const Dashboard: NextPage<
 	InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ initialPrices }) => {
 	const { data: session } = useSession();
+
 	if (!session) {
 		return <LoginModal />;
 	}
@@ -35,6 +38,20 @@ const Dashboard: NextPage<
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	try {
+		const session = await unstable_getServerSession(
+			context.req,
+			context.res,
+			authOptions
+		);
+
+		if (!session) {
+			return {
+				props: {
+					session,
+				},
+			};
+		}
+
 		const db = (await clientPromise).db();
 		const initialPrices: any = await db.collection("prices").find().toArray();
 
@@ -42,6 +59,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 		return {
 			props: {
+				session,
 				initialPrices: JSON.parse(JSON.stringify(initialPrices[0])),
 			},
 		};
