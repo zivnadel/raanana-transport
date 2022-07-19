@@ -4,8 +4,6 @@ import {
 	NextPage,
 } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
-import UnauthorizedModal from "../components/auth/UnauthorizedModal";
 import ActiveWindow from "../components/dashboard/ActiveWindow";
 import Panel from "../components/dashboard/Panel";
 import clientPromise from "../lib/mongodb";
@@ -15,22 +13,12 @@ import { authOptions } from "./api/auth/[...nextauth]";
 const Dashboard: NextPage<
 	InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ initialPrices }) => {
-	const { data: session } = useSession();
-
-	if (session && session.user) {
-		if (session.user.email === process.env.NEXT_PUBLIC_EMAIL_OF_ADMIN) {
-			return (
-				<DashboardContextProvider>
-					<Panel />
-					<ActiveWindow initialPrices={initialPrices} />
-				</DashboardContextProvider>
-			);
-		} else {
-			return <UnauthorizedModal />;
-		}
-	}
-
-	return <></>;
+	return (
+		<DashboardContextProvider>
+			<Panel />
+			<ActiveWindow initialPrices={initialPrices} />
+		</DashboardContextProvider>
+	);
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

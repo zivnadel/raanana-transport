@@ -14,6 +14,14 @@ export const authOptions: NextAuthOptions = {
 	pages: {
 		signIn: "/login",
 	},
+	callbacks: {
+		async signIn({ user, account, profile, email, credentials }) {
+			if (profile.email === process.env.NEXT_PUBLIC_EMAIL_OF_ADMIN) {
+				return true;
+			}
+			return "/unauthorized";
+		},
+	},
 	secret: process.env.NEXTAUTH_SECRET,
 };
 

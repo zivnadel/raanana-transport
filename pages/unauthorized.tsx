@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import Button from "../ui/buttons/Button";
-import CloseModalButton from "../ui/buttons/CloseModalButton";
-import Modal from "../ui/modals/Modal";
+import Button from "../components/ui/buttons/Button";
+import CloseModalButton from "../components/ui/buttons/CloseModalButton";
+import Modal from "../components/ui/modals/Modal";
 
 const UnauthorizedModal: React.FC = () => {
 	const router = useRouter();

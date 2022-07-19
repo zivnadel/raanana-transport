@@ -38,10 +38,10 @@ const Panel: React.FC = () => {
 					aria-labelledby="dropdownDefault">
 					<PanelButton onClick={openPricesButtonClicked}>מחירון</PanelButton>
 					<PanelButton>עדכון לו&quot;ז</PanelButton>
-          <PanelButton>צפה בנתוני השבוע</PanelButton>
+					<PanelButton>צפה בנתוני השבוע</PanelButton>
 					<PanelButton>עריכת פרטי תלמיד</PanelButton>
 					<PanelButton>הוספת\הסרת תלמיד</PanelButton>
-          <PanelButton onClick={() => signOut({ callbackUrl: "/" })}>
+					<PanelButton onClick={() => signOut({ callbackUrl: "/" })}>
 						התנתקות
 					</PanelButton>
 				</ul>
