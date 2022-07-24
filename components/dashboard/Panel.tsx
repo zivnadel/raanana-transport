@@ -17,6 +17,11 @@ const Panel: React.FC = () => {
 		setShowMobileMenu(false);
 	};
 
+	const openAddRemovePupilButtonClicked = () => {
+		dashboardContext?.action({ type: "setShowAddRemovePupil", payload: true });
+		setShowMobileMenu(false);
+	};
+
 	return (
 		<div className="flex flex-col items-center justify-center text-center">
 			<h1 className="mb-2 mt-36 text-3xl font-semibold text-primary md:mt-20">
@@ -40,7 +45,9 @@ const Panel: React.FC = () => {
 					<PanelButton>עדכון לו&quot;ז</PanelButton>
 					<PanelButton>צפה בנתוני השבוע</PanelButton>
 					<PanelButton>עריכת פרטי תלמיד</PanelButton>
-					<PanelButton>הוספת\הסרת תלמיד</PanelButton>
+					<PanelButton onClick={openAddRemovePupilButtonClicked}>
+						הוספת\הסרת תלמיד
+					</PanelButton>
 					<PanelButton onClick={() => signOut({ callbackUrl: "/" })}>
 						התנתקות
 					</PanelButton>

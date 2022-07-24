@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
-import { FaWindowClose } from "react-icons/fa";
 
 import { DashboardContext } from "../../store/DashboardContext";
 import PricesObjectType from "../../types/PricesObjectType";
 import Button from "../ui/buttons/Button";
-import CloseModalButton from "../ui/buttons/CloseModalButton";
+
 import EditableInput from "../ui/inputs/EditableInput";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
@@ -17,7 +16,7 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 	const [showErrorMessage, setShowErrorMessage] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const closeModalClickedHandler = () => {
+	const onModalDismissedHandler = () => {
 		dashboardContext!.action({ type: "setShowPrices", payload: false });
 	};
 
@@ -56,12 +55,10 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 	};
 
 	return (
-		<Modal>
-			<CloseModalButton onClick={closeModalClickedHandler} />
+		<Modal onDismiss={onModalDismissedHandler} heading="מחירים">
 			{isLoading && <LoadingSpinner />}
 			{initialPrices && !isLoading && (
 				<div className="flex flex-col items-center">
-					<h2 className="p-2 text-center text-2xl text-primary">מחירים</h2>
 					{Object.entries(initialPrices).map((price: any) => {
 						return (
 							<EditableInput

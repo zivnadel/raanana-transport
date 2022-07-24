@@ -55,7 +55,7 @@ export default async function handler(
 	if (!session) {
 		res
 			.status(401)
-			.json({ message: "You must be logged in to access this resource!" });
+			.json({ message: "You must be logged in and authorized to access this resource!" });
 		return;
 	}
 
