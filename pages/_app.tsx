@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import Navbar from "../components/Navbar";
 import Head from "next/head";
 import ErrorBoundary from "../components/ErrorBoundary";
+import Footer from "../components/Footer";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 	return (
@@ -24,6 +25,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 					<Component {...pageProps} />
 				</SessionProvider>
 			</main>
+			<footer>
+				<Footer />
+			</footer>
 		</ErrorBoundary>
 	);
 }
