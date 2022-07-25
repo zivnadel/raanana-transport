@@ -88,7 +88,7 @@ const AddEditPupil: React.FC = () => {
 							{submitClicked && !pupilExists && (
 								<>
 									<p className="p-3 text-center text-lg font-medium">
-										תלמיד זה אינו קיים, להוספת תלמיד זה, לחצי למטה
+										תלמיד זה אינו קיים. להוספת תלמיד זה, לחצי למטה
 									</p>
 									<Button className="my-5" onClick={addPupilClickedHandler}>
 										לחצי כאן
