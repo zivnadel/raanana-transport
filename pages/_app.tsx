@@ -11,6 +11,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 		<ErrorBoundary>
 			<Head>
 				<title>הסעות רעננה</title>
+				<meta name="robots" content="noindex, nofollow" />
 			</Head>
 			<header>
 				<Navbar />
