@@ -3,7 +3,8 @@ import PricesObjectType from "../types/PricesObjectType";
 
 export interface DashboardContextType {
 	showPrices: boolean;
-	showAddRemovePupil: boolean;
+	showAddEditPupil: boolean;
+	showRemovePupil: boolean;
 	prices: PricesObjectType;
 	action: Dispatch<SetStateAction<any>>;
 }
@@ -13,7 +14,8 @@ export const DashboardContext = createContext<DashboardContextType | null>(
 );
 
 const initialState = {
-	showAddRemovePupil: false,
+	showAddEditPupil: false,
+	showRemovePupil: false,
 	showPrices: false,
 	prices: { p8: 0, p16: 0, p20: 0, p23: 0, morning: 0 },
 };
@@ -21,7 +23,8 @@ const initialState = {
 type ACTIONTYPE =
 	| { type: "setShowPrices"; payload: boolean }
 	| { type: "setPrices"; payload: PricesObjectType }
-	| { type: "setShowAddRemovePupil"; payload: boolean };
+	| { type: "setShowAddEditPupil"; payload: boolean }
+	| { type: "setShowRemovePupil"; payload: boolean };
 
 const reducer = (state: typeof initialState, action: ACTIONTYPE) => {
 	switch (action.type) {
@@ -29,8 +32,10 @@ const reducer = (state: typeof initialState, action: ACTIONTYPE) => {
 			return { ...state, showPrices: action.payload };
 		case "setPrices":
 			return { ...state, prices: action.payload };
-		case "setShowAddRemovePupil":
-			return { ...state, showAddRemovePupil: action.payload };
+		case "setShowAddEditPupil":
+			return { ...state, showAddEditPupil: action.payload };
+		case "setShowRemovePupil":
+			return { ...state, showRemovePupil: action.payload };
 		default:
 			throw new Error();
 	}
@@ -41,7 +46,8 @@ export const DashboardContextProvider: React.FC = ({ children }) => {
 
 	const dashboardContext: DashboardContextType = {
 		showPrices: state.showPrices,
-		showAddRemovePupil: state.showAddRemovePupil,
+		showRemovePupil: state.showRemovePupil,
+		showAddEditPupil: state.showAddEditPupil,
 		prices: state.prices,
 		action: dispatch,
 	};

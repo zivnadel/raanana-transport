@@ -79,7 +79,7 @@ export default async function handler(
 			const response = await addDate(req.body).catch((error) =>
 				res.status(500).json({ message: error.message })
 			);
-			res.status(200).json({ response });
+			res.status(201).json({ response });
 		}
 		default: {
 			res

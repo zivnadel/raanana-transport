@@ -55,7 +55,10 @@ export default async function handler(
 	if (!session) {
 		res
 			.status(401)
-			.json({ message: "You must be logged in and authorized to access this resource!" });
+			.json({
+				message:
+					"You must be logged in and authorized to access this resource!",
+			});
 		return;
 	}
 
@@ -64,14 +67,19 @@ export default async function handler(
 	switch (req.method) {
 		case "GET":
 			const prices = await getPrices().catch((error) =>
-				res.status(500).json({ errorMessage: error.message })
+				res.status(500).json({ message: error.message })
 			);
 			return res.status(200).json({ prices });
 
 		case "PUT":
 			const response = await putPrices(req.body).catch((error) => {
-				res.status(500).json({ errorMessage: error.message });
+				res.status(500).json({ message: error.message });
 			});
-			return res.status(200).json({ response });
+			return res.status(201).json({ response });
+		default: {
+			res
+				.status(405)
+				.end(`Method ${req.method} doesn't exist or it is not allowed.`);
+		}
 	}
 }

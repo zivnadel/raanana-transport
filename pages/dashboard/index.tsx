@@ -4,11 +4,11 @@ import {
 	NextPage,
 } from "next";
 import { unstable_getServerSession } from "next-auth";
-import ActiveWindow from "../components/dashboard/ActiveWindow";
-import Panel from "../components/dashboard/Panel";
-import clientPromise from "../lib/mongodb";
-import { DashboardContextProvider } from "../store/DashboardContext";
-import { authOptions } from "./api/auth/[...nextauth]";
+import ActiveWindow from "../../components/dashboard/ActiveWindow";
+import Panel from "../../components/dashboard/Panel";
+import clientPromise from "../../lib/mongodb";
+import { DashboardContextProvider } from "../../store/DashboardContext";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 const Dashboard: NextPage<
 	InferGetServerSidePropsType<typeof getServerSideProps>

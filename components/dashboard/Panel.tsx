@@ -12,14 +12,18 @@ const Panel: React.FC = () => {
 		setShowMobileMenu((prevState) => !prevState);
 	};
 
-	const openPricesButtonClicked = () => {
+	const openPricesButtonClickedHandler = () => {
 		dashboardContext!.action({ type: "setShowPrices", payload: true });
 		setShowMobileMenu(false);
 	};
 
-	const openAddRemovePupilButtonClicked = () => {
-		dashboardContext?.action({ type: "setShowAddRemovePupil", payload: true });
+	const openAddEditPupilButtonClickedHandler = () => {
+		dashboardContext?.action({ type: "setShowAddEditPupil", payload: true });
 		setShowMobileMenu(false);
+	};
+
+	const openRemovePupilButtonClickedHandler = () => {
+		dashboardContext?.action({ type: "setShowRemovePupil", payload: true });
 	};
 
 	return (
@@ -39,14 +43,18 @@ const Panel: React.FC = () => {
 					showMobileMenu ? "flex" : "hidden"
 				} w-44 divide-y divide-gray-100 rounded bg-white shadow md:flex md:w-full md:divide-y-0 md:bg-transparent md:shadow-none`}>
 				<ul
-					className="py-1 text-sm text-gray-700 md:flex md:w-full md:justify-center md:py-0"
+					className="py-1 text-sm text-gray-700 md:flex md:w-full md:justify-between md:px-10 md:py-0"
 					aria-labelledby="dropdownDefault">
-					<PanelButton onClick={openPricesButtonClicked}>מחירון</PanelButton>
+					<PanelButton onClick={openPricesButtonClickedHandler}>
+						מחירון
+					</PanelButton>
 					<PanelButton>עדכון לו&quot;ז</PanelButton>
-					<PanelButton>צפה בנתוני השבוע</PanelButton>
-					<PanelButton>עריכת פרטי תלמיד</PanelButton>
-					<PanelButton onClick={openAddRemovePupilButtonClicked}>
-						הוספת\הסרת תלמיד
+					<PanelButton>צפייה בנתוני השבוע</PanelButton>
+					<PanelButton onClick={openRemovePupilButtonClickedHandler}>
+						הסרת תלמיד
+					</PanelButton>
+					<PanelButton onClick={openAddEditPupilButtonClickedHandler}>
+						הוספת\עריכת תלמיד
 					</PanelButton>
 					<PanelButton onClick={() => signOut({ callbackUrl: "/" })}>
 						התנתקות

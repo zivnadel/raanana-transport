@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 
 import { DashboardContext } from "../../store/DashboardContext";
@@ -15,6 +16,8 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 		useState<PricesObjectType>(initialPrices);
 	const [showErrorMessage, setShowErrorMessage] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const router = useRouter();
 
 	const onModalDismissedHandler = () => {
 		dashboardContext!.action({ type: "setShowPrices", payload: false });
@@ -44,10 +47,11 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 			});
 			setIsLoading(false);
 			dashboardContext!.action({ type: "setShowPrices", payload: false });
-			if (response.status === 200) {
+			if (response.status === 201) {
 				dashboardContext!.action({ type: "setPrices", payload: currentPrices });
 				// TODO: maybe use component instead of alert.
 				alert("המידע עודכן בהצלחה!");
+				router.reload();
 			} else {
 				alert("אירעה שגיאה! רענני את העמוד או נסי מאוחר יותר");
 			}

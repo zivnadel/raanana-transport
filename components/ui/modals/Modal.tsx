@@ -4,14 +4,21 @@ interface Props {
 	children?: React.ReactNode;
 	onDismiss?: React.MouseEventHandler<SVGElement>;
 	heading?: string;
+	className?: string;
 }
 
-const Modal: React.FC<Props> = ({ children, onDismiss, heading }) => {
+const Modal: React.FC<Props> = ({
+	children,
+	onDismiss,
+	heading,
+	className,
+}) => {
 	return (
 		// Modal backdrop
 		<div className="fixed top-0 left-0 right-0 z-50 h-full w-full overflow-y-auto overflow-x-hidden bg-gray-600 bg-opacity-40 md:inset-0">
 			{/* Modal Flex Container */}
-			<div className="flex h-full w-full items-center justify-center">
+			<div
+				className={`flex h-full w-full items-center justify-center ${className}`}>
 				{/* Modal Content */}
 				<div className="w-10/12 max-w-md rounded-lg bg-white shadow">
 					{onDismiss && <CloseModalButton onClick={onDismiss} />}

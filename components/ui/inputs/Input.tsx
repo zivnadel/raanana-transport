@@ -2,18 +2,22 @@ interface Props {
 	name: string;
 	label: string;
 	type: string;
-    required?: boolean
+	required?: boolean;
+	value?: string
+	onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
-const Input: React.FC<Props> = ({ name, label, type, required }) => {
+const Input: React.FC<Props> = ({ name, label, type, required, value, onChange }) => {
 	return (
 		<div className="relative z-0 m-3 w-10/12">
 			<input
+				onChange={onChange}
+				value={value}
 				type={type}
 				id={name}
 				className="text-gray-900border-gray-500 peer block w-full appearance-none border-0 border-b-2 bg-transparent py-2.5 px-0 text-right text-sm focus:border-primary focus:outline-none focus:ring-0"
 				placeholder=" "
-                required={required}
+				required={required}
 			/>
 			<label
 				htmlFor={name}

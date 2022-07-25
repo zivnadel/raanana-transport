@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { DashboardContext } from "../../store/DashboardContext";
-import AddRemovePupil from "./AddRemovePupil";
+import AddEditPupil from "./AddEditPupil";
 import PricesForm from "./PricesForm";
+import RemovePupil from "./RemovePupil";
 
 const ActiveWindow: React.FC<any> = ({ initialPrices }) => {
 	const dashboardContext = useContext(DashboardContext);
@@ -11,7 +12,8 @@ const ActiveWindow: React.FC<any> = ({ initialPrices }) => {
 			{dashboardContext!.showPrices && (
 				<PricesForm initialPrices={initialPrices} />
 			)}
-			{dashboardContext!.showAddRemovePupil && <AddRemovePupil />}
+			{dashboardContext!.showAddEditPupil && <AddEditPupil />}
+			{dashboardContext!.showRemovePupil && <RemovePupil />}
 		</>
 	);
 };
