@@ -13,7 +13,7 @@ const DisabledInput: React.FC<Props> = ({ id, value, label }) => {
 			<input
 				type="text"
 				id={id}
-				className="mb-6 block w-3/6 cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 p-2.5 text-right text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+				className="mb-6 block w-3/6 cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 p-2.5 text-right text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
 				value={value}
 				disabled
                 required

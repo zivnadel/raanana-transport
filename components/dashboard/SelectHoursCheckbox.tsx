@@ -27,7 +27,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({ day, onChange, selected }) => {
 				{mapDayToString(day)}
 			</h3>
 			<ul className="mx-3 mb-2 flex w-5/6 items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900">
-				<li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
+				<li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
 					<div className="flex items-center pl-3">
 						<input
 							onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -79,7 +79,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({ day, onChange, selected }) => {
 						/>
 						<label
 							htmlFor={`checkbox-17:00-${day}`}
-							className="ml-2 w-full py-3 text-sm font-medium text-gray-900">
+							className="ml-2 mr-2 w-full py-3 text-sm font-medium text-gray-900">
 							17:00
 						</label>
 					</div>
