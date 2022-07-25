@@ -96,6 +96,7 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 				schedule: filteredHours,
 			});
 			setShowError(false);
+            alert("התלמיד עודכן בהצלחה!")
 			await router.push("/dashboard");
 			setIsLoading(false);
 		} else {
@@ -104,34 +105,40 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 	};
 
 	return (
-		<Modal
-			onDismiss={() => router.push("/dashboard")}
-			heading={!isLoading ? "עריכת פרטי תלמיד" : ""}
-			className="text-center">
-			{isLoading && <LoadingSpinner />}
-			{!isLoading && (
-				<form onSubmit={submitHandler}>
-					<DisabledInput id="pupilName" value={pupil.name} label="שם התלמיד" />
-					{[1, 2, 3, 4, 5].map((day) => (
-						<SelectHoursCheckbox
-							onChange={onCheckboxCheckedHandler}
-							day={day}
-							key={day}
-							selected={pupil.schedule}
+		<div className="h-screen">
+			<Modal
+				onDismiss={() => router.push("/dashboard")}
+				heading={!isLoading ? "עריכת פרטי תלמיד" : ""}
+				className="text-center">
+				{isLoading && <LoadingSpinner />}
+				{!isLoading && (
+					<form onSubmit={submitHandler}>
+						<DisabledInput
+							id="pupilName"
+							value={pupil.name}
+							label="שם התלמיד"
 						/>
-					))}
-					{showError && (
-						<p className="p-3 font-medium text-red-500">
-							נא למלא לפחות שדה אחד, אם שדה אחד כבר מלא ייתכן שארעה שגיאה. נא
-							לרענן ולנסות שוב
-						</p>
-					)}
-					<Button type="submit" className="mt-2 mb-5">
-						שלחי
-					</Button>
-				</form>
-			)}
-		</Modal>
+						{[1, 2, 3, 4, 5].map((day) => (
+							<SelectHoursCheckbox
+								onChange={onCheckboxCheckedHandler}
+								day={day}
+								key={day}
+								selected={pupil.schedule}
+							/>
+						))}
+						{showError && (
+							<p className="p-3 font-medium text-red-500">
+								נא למלא לפחות שדה אחד, אם שדה אחד כבר מלא ייתכן שארעה שגיאה. נא
+								לרענן ולנסות שוב
+							</p>
+						)}
+						<Button type="submit" className="mt-2 mb-5">
+							שלחי
+						</Button>
+					</form>
+				)}
+			</Modal>
+		</div>
 	);
 };
 

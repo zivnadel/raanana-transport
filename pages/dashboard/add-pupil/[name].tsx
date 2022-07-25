@@ -42,7 +42,7 @@ const AddPupil: NextPage<
 		event: React.ChangeEvent<HTMLInputElement>,
 		day: number
 	) => {
-		setShowError(false)
+		setShowError(false);
 		setHours((prevHours) => {
 			if (!prevHours) {
 				return [{ day, hours: [event.target.value] }];
@@ -96,6 +96,7 @@ const AddPupil: NextPage<
 				name,
 				schedule: filteredHours,
 			});
+			alert("התלמיד נוסף בהצלחה!")
 			await router.push("/dashboard");
 			setIsLoading(false);
 			setShowError(false);
@@ -105,7 +106,7 @@ const AddPupil: NextPage<
 	};
 
 	return (
-		<>
+		<div className="h-screen">
 			{existing && (
 				<Modal
 					className="text-center"
@@ -153,7 +154,7 @@ const AddPupil: NextPage<
 					)}
 				</Modal>
 			)}
-		</>
+		</div>
 	);
 };
 

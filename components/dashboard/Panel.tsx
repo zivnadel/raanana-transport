@@ -27,7 +27,7 @@ const Panel: React.FC = () => {
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center text-center">
+		<div className="flex h-screen flex-col items-center text-center">
 			<h1 className="mb-2 mt-36 text-3xl font-semibold text-primary md:mt-20">
 				לוח הבקרה
 			</h1>

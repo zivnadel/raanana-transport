@@ -1,4 +1,4 @@
-const Footer = () => {
+const Footer: React.FC = () => {
 	return (
 		<div className="flex h-16 w-full items-center justify-center bg-black bg-opacity-[65%] text-white">
 			<p className="shadow-black drop-shadow-2xl">
