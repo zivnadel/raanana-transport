@@ -26,6 +26,10 @@ const Panel: React.FC = () => {
 		dashboardContext?.action({ type: "setShowRemovePupil", payload: true });
 	};
 
+	const loadYearButtonClickedHandler = () => {
+		dashboardContext?.action({ type: "setLoadYear", payload: true });
+	};
+
 	return (
 		<div className="flex h-screen flex-col items-center text-center">
 			<h1 className="mb-2 mt-36 text-3xl font-semibold text-primary md:mt-20">
@@ -50,6 +54,9 @@ const Panel: React.FC = () => {
 					</PanelButton>
 					<PanelButton>עדכון לו&quot;ז</PanelButton>
 					<PanelButton>צפייה בנתוני השבוע</PanelButton>
+					<PanelButton onClick={loadYearButtonClickedHandler}>
+						טעינת שנה&quot;ל
+					</PanelButton>
 					<PanelButton onClick={openRemovePupilButtonClickedHandler}>
 						הסרת תלמיד
 					</PanelButton>

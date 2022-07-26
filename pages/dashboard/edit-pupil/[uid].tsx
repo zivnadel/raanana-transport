@@ -83,7 +83,6 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 	const submitHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 		const filteredHours = clearEmptyDays();
-		console.log(filteredHours);
 		setIsLoading(true);
 		const pupilStillExists = await get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupil.name}`
