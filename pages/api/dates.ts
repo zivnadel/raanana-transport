@@ -46,6 +46,8 @@ const initiateYear = async () => {
 			await db.collection<PricesObjectType>("prices").find({}).toArray()
 		)[0];
 
+		// TODO: fetch week schedule
+
 		// initiate the year according to pupils information
 		const dates = produceYearArray();
 		const year = dates.map((rawDate): DateObjectType => {
@@ -153,6 +155,9 @@ export default async function handler(
 				(error) => res.status(500).json({ message: error.message })
 			);
 			return res.status(200).json({ response });
+		}
+		case "POST": {
+			// TODO: create edit schedule post request
 		}
 		case "PUT": {
 			const response = await initiateYear().catch((error) => {

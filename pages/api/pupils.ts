@@ -4,7 +4,7 @@ import Cors from "cors";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import PupilObjectType from "../../types/PupilObjectType";
-import DateObjectType, { busType } from "../../types/DateObjectType";
+import DateObjectType from "../../types/DateObjectType";
 import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
 import PricesObjectType from "../../types/PricesObjectType";
 import { Db } from "mongodb";
@@ -43,6 +43,50 @@ const getPupil = async (name?: string | string[]) => {
 	}
 };
 
+const addPupil = async (pupil: string) => {
+	try {
+		const db = (await clientPromise).db();
+		const data = JSON.parse(pupil);
+		const response = await db.collection("pupils").insertOne(data);
+		if (response.acknowledged) {
+			await updateSchedule("add", db, data);
+		}
+		return { status: "Success" };
+	} catch (error: any) {
+		throw new Error(error);
+	}
+};
+
+const updatePupil = async (pupil: string) => {
+	try {
+		const data = JSON.parse(pupil) as PupilObjectType;
+		const db = (await clientPromise).db();
+		const response = await db
+			.collection("pupils")
+			.updateOne({ name: data.name }, { $set: { schedule: data.schedule } });
+		if (response.acknowledged) {
+			await updateSchedule("edit", db, data);
+		}
+		return { status: "Success" };
+	} catch (error: any) {
+		throw new Error(error);
+	}
+};
+
+const deletePupil = async (body: string) => {
+	try {
+		const { name } = JSON.parse(body) as { name: string };
+		const db = (await clientPromise).db();
+		const response = await db.collection("pupils").deleteOne({ name });
+		if (response.acknowledged) {
+			await updateSchedule("delete", db, undefined, name);
+		}
+		return { status: "Success" };
+	} catch (error: any) {
+		throw new Error(error);
+	}
+};
+
 const addPupilToSchedule = (
 	dates: DateObjectType[],
 	pupil: PupilObjectType,
@@ -56,13 +100,13 @@ const addPupilToSchedule = (
 					switch (hour) {
 						case "morning":
 							const morning = date.transportations.morning;
-							if (!morning.pupils.includes(pupil.name)) {
+							if (morning && !morning.pupils.includes(pupil.name)) {
 								morning.pupils.push(pupil.name);
 							}
 							break;
 						case "15:30":
 							const threeThirty = date.transportations["15:30"];
-							if (!threeThirty.pupils.includes(pupil.name)) {
+							if (threeThirty && !threeThirty.pupils.includes(pupil.name)) {
 								threeThirty.pupils.push(pupil.name);
 								threeThirty.busType = calculateBusType(
 									threeThirty.pupils.length
@@ -72,7 +116,7 @@ const addPupilToSchedule = (
 							break;
 						case "17:00":
 							const five = date.transportations["17:00"];
-							if (!five.pupils.includes(pupil.name)) {
+							if (five && !five.pupils.includes(pupil.name)) {
 								five.pupils.push(pupil.name);
 								five.busType = calculateBusType(five.pupils.length);
 								five.price = calculatePrice(five.busType, prices);
@@ -82,9 +126,15 @@ const addPupilToSchedule = (
 				});
 			}
 			date.totalAmount =
-				date.transportations.morning.price +
-				date.transportations["15:30"].price +
-				date.transportations["17:00"].price;
+				(date.transportations.morning
+					? date.transportations.morning.price
+					: 0) +
+				(date.transportations["15:30"]
+					? date.transportations["15:30"].price
+					: 0) +
+				(date.transportations["17:00"]
+					? date.transportations["17:00"].price
+					: 0);
 		});
 	});
 	return dates;
@@ -100,13 +150,13 @@ const deletePupilFromSchedule = (
 		const threeThirty = date.transportations["15:30"];
 		const five = date.transportations["17:00"];
 
-		if (morning.pupils.includes(pupilName!)) {
+		if (morning && morning.pupils.includes(pupilName!)) {
 			morning.pupils = morning.pupils.filter(
 				(exisitingPupil) => exisitingPupil !== pupilName
 			);
 		}
 
-		if (threeThirty.pupils.includes(pupilName!)) {
+		if (threeThirty && threeThirty.pupils.includes(pupilName!)) {
 			threeThirty.pupils = threeThirty.pupils.filter(
 				(exisitingPupil) => exisitingPupil !== pupilName
 			);
@@ -115,7 +165,7 @@ const deletePupilFromSchedule = (
 			threeThirty.price = calculatePrice(threeThirty.busType, prices);
 		}
 
-		if (five.pupils.includes(pupilName!)) {
+		if (five && five.pupils.includes(pupilName!)) {
 			five.pupils = five.pupils.filter(
 				(exisitingPupil) => exisitingPupil !== pupilName
 			);
@@ -123,9 +173,11 @@ const deletePupilFromSchedule = (
 			five.price = calculatePrice(five.busType, prices);
 		}
 		date.totalAmount =
-			date.transportations.morning.price +
-			date.transportations["15:30"].price +
-			date.transportations["17:00"].price;
+			(date.transportations.morning ? date.transportations.morning.price : 0) +
+			(date.transportations["15:30"]
+				? date.transportations["15:30"].price
+				: 0) +
+			(date.transportations["17:00"] ? date.transportations["17:00"].price : 0);
 	});
 	return dates;
 };
@@ -171,50 +223,6 @@ const updateSchedule = async (
 		} else {
 			throw new Error("Error deleting documents!");
 		}
-	} catch (error: any) {
-		throw new Error(error);
-	}
-};
-
-const addPupil = async (pupil: string) => {
-	try {
-		const db = (await clientPromise).db();
-		const data = JSON.parse(pupil);
-		const response = await db.collection("pupils").insertOne(data);
-		if (response.acknowledged) {
-			await updateSchedule("add", db, data);
-		}
-		return { status: "Success" };
-	} catch (error: any) {
-		throw new Error(error);
-	}
-};
-
-const updatePupil = async (pupil: string) => {
-	try {
-		const data = JSON.parse(pupil) as PupilObjectType;
-		const db = (await clientPromise).db();
-		const response = await db
-			.collection("pupils")
-			.updateOne({ name: data.name }, { $set: { schedule: data.schedule } });
-		if (response.acknowledged) {
-			await updateSchedule("edit", db, data);
-		}
-		return { status: "Success" };
-	} catch (error: any) {
-		throw new Error(error);
-	}
-};
-
-const deletePupil = async (body: string) => {
-	try {
-		const { name } = JSON.parse(body) as { name: string };
-		const db = (await clientPromise).db();
-		const response = await db.collection("pupils").deleteOne({ name });
-		if (response.acknowledged) {
-			await updateSchedule("delete", db, undefined, name);
-		}
-		return { status: "Success" };
 	} catch (error: any) {
 		throw new Error(error);
 	}

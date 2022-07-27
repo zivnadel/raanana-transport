@@ -16,9 +16,9 @@ type DateObjectType = {
 	date: string;
     day: number;
 	transportations: {
-		morning: HourObjectType;
-		"15:30": HourObjectType;
-		"17:00": HourObjectType;
+		morning?: HourObjectType;
+		"15:30"?: HourObjectType;
+		"17:00"?: HourObjectType;
 	};
 	totalAmount: number;
 };
