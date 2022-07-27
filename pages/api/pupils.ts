@@ -5,9 +5,9 @@ import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import PupilObjectType from "../../types/PupilObjectType";
 import DateObjectType, { busType } from "../../types/DateObjectType";
-import { toDate } from "../../utils/dateUtils";
-import { Db } from "mongodb";
+import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
 import PricesObjectType from "../../types/PricesObjectType";
+import { Db } from "mongodb";
 
 const cors = Cors({
 	origin: process.env.VERCEL_URL,
@@ -43,11 +43,148 @@ const getPupil = async (name?: string | string[]) => {
 	}
 };
 
+const addPupilToSchedule = (
+	dates: DateObjectType[],
+	pupil: PupilObjectType,
+	prices: PricesObjectType
+) => {
+	const schedule = pupil.schedule;
+	dates.map((date) => {
+		schedule.map((scheduleDay) => {
+			if (date.day === scheduleDay.day) {
+				scheduleDay.hours.map((hour) => {
+					switch (hour) {
+						case "morning":
+							const morning = date.transportations.morning;
+							if (!morning.pupils.includes(pupil.name)) {
+								morning.pupils.push(pupil.name);
+							}
+							break;
+						case "15:30":
+							const threeThirty = date.transportations["15:30"];
+							if (!threeThirty.pupils.includes(pupil.name)) {
+								threeThirty.pupils.push(pupil.name);
+								threeThirty.busType = calculateBusType(
+									threeThirty.pupils.length
+								);
+								threeThirty.price = calculatePrice(threeThirty.busType, prices);
+							}
+							break;
+						case "17:00":
+							const five = date.transportations["17:00"];
+							if (!five.pupils.includes(pupil.name)) {
+								five.pupils.push(pupil.name);
+								five.busType = calculateBusType(five.pupils.length);
+								five.price = calculatePrice(five.busType, prices);
+							}
+							break;
+					}
+				});
+			}
+			date.totalAmount =
+				date.transportations.morning.price +
+				date.transportations["15:30"].price +
+				date.transportations["17:00"].price;
+		});
+	});
+	return dates;
+};
+
+const deletePupilFromSchedule = (
+	dates: DateObjectType[],
+	pupilName: string,
+	prices: PricesObjectType
+) => {
+	dates.map((date) => {
+		const morning = date.transportations.morning;
+		const threeThirty = date.transportations["15:30"];
+		const five = date.transportations["17:00"];
+
+		if (morning.pupils.includes(pupilName!)) {
+			morning.pupils = morning.pupils.filter(
+				(exisitingPupil) => exisitingPupil !== pupilName
+			);
+		}
+
+		if (threeThirty.pupils.includes(pupilName!)) {
+			threeThirty.pupils = threeThirty.pupils.filter(
+				(exisitingPupil) => exisitingPupil !== pupilName
+			);
+
+			threeThirty.busType = calculateBusType(threeThirty.pupils.length);
+			threeThirty.price = calculatePrice(threeThirty.busType, prices);
+		}
+
+		if (five.pupils.includes(pupilName!)) {
+			five.pupils = five.pupils.filter(
+				(exisitingPupil) => exisitingPupil !== pupilName
+			);
+			five.busType = calculateBusType(five.pupils.length);
+			five.price = calculatePrice(five.busType, prices);
+		}
+		date.totalAmount =
+			date.transportations.morning.price +
+			date.transportations["15:30"].price +
+			date.transportations["17:00"].price;
+	});
+	return dates;
+};
+
+const updateSchedule = async (
+	actionType: "delete" | "add" | "edit",
+	db: Db,
+	pupil?: PupilObjectType,
+	pupilName?: string
+) => {
+	try {
+		const dates = await db
+			.collection<DateObjectType>("dates")
+			.find({})
+			.toArray();
+		const prices = (
+			await db.collection<PricesObjectType>("prices").find({}).toArray()
+		)[0];
+
+		let datesToUpdate: DateObjectType[];
+
+		switch (actionType) {
+			case "add":
+				datesToUpdate = addPupilToSchedule(dates, pupil!, prices);
+				break;
+			case "delete":
+				datesToUpdate = deletePupilFromSchedule(dates, pupilName!, prices);
+				break;
+			case "edit":
+				const datesAfterDeletion = deletePupilFromSchedule(
+					dates,
+					pupil!.name,
+					prices
+				);
+				datesToUpdate = addPupilToSchedule(datesAfterDeletion, pupil!, prices);
+				break;
+		}
+
+		const deleteResponse = await db.collection("dates").deleteMany({});
+		if (deleteResponse.deletedCount > 0) {
+			const response = await db.collection("dates").insertMany(datesToUpdate);
+			return response;
+		} else {
+			throw new Error("Error deleting documents!");
+		}
+	} catch (error: any) {
+		throw new Error(error);
+	}
+};
+
 const addPupil = async (pupil: string) => {
 	try {
 		const db = (await clientPromise).db();
-		const response = await db.collection("pupils").insertOne(JSON.parse(pupil));
-		return response;
+		const data = JSON.parse(pupil);
+		const response = await db.collection("pupils").insertOne(data);
+		if (response.acknowledged) {
+			await updateSchedule("add", db, data);
+		}
+		return { status: "Success" };
 	} catch (error: any) {
 		throw new Error(error);
 	}
@@ -55,12 +192,15 @@ const addPupil = async (pupil: string) => {
 
 const updatePupil = async (pupil: string) => {
 	try {
-		const data = JSON.parse(pupil);
+		const data = JSON.parse(pupil) as PupilObjectType;
 		const db = (await clientPromise).db();
 		const response = await db
 			.collection("pupils")
 			.updateOne({ name: data.name }, { $set: { schedule: data.schedule } });
-		return response;
+		if (response.acknowledged) {
+			await updateSchedule("edit", db, data);
+		}
+		return { status: "Success" };
 	} catch (error: any) {
 		throw new Error(error);
 	}
@@ -68,162 +208,17 @@ const updatePupil = async (pupil: string) => {
 
 const deletePupil = async (body: string) => {
 	try {
-		const { name } = JSON.parse(body);
+		const { name } = JSON.parse(body) as { name: string };
 		const db = (await clientPromise).db();
 		const response = await db.collection("pupils").deleteOne({ name });
-		return response;
+		if (response.acknowledged) {
+			await updateSchedule("delete", db, undefined, name);
+		}
+		return { status: "Success" };
 	} catch (error: any) {
 		throw new Error(error);
 	}
 };
-
-// TODO: FIX THAT
-// const calculateBusType = (numOfPupils: number): busType[] => {
-// 	if (numOfPupils <= 0) {
-// 		return [];
-// 	} else if (numOfPupils > 0 && numOfPupils <= 8) {
-// 		return [busType.p8];
-// 	} else if (numOfPupils > 8 && numOfPupils <= 16) {
-// 		return [busType.p16];
-// 	} else if (numOfPupils > 16 && numOfPupils <= 20) {
-// 		return [busType.p20];
-// 	} else if (numOfPupils > 20 && numOfPupils <= 23) {
-// 		return [busType.p23];
-// 	} else {
-// 		return [busType.p23, ...calculateBusType(numOfPupils - 23)];
-// 	}
-// };
-
-// const calculatePrice = async (
-// 	busTypes: busType[],
-// 	prices: PricesObjectType
-// ) => {
-// 	try {
-// 		let price = 0;
-// 		busTypes.map((type) => {
-// 			switch (type) {
-// 				case busType.morning:
-// 					price += prices.morning;
-// 					break;
-// 				case busType.p8:
-// 					price += prices.p8;
-// 					break;
-// 				case busType.p16:
-// 					price += prices.p16;
-// 					break;
-// 				case busType.p20:
-// 					price += prices.p20;
-// 					break;
-// 				case busType.p23:
-// 					price += prices.p23;
-// 					break;
-// 			}
-// 		});
-// 		return price;
-// 	} catch (error: any) {
-// 		throw new Error(error);
-// 	}
-// };
-
-// const updateSchedule = async (stringifiedPupil: string) => {
-// 	try {
-// 		const pupil = JSON.parse(stringifiedPupil) as PupilObjectType;
-
-// 		const db = (await clientPromise).db();
-
-// 		const datesToUpdate = await db
-// 			.collection<DateObjectType>("dates")
-// 			.find({})
-// 			.toArray();
-
-// 		const prices = (
-// 			await db.collection<PricesObjectType>("prices").find({}).toArray()
-// 		)[0];
-
-// 		datesToUpdate.map((date) => {
-// 			pupil.schedule.map(async (scheduleDay) => {
-// 				if (date.day === scheduleDay.day) {
-// 					scheduleDay.hours.map(async (hour) => {
-// 						switch (hour) {
-// 							case "morning":
-// 								date.transportations.morning.pupils.push(pupil.name);
-// 							case "15:30":
-// 								date.transportations["15:30"].pupils.push(pupil.name);
-
-// 								date.transportations["15:30"].busType = calculateBusType(
-// 									date.transportations["15:30"].pupils.length + 1
-// 								);
-// 								date.transportations["15:30"].price = await calculatePrice(
-// 									date.transportations["15:30"].busType,
-// 									prices
-// 								);
-// 							case "17:00":
-// 								date.transportations["17:00"].pupils.push(pupil.name);
-
-// 								date.transportations["17:00"].busType = calculateBusType(
-// 									date.transportations["17:00"].pupils.length + 1
-// 								);
-// 								date.transportations["17:00"].price = await calculatePrice(
-// 									date.transportations["17:00"].busType,
-// 									prices
-// 								);
-// 						}
-// 					});
-// 				} else {
-// 					if (date.transportations.morning.pupils.includes(pupil.name)) {
-// 						date.transportations.morning.pupils =
-// 							date.transportations.morning.pupils.filter(
-// 								(pupilName) => pupilName !== pupil.name
-// 							);
-// 					} else if (
-// 						date.transportations["15:30"].pupils.includes(pupil.name)
-// 					) {
-// 						date.transportations["15:30"].pupils = date.transportations[
-// 							"15:30"
-// 						].pupils.filter((pupilName) => pupilName !== pupil.name);
-// 						date.transportations["15:30"].busType = calculateBusType(
-// 							date.transportations["15:30"].pupils.length - 1
-// 						);
-// 						date.transportations["15:30"].price = await calculatePrice(
-// 							date.transportations["15:30"].busType,
-// 							prices
-// 						);
-// 					} else if (
-// 						date.transportations["17:00"].pupils.includes(pupil.name)
-// 					) {
-// 						date.transportations["17:00"].pupils = date.transportations[
-// 							"17:00"
-// 						].pupils.filter((pupilName) => pupilName !== pupil.name);
-// 						date.transportations["17:00"].busType = calculateBusType(
-// 							date.transportations["17:00"].pupils.length - 1
-// 						);
-// 						date.transportations["17:00"].price = await calculatePrice(
-// 							date.transportations["17:00"].busType,
-// 							prices
-// 						);
-// 					}
-// 				}
-// 			});
-// 			date.totalAmount =
-// 				date.transportations.morning.price +
-// 				date.transportations["15:30"].price +
-// 				date.transportations["17:00"].price;
-// 		});
-
-// 		const bulkData = datesToUpdate.map((date) => ({
-// 			replaceOne: {
-// 				upsert: true,
-// 				filter: { _id: date._id },
-// 				replacement: { date },
-// 			},
-// 		}));
-
-// 		const response = await db.collection("dates").bulkWrite(bulkData);
-// 		return response;
-// 	} catch (error: any) {
-// 		throw new Error(error);
-// 	}
-// };
 
 export default async function handler(
 	req: NextApiRequest,
@@ -260,7 +255,6 @@ export default async function handler(
 			const response = await updatePupil(req.body).catch((error) => {
 				return res.status(500).json({ message: error.message });
 			});
-			// await updateSchedule(req.body);
 			return res.status(200).json({ response });
 		}
 

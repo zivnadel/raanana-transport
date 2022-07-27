@@ -1,3 +1,6 @@
+import { busType } from "../types/DateObjectType";
+import PricesObjectType from "../types/PricesObjectType";
+
 export const produceYearArray = () => {
 	const currentYear = new Date(
 		new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" })
@@ -32,4 +35,47 @@ export const toDate = (normalDateString: string) => {
 	let date = new Date(new Date(normalDateString).toUTCString());
 	date.setTime(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
 	return date;
+};
+
+export const calculateBusType = (numOfPupils: number): busType[] => {
+	if (numOfPupils === 0) {
+		return [];
+	} else if (numOfPupils > 0 && numOfPupils <= 8) {
+		return [busType.p8];
+	} else if (numOfPupils > 8 && numOfPupils <= 16) {
+		return [busType.p16];
+	} else if (numOfPupils > 16 && numOfPupils <= 20) {
+		return [busType.p20];
+	} else if (numOfPupils > 20 && numOfPupils <= 23) {
+		return [busType.p23];
+	} else {
+		return [busType.p23, ...calculateBusType(numOfPupils - 23)];
+	}
+};
+
+export const calculatePrice = (
+	busTypes: busType[],
+	prices: PricesObjectType
+): number => {
+	let price = 0;
+	busTypes.map((type) => {
+		switch (type) {
+			case busType.morning:
+				price += prices.morning;
+				break;
+			case busType.p8:
+				price += prices.p8;
+				break;
+			case busType.p16:
+				price += prices.p16;
+				break;
+			case busType.p20:
+				price += prices.p20;
+				break;
+			case busType.p23:
+				price += prices.p23;
+				break;
+		}
+	});
+	return price;
 };
