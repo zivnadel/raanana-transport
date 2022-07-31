@@ -36,7 +36,6 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 	};
 
 	React.useEffect(() => {
-		console.log(initialDate);
 		(async () => {
 			setIsLoading(true);
 			const response = await get<DateObjectType[]>(
