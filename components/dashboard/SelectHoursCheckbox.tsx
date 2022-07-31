@@ -2,11 +2,25 @@ import React from "react";
 
 interface Props {
 	day: number;
-	onChange: (event: React.ChangeEvent<HTMLInputElement>, day: number) => void;
-	selected?: { day: number; hours: string[] }[];
+	date?: string;
+	onChangeWithDay?: (
+		event: React.ChangeEvent<HTMLInputElement>,
+		day: number
+	) => void;
+	onChangeWithDate?: (
+		event: React.ChangeEvent<HTMLInputElement>,
+		date: string
+	) => void;
+	selected?: { day: number; hours: string[]; date?: string }[];
 }
 
-const SelectHoursCheckbox: React.FC<Props> = ({ day, onChange, selected }) => {
+const SelectHoursCheckbox: React.FC<Props> = ({
+	day,
+	date,
+	onChangeWithDay,
+	onChangeWithDate,
+	selected,
+}) => {
 	const isSelected = (day: number, hour: string) => {
 		let flag = false;
 
@@ -21,18 +35,25 @@ const SelectHoursCheckbox: React.FC<Props> = ({ day, onChange, selected }) => {
 		return flag;
 	};
 
+	const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (onChangeWithDay) {
+			return onChangeWithDay(event, day);
+		}
+		if (onChangeWithDate && date) {
+			return onChangeWithDate(event, date);
+		}
+	};
+
 	return (
 		<div className="flex w-full flex-col items-center">
 			<h3 className="mb-0.5 font-semibold text-gray-900">
-				{mapDayToString(day)}
+				{date ? `${date} - ${mapDayToString(day)}` : mapDayToString(day)}
 			</h3>
 			<ul className="mx-3 mb-2 flex w-5/6 items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900">
 				<li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
 					<div className="flex items-center pl-3">
 						<input
-							onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-								onChange(event, day)
-							}
+							onChange={changeHandler}
 							defaultChecked={selected && isSelected(day, "morning")}
 							id={`checkbox-morning-${day}`}
 							type="checkbox"
@@ -49,9 +70,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({ day, onChange, selected }) => {
 				<li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
 					<div className="flex items-center pl-3">
 						<input
-							onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-								onChange(event, day)
-							}
+							onChange={changeHandler}
 							defaultChecked={selected && isSelected(day, "15:30")}
 							id={`checkbox-15:30-${day}`}
 							type="checkbox"
@@ -68,9 +87,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({ day, onChange, selected }) => {
 				<li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
 					<div className="flex items-center pl-3">
 						<input
-							onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-								onChange(event, day)
-							}
+							onChange={changeHandler}
 							defaultChecked={selected && isSelected(day, "17:00")}
 							id={`checkbox-17:00-${day}`}
 							type="checkbox"

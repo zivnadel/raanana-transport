@@ -30,6 +30,10 @@ const Panel: React.FC = () => {
 		dashboardContext?.action({ type: "setLoadYear", payload: true });
 	};
 
+	const openViewWeekButtonClickedHandler = () => {
+		dashboardContext?.action({ type: "setShowViewWeek", payload: true });
+	};
+
 	return (
 		<div className="flex h-screen flex-col items-center text-center">
 			<h1 className="mb-2 mt-36 text-3xl font-semibold text-primary md:mt-20">
@@ -53,7 +57,9 @@ const Panel: React.FC = () => {
 						מחירון
 					</PanelButton>
 					<PanelButton>עדכון לו&quot;ז</PanelButton>
-					<PanelButton>צפייה בנתוני השבוע</PanelButton>
+					<PanelButton onClick={openViewWeekButtonClickedHandler}>
+						צפייה בנתוני השבוע
+					</PanelButton>
 					<PanelButton onClick={loadYearButtonClickedHandler}>
 						טעינת שנה&quot;ל
 					</PanelButton>

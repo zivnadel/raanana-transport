@@ -8,7 +8,10 @@ import { authOptions } from "./auth/[...nextauth]";
 const getPrices = async () => {
 	try {
 		const db = (await clientPromise).db();
-		const prices = await db.collection("prices").find().toArray();
+		const prices = await db
+			.collection("prices")
+			.find({}, { projection: { _id: 0 } })
+			.toArray();
 		return prices[0];
 	} catch (error: any) {
 		throw new Error(error);
@@ -53,12 +56,9 @@ export default async function handler(
 	const session = await unstable_getServerSession(req, res, authOptions);
 
 	if (!session) {
-		res
-			.status(401)
-			.json({
-				message:
-					"You must be logged in and authorized to access this resource!",
-			});
+		res.status(401).json({
+			message: "You must be logged in and authorized to access this resource!",
+		});
 		return;
 	}
 
@@ -69,7 +69,7 @@ export default async function handler(
 			const prices = await getPrices().catch((error) =>
 				res.status(500).json({ message: error.message })
 			);
-			return res.status(200).json({ prices });
+			return res.status(200).json(prices);
 
 		case "PUT":
 			const response = await putPrices(req.body).catch((error) => {

@@ -2,6 +2,7 @@ import React from "react";
 import { DashboardContext } from "../../store/DashboardContext";
 import { deleteOne } from "../../utils/http";
 import Button from "../ui/buttons/Button";
+import ErrorParagraph from "../ui/ErrorParagraph";
 import Input from "../ui/inputs/Input";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
@@ -66,7 +67,7 @@ const RemovePupil: React.FC = () => {
 						label="שם מלא"
 					/>
 					{showError && (
-						<p className="p-3 font-medium text-red-500">!משתמש זה אינו קיים</p>
+						<ErrorParagraph error="!תלמיד זה אינו קיים"/>
 					)}
 					<Button type="submit" className="my-5">
 						הסרה

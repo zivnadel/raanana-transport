@@ -1,3 +1,4 @@
+import { WithId } from "mongodb";
 import {
 	GetServerSideProps,
 	InferGetServerSidePropsType,
@@ -8,15 +9,17 @@ import ActiveWindow from "../../components/dashboard/ActiveWindow";
 import Panel from "../../components/dashboard/Panel";
 import clientPromise from "../../lib/mongodb";
 import { DashboardContextProvider } from "../../store/DashboardContext";
+import DateObjectType from "../../types/DateObjectType";
+import { toIsraelDate, toNormalDateString } from "../../utils/dateUtils";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 const Dashboard: NextPage<
 	InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ initialPrices }) => {
+> = ({ initialPrices, initialDate }) => {
 	return (
 		<DashboardContextProvider>
 			<Panel />
-			<ActiveWindow initialPrices={initialPrices} />
+			<ActiveWindow initialPrices={initialPrices} initialDate={initialDate} />
 		</DashboardContextProvider>
 	);
 };
@@ -39,14 +42,39 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 
 		const db = (await clientPromise).db();
-		const initialPrices: any = await db.collection("prices").find().toArray();
 
-		delete initialPrices[0]._id;
+		// fetching the initial prices for edit prices
+		const initialPrices = (
+			await db
+				.collection("prices")
+				.find({}, { projection: { _id: 0 } })
+				.toArray()
+		)[0];
+
+		// fetching the current date if in the range from db, for edit week and edit day
+		let initialDate: WithId<DateObjectType> | null;
+		const today = toIsraelDate(new Date());
+		if (
+			today <= toIsraelDate(new Date("2023-06-20")) &&
+			today >= toIsraelDate(new Date("2022-09-01"))
+		) {
+			initialDate = await db
+				.collection<DateObjectType>("dates")
+				.findOne(
+					{ date: toNormalDateString(today) },
+					{ projection: { _id: 0 } }
+				);
+		} else {
+			initialDate = await db
+				.collection<DateObjectType>("dates")
+				.findOne({ date: "2022/9/1" }, { projection: { _id: 0 } });
+		}
 
 		return {
 			props: {
 				session,
-				initialPrices: JSON.parse(JSON.stringify(initialPrices[0])),
+				initialPrices,
+				initialDate,
 			},
 		};
 	} catch (error: any) {

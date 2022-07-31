@@ -7,7 +7,7 @@ import PupilObjectType from "../../types/PupilObjectType";
 import DateObjectType from "../../types/DateObjectType";
 import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
 import PricesObjectType from "../../types/PricesObjectType";
-import { Db } from "mongodb";
+import { AnyBulkWriteOperation, Db, Document, WithId } from "mongodb";
 
 const cors = Cors({
 	origin: process.env.VERCEL_URL,
@@ -77,11 +77,14 @@ const deletePupil = async (body: string) => {
 	try {
 		const { name } = JSON.parse(body) as { name: string };
 		const db = (await clientPromise).db();
-		const response = await db.collection("pupils").deleteOne({ name });
-		if (response.acknowledged) {
-			await updateSchedule("delete", db, undefined, name);
+		const pupil = await db
+			.collection<PupilObjectType>("pupils")
+			.findOne({ name });
+		const deleteResponse = await db.collection("pupils").deleteOne({ name });
+		if (deleteResponse.deletedCount > 0) {
+			await updateSchedule("delete", db, pupil!);
 		}
-		return { status: "Success" };
+		return { status: "Success", deletedCount: deleteResponse.deletedCount };
 	} catch (error: any) {
 		throw new Error(error);
 	}
@@ -185,13 +188,14 @@ const deletePupilFromSchedule = (
 const updateSchedule = async (
 	actionType: "delete" | "add" | "edit",
 	db: Db,
-	pupil?: PupilObjectType,
-	pupilName?: string
+	pupil: PupilObjectType
 ) => {
 	try {
+		const days = pupil?.schedule.map((scheduleDay) => scheduleDay.day);
+		console.log(days)
 		const dates = await db
 			.collection<DateObjectType>("dates")
-			.find({})
+			.find({ day: { $in: days } })
 			.toArray();
 		const prices = (
 			await db.collection<PricesObjectType>("prices").find({}).toArray()
@@ -204,7 +208,7 @@ const updateSchedule = async (
 				datesToUpdate = addPupilToSchedule(dates, pupil!, prices);
 				break;
 			case "delete":
-				datesToUpdate = deletePupilFromSchedule(dates, pupilName!, prices);
+				datesToUpdate = deletePupilFromSchedule(dates, pupil!.name, prices);
 				break;
 			case "edit":
 				const datesAfterDeletion = deletePupilFromSchedule(
@@ -216,16 +220,49 @@ const updateSchedule = async (
 				break;
 		}
 
-		const deleteResponse = await db.collection("dates").deleteMany({});
-		if (deleteResponse.deletedCount > 0) {
-			const response = await db.collection("dates").insertMany(datesToUpdate);
-			return response;
-		} else {
-			throw new Error("Error deleting documents!");
-		}
+		const bulkData: AnyBulkWriteOperation<DateObjectType | Document>[] =
+			datesToUpdate.map((dateToUpdate) => {
+				return {
+					updateOne: {
+						filter: { date: dateToUpdate.date },
+						update: {
+							$set: {
+								transportations: dateToUpdate.transportations,
+								totalAmount: dateToUpdate.totalAmount,
+							},
+						},
+					},
+				};
+			});
+
+		const response = await db.collection("dates").bulkWrite(bulkData);
+
+		return response;
+
+		// const ids = dates.map((date) => date._id);
+
+		// const deleteResponse = await db
+		// 	.collection<DateObjectType>("dates")
+		// 	.deleteMany({ _id: { $in: ids } });
+
+		// if (deleteResponse.deletedCount > 0) {
+		// 	const response = await db.collection("dates").insertMany(datesToUpdate);
+		// 	return response;
+		// } else {
+		// 	throw new Error("Error deleting documents!");
+		// }
 	} catch (error: any) {
 		throw new Error(error);
 	}
+};
+
+const getPupilsByDayAndHour = async (day: number, hour: string) => {
+	const db = (await clientPromise).db();
+	const pupils = await db
+		.collection<PupilObjectType>("pupils")
+		.find({ schedule: { $elemMatch: { day, hours: hour } } })
+		.toArray();
+	return pupils.map((pupil) => pupil.name);
 };
 
 export default async function handler(
@@ -245,11 +282,21 @@ export default async function handler(
 
 	switch (req.method) {
 		case "GET": {
-			const { pupilName } = req.query;
-			const response = await getPupil(pupilName).catch((error) => {
-				return res.status(500).json({ message: error.message });
-			});
-			return res.status(200).json({ response });
+			const { pupilName, day, hour } = req.query;
+			let response: any;
+			if (pupilName) {
+				response = await getPupil(pupilName).catch((error) => {
+					return res.status(500).json({ message: error.message });
+				});
+			} else if (day && hour) {
+				response = await getPupilsByDayAndHour(+day, hour.toString()).catch(
+					(error) => {
+						return res.status(500).json({ message: error.message });
+					}
+				);
+			}
+
+			return res.status(200).json(response);
 		}
 
 		case "POST": {

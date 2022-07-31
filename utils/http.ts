@@ -1,10 +1,10 @@
-export async function get<T>(url: string, headers?: HeadersInit): Promise<T> {
+export async function get<T>(url: string, headers?: HeadersInit) {
 	const response = await fetch(url, { method: "GET", headers });
 	if (!response.ok) {
 		throw new Error(response.statusText);
 	} else {
-		const data = (await response.json()) as Promise<{ response: T }>;
-		return (await data).response;
+		const data = await (response.json() as Promise<T>);
+		return data;
 	}
 }
 

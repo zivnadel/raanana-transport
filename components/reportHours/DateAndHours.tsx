@@ -65,7 +65,6 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 		};
 
 		const dateChangedHandler = async () => {
-			// TODO: upgrade datepicker to also block holidays and so on
 			const day = new Date(dateInputRef.current!.value).getDay() + 1;
 			if (day === 6 || day === 7) {
 				setErrorMessage("בימי שישי ושבת אין הסעות! הכנס תאריך מתאים");

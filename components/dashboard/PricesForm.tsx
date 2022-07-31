@@ -25,7 +25,7 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 
 	const priceChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setCurrentPrices((prevState) => {
-			return { ...prevState, [event.target.id]: parseInt(event.target.value) };
+			return { ...prevState, [event.target.id]: +event.target.value };
 		});
 	};
 
@@ -59,7 +59,9 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 	};
 
 	return (
-		<Modal onDismiss={onModalDismissedHandler} heading="מחירים">
+		<Modal
+			onDismiss={onModalDismissedHandler}
+			heading={!isLoading ? "מחירים" : ""}>
 			{isLoading && <LoadingSpinner />}
 			{initialPrices && !isLoading && (
 				<div className="flex flex-col items-center">

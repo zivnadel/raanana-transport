@@ -5,6 +5,7 @@ export interface DashboardContextType {
 	showPrices: boolean;
 	showAddEditPupil: boolean;
 	showRemovePupil: boolean;
+	showViewWeek: boolean;
 	loadYear: boolean;
 	prices: PricesObjectType;
 	action: Dispatch<SetStateAction<any>>;
@@ -18,6 +19,7 @@ const initialState = {
 	showAddEditPupil: false,
 	showRemovePupil: false,
 	showPrices: false,
+	showViewWeek: false,
 	loadYear: false,
 	prices: { p8: 0, p16: 0, p20: 0, p23: 0, morning: 0 },
 };
@@ -27,7 +29,8 @@ type ACTIONTYPE =
 	| { type: "setPrices"; payload: PricesObjectType }
 	| { type: "setShowAddEditPupil"; payload: boolean }
 	| { type: "setShowRemovePupil"; payload: boolean }
-	| { type: "setLoadYear"; payload: boolean };
+	| { type: "setLoadYear"; payload: boolean }
+	| { type: "setShowViewWeek"; payload: boolean };
 
 const reducer = (state: typeof initialState, action: ACTIONTYPE) => {
 	switch (action.type) {
@@ -41,6 +44,8 @@ const reducer = (state: typeof initialState, action: ACTIONTYPE) => {
 			return { ...state, showRemovePupil: action.payload };
 		case "setLoadYear":
 			return { ...state, loadYear: action.payload };
+		case "setShowViewWeek":
+			return { ...state, showViewWeek: action.payload };
 		default:
 			throw new Error();
 	}
@@ -53,6 +58,7 @@ export const DashboardContextProvider: React.FC = ({ children }) => {
 		showPrices: state.showPrices,
 		showRemovePupil: state.showRemovePupil,
 		showAddEditPupil: state.showAddEditPupil,
+		showViewWeek: state.showViewWeek,
 		loadYear: state.loadYear,
 		prices: state.prices,
 		action: dispatch,

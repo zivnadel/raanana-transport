@@ -7,6 +7,7 @@ import {
 	calculateBusType,
 	calculatePrice,
 	produceYearArray,
+	toIsraelDate,
 	toNormalDateString,
 } from "../../utils/dateUtils";
 import DateObjectType, {
@@ -15,6 +16,7 @@ import DateObjectType, {
 } from "../../types/DateObjectType";
 import PupilObjectType from "../../types/PupilObjectType";
 import PricesObjectType from "../../types/PricesObjectType";
+import { AnyBulkWriteOperation, Document, WithId } from "mongodb";
 
 // This function retrieves a date from the database.
 // If no date was specified, it returns all dates.
@@ -114,6 +116,48 @@ const initiateYear = async () => {
 	}
 };
 
+const getWeek = async (date: Date) => {
+	const transformedDate = date;
+	const db = (await clientPromise).db();
+	transformedDate.setDate(transformedDate.getDate() - transformedDate.getDay());
+
+	let daysOfTheWeek: string[] = [toNormalDateString(transformedDate)];
+	for (let i = 1; i < 5; i++) {
+		let nextDay = new Date(transformedDate);
+		nextDay.setDate(transformedDate.getDate() + i);
+		daysOfTheWeek.push(toNormalDateString(nextDay));
+	}
+	const week = await db
+		.collection<DateObjectType>("dates")
+		.find({
+			date: { $in: daysOfTheWeek },
+		})
+		.toArray();
+	return week;
+};
+
+const updateDates = async (dates: WithId<DateObjectType>[]) => {
+	const db = (await clientPromise).db();
+
+	const bulkData: AnyBulkWriteOperation<DateObjectType | Document>[] =
+		dates.map((date) => {
+			return {
+				updateOne: {
+					filter: { date: date.date },
+					update: {
+						$set: {
+							transportations: date.transportations,
+							totalAmount: date.totalAmount,
+						},
+					},
+				},
+			};
+		});
+
+	const response = await db.collection("dates").bulkWrite(bulkData);
+	return response;
+};
+
 const cors = Cors({
 	origin: process.env.VERCEL_URL,
 });
@@ -150,14 +194,28 @@ export default async function handler(
 
 	switch (req.method) {
 		case "GET": {
-			const { date } = req.query;
-			const response = await getDate(new Date(date!.toLocaleString())).catch(
-				(error) => res.status(500).json({ message: error.message })
-			);
-			return res.status(200).json({ response });
+			const { date, week } = req.query;
+			let response: any;
+			if (date) {
+				response = await getDate(new Date(date!.toLocaleString())).catch(
+					(error) => res.status(500).json({ message: error.message })
+				);
+			}
+			if (week) {
+				response = await getWeek(new Date(week!.toLocaleString())).catch(
+					(error) => {
+						res.status(500).json({ message: error.message });
+					}
+				);
+			}
+			return res.status(200).json(response);
 		}
-		case "POST": {
-			// TODO: create edit schedule post request
+		case "PATCH": {
+			const data = JSON.parse(req.body) as WithId<DateObjectType>[];
+			const response = await updateDates(data).catch((error) => {
+				res.status(500).json({ message: error.message });
+			});
+			return res.status(200).json({ response });
 		}
 		case "PUT": {
 			const response = await initiateYear().catch((error) => {

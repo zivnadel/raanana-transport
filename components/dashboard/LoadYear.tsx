@@ -16,10 +16,12 @@ const LoadYear: React.FC = () => {
 		}, [])
 	);
 
-	if (!isLoading && !error) {
-		alert("טעינת שנת הלימודים בוצעה בהצלחה!");
-		dashboardContext?.action({ type: "setLoadYear", payload: false });
-	}
+	React.useEffect(() => {
+		if (!isLoading && !error) {
+			alert("טעינת שנת הלימודים בוצעה בהצלחה!");
+			dashboardContext?.action({ type: "setLoadYear", payload: false });
+		}
+	}, [isLoading, error]);
 
 	return (
 		<>

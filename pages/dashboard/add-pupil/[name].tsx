@@ -96,7 +96,7 @@ const AddPupil: NextPage<
 				name,
 				schedule: filteredHours,
 			});
-			alert("התלמיד נוסף בהצלחה!")
+			alert("התלמיד נוסף בהצלחה!");
 			await router.push("/dashboard");
 			setIsLoading(false);
 			setShowError(false);
@@ -136,7 +136,7 @@ const AddPupil: NextPage<
 							/>
 							{[1, 2, 3, 4, 5].map((day) => (
 								<SelectHoursCheckbox
-									onChange={onCheckboxCheckedHandler}
+									onChangeWithDay={onCheckboxCheckedHandler}
 									day={day}
 									key={day}
 								/>

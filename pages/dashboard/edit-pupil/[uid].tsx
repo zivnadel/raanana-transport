@@ -69,20 +69,22 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 		});
 	};
 
-	const clearEmptyDays = () => {
-		if (!hours || hours.length === 0) {
-			return null;
-		}
-		const filteredHours = hours!.filter((day) => day.hours.length > 0);
-		if (filteredHours.length === 0) {
-			return null;
-		}
-		return filteredHours;
-	};
+	// const clearEmptyDays = () => {
+	// 	if (!hours || hours.length === 0) {
+	// 		return [];
+	// 	}
+	// 	const filteredHours = hours!.filter((day) => day.hours.length > 0);
+	// 	console.log(filteredHours)
+	// 	if (filteredHours.length === 0) {
+	// 		return [];
+	// 	}
+	// 	return filteredHours;
+		
+	// };
 
 	const submitHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
-		const filteredHours = clearEmptyDays();
+		const filteredHours = hours; // ! TEMP
 		setIsLoading(true);
 		const pupilStillExists = await get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupil.name}`
@@ -119,7 +121,7 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 						/>
 						{[1, 2, 3, 4, 5].map((day) => (
 							<SelectHoursCheckbox
-								onChange={onCheckboxCheckedHandler}
+								onChangeWithDay={onCheckboxCheckedHandler}
 								day={day}
 								key={day}
 								selected={pupil.schedule}

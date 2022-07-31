@@ -11,7 +11,7 @@ export const produceYearArray = () => {
 	let yearArray: Date[] = new Array();
 	let currentDate = new Date(start);
 
-	while (currentDate < end) {
+	while (currentDate <= end) {
 		if (currentDate.getDay() !== 5 && currentDate.getDay() !== 6) {
 			yearArray.push(new Date(currentDate));
 		}
@@ -23,17 +23,20 @@ export const produceYearArray = () => {
 
 export const toNormalDateString = (date: Date) => {
 	let newDate = new Date(date.toUTCString());
-	newDate.setTime(
-		newDate.getTime() + Math.abs(date.getTimezoneOffset() * 60000)
-	);
+	newDate.setHours(newDate.getHours() - 3);
 	return `${newDate.getFullYear()}/${
 		newDate.getMonth() + 1
 	}/${newDate.getDate()}`;
 };
 
-export const toDate = (normalDateString: string) => {
-	let date = new Date(new Date(normalDateString).toUTCString());
-	date.setTime(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
+export const toIsraelDate = (normalDate: string | Date) => {
+	let date: Date;
+	if (typeof normalDate === "string") {
+		date = new Date(new Date(normalDate).toUTCString());
+	} else {
+		date = normalDate;
+	}
+	date.setHours(date.getHours() - 3);
 	return date;
 };
 
