@@ -53,11 +53,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 		// fetching the current date if in the range from db, for edit week and edit day
 		let initialDate: WithId<DateObjectType> | null;
-		const today = toIsraelDate(new Date());
-		if (
-			today <= toIsraelDate(new Date("2023-06-20")) &&
-			today >= toIsraelDate(new Date("2022-09-01"))
-		) {
+		const today = new Date();
+		if (today <= new Date("2023-06-20") && today >= new Date("2022-09-01")) {
 			initialDate = await db
 				.collection<DateObjectType>("dates")
 				.findOne(

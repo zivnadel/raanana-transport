@@ -77,7 +77,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 	};
 
 	const dateChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCurrentWeekDate(toIsraelDate(event.target.value));
+		setCurrentWeekDate(new Date(event.target.value));
 	};
 
 	const onCheckboxCheckedHandler = (
@@ -175,7 +175,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 			)}
 			{!isLoading && currentWeek.length !== 0 && (
 				<>
-					<div className="p-6">
+					<div className="py-6">
 						{modeledWeek.map((day) => (
 							<SelectHoursCheckbox
 								onChangeWithDate={onCheckboxCheckedHandler}
