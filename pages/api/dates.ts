@@ -7,7 +7,6 @@ import {
 	calculateBusType,
 	calculatePrice,
 	produceYearArray,
-	toIsraelDate,
 	toNormalDateString,
 } from "../../utils/dateUtils";
 import DateObjectType, {

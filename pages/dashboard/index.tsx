@@ -10,7 +10,7 @@ import Panel from "../../components/dashboard/Panel";
 import clientPromise from "../../lib/mongodb";
 import { DashboardContextProvider } from "../../store/DashboardContext";
 import DateObjectType from "../../types/DateObjectType";
-import { toIsraelDate, toNormalDateString } from "../../utils/dateUtils";
+import { toNormalDateString } from "../../utils/dateUtils";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 const Dashboard: NextPage<

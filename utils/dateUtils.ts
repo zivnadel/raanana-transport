@@ -29,16 +29,16 @@ export const toNormalDateString = (date: Date) => {
 	}/${newDate.getDate()}`;
 };
 
-export const toIsraelDate = (normalDate: string | Date) => {
-	let date: Date;
-	if (typeof normalDate === "string") {
-		date = new Date(new Date(normalDate).toUTCString());
-	} else {
-		date = normalDate;
-	}
-	date.setHours(date.getHours() - 3);
-	return date;
-};
+// export const toIsraelDate = (normalDate: string | Date) => {
+// 	let date: Date;
+// 	if (typeof normalDate === "string") {
+// 		date = new Date(new Date(normalDate).toUTCString());
+// 	} else {
+// 		date = normalDate;
+// 	}
+// 	date.setHours(date.getHours() - 3);
+// 	return date;
+// };
 
 export const calculateBusType = (numOfPupils: number): busType[] => {
 	if (numOfPupils === 0) {

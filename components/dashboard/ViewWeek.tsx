@@ -3,11 +3,9 @@ import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import { DashboardContext } from "../../store/DashboardContext";
 import DateObjectType from "../../types/DateObjectType";
 import PricesObjectType from "../../types/PricesObjectType";
-import PupilObjectType from "../../types/PupilObjectType";
 import {
 	calculateBusType,
 	calculatePrice,
-	toIsraelDate,
 } from "../../utils/dateUtils";
 import { get, patch } from "../../utils/http";
 import Button from "../ui/buttons/Button";
@@ -38,6 +36,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 	};
 
 	React.useEffect(() => {
+		console.log(initialDate);
 		(async () => {
 			setIsLoading(true);
 			const response = await get<DateObjectType[]>(
