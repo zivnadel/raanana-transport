@@ -2,10 +2,10 @@ import "../styles/globals.css";
 
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/ui/Navbar";
 import Head from "next/head";
 import ErrorBoundary from "../components/ErrorBoundary";
-import Footer from "../components/Footer";
+import Footer from "../components/ui/Footer";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 	return (

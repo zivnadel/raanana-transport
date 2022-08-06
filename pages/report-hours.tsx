@@ -5,9 +5,9 @@ import ReportHoursInput from '../components/reportHours/ReportHoursInput';
 import DoubleRadioGroup from '../components/reportHours/DoubleRadioGroup';
 import DateAndHours from '../components/reportHours/DateAndHours';
 
-// IMPORTANT: This form uses state mechanism of multiple refs and states for storing
-// and managing values. This is a bit bloated but works well !-MAY-! change in the future
-// to a store (context/redux) based solution in the future
+// ! IMPORTANT: This form uses state mechanism of multiple refs and states for storing
+// ! and managing values. This is a bit bloated but works well !-MAY-! change in the future
+// ! to a store (context/redux) based solution in the future
 
 const ReportHours: NextPage = () => {
   // States for managing validation of form
