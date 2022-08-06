@@ -16,29 +16,27 @@ const Login: NextPage<
 	const router = useRouter();
 
 	return (
-		<div className="h-screen">
-			<Modal
-				onDismiss={() => {
-					router.push("/");
-				}}>
-				<h1 className="m-5 text-center text-3xl font-semibold text-primary">
-					לחץ למעבר לדף ההתחברות
-				</h1>
-				<div className="w-full text-center">
-					{Object.values(providers).map((provider: any) => (
-						<div key={provider.name}>
-							<Button
-								className="my-5 w-4/6"
-								onClick={() =>
-									signIn(provider.id, { callbackUrl: "/dashboard" })
-								}>
-								{provider.name} התחבר באמצעות
-							</Button>
-						</div>
-					))}
-				</div>
-			</Modal>
-		</div>
+		<Modal
+			onDismiss={() => {
+				router.push("/");
+			}}>
+			<h1 className="m-5 text-center text-3xl font-semibold text-primary">
+				לחץ למעבר לדף ההתחברות
+			</h1>
+			<div className="w-full text-center">
+				{Object.values(providers).map((provider: any) => (
+					<div key={provider.name}>
+						<Button
+							className="my-5 w-4/6"
+							onClick={() =>
+								signIn(provider.id, { callbackUrl: "/dashboard" })
+							}>
+							{provider.name} התחבר באמצעות
+						</Button>
+					</div>
+				))}
+			</div>
+		</Modal>
 	);
 };
 

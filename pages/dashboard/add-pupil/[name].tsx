@@ -106,7 +106,7 @@ const AddPupil: NextPage<
 	};
 
 	return (
-		<div className="h-screen">
+		<>
 			{existing && (
 				<Modal
 					className="text-center"
@@ -154,7 +154,7 @@ const AddPupil: NextPage<
 					)}
 				</Modal>
 			)}
-		</div>
+		</>
 	);
 };
 

@@ -1,12 +1,10 @@
+import e from "cors";
 import React from "react";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import { DashboardContext } from "../../store/DashboardContext";
-import DateObjectType from "../../types/DateObjectType";
+import DateObjectType, { busType } from "../../types/DateObjectType";
 import PricesObjectType from "../../types/PricesObjectType";
-import {
-	calculateBusType,
-	calculatePrice,
-} from "../../utils/dateUtils";
+import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
 import { get, patch } from "../../utils/http";
 import Button from "../ui/buttons/Button";
 import ErrorParagraph from "../ui/ErrorParagraph";
@@ -102,10 +100,12 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 	const submitClickedHandler = async () => {
 		setIsLoading(true);
 		const prices = await get<PricesObjectType>("/api/prices");
-
-		let weekData: DateObjectType[] = JSON.parse(JSON.stringify(currentWeek));
+		let weekData: typeof currentWeek = JSON.parse(JSON.stringify(currentWeek));
+		const modeledWeekCopy: typeof modeledWeek = JSON.parse(
+			JSON.stringify(modeledWeek)
+		);
 		weekData.map((day) => {
-			modeledWeek.map((modeledDay) => {
+			modeledWeekCopy.map((modeledDay) => {
 				if (day.date === modeledDay.date) {
 					Object.keys(day.transportations).map((hour) => {
 						if (!modeledDay.hours.includes(hour)) {
@@ -122,13 +122,20 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 								`/api/pupils?day=${day.day}&hour=${hour}`
 							);
 
-							const busType = calculateBusType(pupils.length);
-							const price = calculatePrice(busType, prices);
+							let dayBusType: busType[] = [];
+
+							if (hour === "morning") {
+								dayBusType = [busType.morning];
+							} else {
+								dayBusType = calculateBusType(pupils.length);
+							}
+
+							const price = calculatePrice(dayBusType, prices);
 
 							day.transportations[hour as keyof typeof day.transportations] = {
-								pupils: pupils,
-								busType: busType,
-								price: price,
+								pupils,
+								busType: dayBusType,
+								price,
 							};
 
 							day.totalAmount += price;
@@ -137,7 +144,9 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 				}
 			});
 		});
+
 		const response = await patch("/api/dates", weekData);
+
 		setIsLoading(false);
 	};
 

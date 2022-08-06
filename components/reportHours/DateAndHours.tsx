@@ -65,9 +65,15 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 		};
 
 		const dateChangedHandler = async () => {
-			const day = new Date(dateInputRef.current!.value).getDay() + 1;
-			if (day === 6 || day === 7) {
-				setErrorMessage("בימי שישי ושבת אין הסעות! הכנס תאריך מתאים");
+			const date = new Date(dateInputRef.current!.value);
+			const day = date.getDay() + 1;
+			if (
+				day === 6 ||
+				day === 7 ||
+				date < new Date("2022-09-01") ||
+				date > new Date("2023-06-20")
+			) {
+				setErrorMessage("בתאריך זה אין הסעות! הכנס תאריך מתאים");
 				setShowErrorStyles(true);
 
 				// setIsEmpty is actually indicator for error so

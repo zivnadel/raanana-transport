@@ -192,7 +192,6 @@ const updateSchedule = async (
 ) => {
 	try {
 		const days = pupil?.schedule.map((scheduleDay) => scheduleDay.day);
-		console.log(days)
 		const dates = await db
 			.collection<DateObjectType>("dates")
 			.find({ day: { $in: days } })

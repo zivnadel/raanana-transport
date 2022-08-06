@@ -20,12 +20,12 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 			<header>
 				<Navbar />
 			</header>
-			<main>
+			<main className="h-[95vh]">
 				<SessionProvider session={session}>
 					<Component {...pageProps} />
 				</SessionProvider>
 			</main>
-			<footer>
+			<footer className="h-[5vh]">
 				<Footer />
 			</footer>
 		</ErrorBoundary>
