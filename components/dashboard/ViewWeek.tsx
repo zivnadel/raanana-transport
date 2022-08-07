@@ -102,8 +102,8 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 		const prices = await get<PricesObjectType>("/api/prices");
 		let weekData: typeof currentWeek = JSON.parse(JSON.stringify(currentWeek));
 
-		weekData.map((day) => {
-			modeledWeek.map((modeledDay) => {
+		for (let day of weekData) {
+			for (let modeledDay of modeledWeek) {
 				if (day.date === modeledDay.date) {
 					Object.keys(day.transportations).map((hour) => {
 						if (!modeledDay.hours.includes(hour)) {
@@ -112,7 +112,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 							];
 						}
 					});
-					modeledDay.hours.map(async (hour) => {
+					for (let hour of modeledDay.hours) {
 						if (
 							!day.transportations[hour as keyof typeof day.transportations]
 						) {
@@ -138,12 +138,12 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 
 							day.totalAmount += price;
 						}
-					});
+					}
 				}
-			});
-		});
+			}
+		}
 
-		const response = await patch("/api/dates", weekData);
+		await patch("/api/dates", weekData);
 
 		setIsLoading(false);
 	};
