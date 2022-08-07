@@ -42,14 +42,12 @@ const initiateYear = async () => {
 			.find({})
 			.toArray();
 
-		console.log("PUPILS");
 
 		// returieve prices to calculate the prices
 		const prices = (
 			await db.collection<PricesObjectType>("prices").find({}).toArray()
 		)[0];
 
-		console.log("PRICES");
 
 		// TODO: fetch week schedule
 
@@ -108,10 +106,8 @@ const initiateYear = async () => {
 		});
 
 		const deleteResponse = await db.collection("dates").deleteMany({});
-		if (deleteResponse.acknowledged) {
-			console.log("DELETED");
+		if (deleteResponse.acknowledged && deleteResponse.deletedCount > 0) {
 			const response = await db.collection("dates").insertMany(year);
-			console.log("INSERTED");
 			return response;
 		} else {
 			throw new Error("Error deleting documents!");
