@@ -27,7 +27,7 @@ const DisabledInput: React.FC<Props> = ({
 				<input
 					type="text"
 					id={id}
-					className="text-right"
+					className="text-right bg-transparent"
 					value={value}
 					disabled
 					required

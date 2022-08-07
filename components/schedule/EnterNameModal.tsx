@@ -2,6 +2,7 @@ import React from "react";
 import PupilObjectType from "../../types/PupilObjectType";
 import { get } from "../../utils/http";
 import Button from "../ui/buttons/Button";
+import ErrorParagraph from "../ui/ErrorParagraph";
 import Input from "../ui/inputs/Input";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
@@ -22,6 +23,7 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 	const [lastNameError, setLastNameError] = React.useState<string | undefined>(
 		undefined
 	);
+	const [pupilDoesntExist, setPupilDoesntExist] = React.useState(false);
 
 	const [isLoading, setIsLoading] = React.useState(false);
 
@@ -51,6 +53,10 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 		);
 		setIsLoading(false);
 
+		if (!pupil) {
+			return setPupilDoesntExist(true);
+		}
+
 		localStorage.setItem("schedulePupilName", pupil.name);
 		setPupil(pupil);
 
@@ -72,6 +78,7 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 						onChange={(e) => {
 							setFirstName(e.target.value);
 							setFirstNameError(undefined);
+							setPupilDoesntExist(false);
 						}}
 						value={firstName}
 						required={true}
@@ -85,13 +92,17 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 						onChange={(e) => {
 							setLastName(e.target.value);
 							setLastNameError(undefined);
+							setPupilDoesntExist(false);
 						}}
 						value={lastName}
 						required={true}
 						error={lastNameError}
 						className="w-full"
 					/>
-					<Button type="submit">אישור</Button>
+					{pupilDoesntExist && <ErrorParagraph error="!תלמיד זה אינו קיים" />}
+					<Button type="submit" className={pupilDoesntExist ? "mt-0" : ""}>
+						אישור
+					</Button>
 				</form>
 			)}
 		</Modal>
