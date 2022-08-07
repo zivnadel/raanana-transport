@@ -321,7 +321,7 @@ export default async function handler(
 		}
 
 		default: {
-			res
+			return res
 				.status(405)
 				.end(`Method ${req.method} doesn't exist or it is not allowed.`);
 		}

@@ -77,7 +77,7 @@ export default async function handler(
 			});
 			return res.status(201).json({ response });
 		default: {
-			res
+			return res
 				.status(405)
 				.end(`Method ${req.method} doesn't exist or it is not allowed.`);
 		}

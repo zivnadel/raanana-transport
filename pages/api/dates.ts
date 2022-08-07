@@ -42,12 +42,10 @@ const initiateYear = async () => {
 			.find({})
 			.toArray();
 
-
-		// returieve prices to calculate the prices
+		// retrieve prices to calculate the prices
 		const prices = (
 			await db.collection<PricesObjectType>("prices").find({}).toArray()
 		)[0];
-
 
 		// TODO: fetch week schedule
 
@@ -221,10 +219,10 @@ export default async function handler(
 			const response = await initiateYear().catch((error) => {
 				res.status(500).json({ message: error.message });
 			});
-			res.status(201).json({ response });
+			return res.status(201).json({ response });
 		}
 		default: {
-			res
+			return res
 				.status(405)
 				.end(`Method ${req.method} doesn't exist or it is not allowed.`);
 		}
