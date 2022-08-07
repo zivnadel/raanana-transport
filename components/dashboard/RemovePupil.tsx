@@ -1,6 +1,6 @@
 import React from "react";
 import { DashboardContext } from "../../store/DashboardContext";
-import { deleteOne } from "../../utils/http";
+import { _delete } from "../../utils/http";
 import Button from "../ui/buttons/Button";
 import ErrorParagraph from "../ui/ErrorParagraph";
 import Input from "../ui/inputs/Input";
@@ -31,7 +31,7 @@ const RemovePupil: React.FC = () => {
 			return;
 		}
 		setIsLoading(true);
-		const { response } = await deleteOne("/api/pupils", { name });
+		const { response } = await _delete("/api/pupils", { name });
 		setIsLoading(false);
 
 		if (response.deletedCount === 0) {

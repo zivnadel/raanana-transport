@@ -1,7 +1,8 @@
 import React, { ForwardRefExoticComponent, useImperativeHandle } from "react";
 import { Dispatch, SetStateAction, useState, useRef } from "react";
 import DateObjectType from "../../types/DateObjectType";
-import { get } from "../../utils/http";
+import { calculateLearningYear } from "../../utils/dateUtils";
+import { _get } from "../../utils/http";
 
 interface Props {
 	setIsEmpty: Dispatch<SetStateAction<boolean>>;
@@ -41,7 +42,7 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 			setIsEmpty(true);
 			setIsLoading(true);
 
-			const response = await get<DateObjectType>(
+			const response = await _get<DateObjectType>(
 				`/api/dates/?date=${new Date(dateInputRef.current?.value!)}`
 			);
 
@@ -67,11 +68,12 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 		const dateChangedHandler = async () => {
 			const date = new Date(dateInputRef.current!.value);
 			const day = date.getDay() + 1;
+			const year = calculateLearningYear();
 			if (
 				day === 6 ||
 				day === 7 ||
-				date < new Date("2022-09-01") ||
-				date > new Date("2023-06-20")
+				date < new Date(`${year}-09-01`) ||
+				date > new Date(`${year + 1}-06-20`)
 			) {
 				setErrorMessage("בתאריך זה אין הסעות! הכנס תאריך מתאים");
 				setShowErrorStyles(true);
@@ -98,8 +100,8 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 					ref={dateInputRef}
 					onChange={dateChangedHandler}
 					type="date"
-					min="2022-09-01"
-					max="2023-06-20"
+					min={`${calculateLearningYear()}-09-01`}
+					max={`${calculateLearningYear() + 1}-06-20`}
 					className={`mb-2 block w-full border-0 border-b-2 bg-transparent px-0 py-3 text-right text-sm text-gray-900 ${
 						showErrorStyles
 							? "border-secondary text-secondary focus:border-secondary"

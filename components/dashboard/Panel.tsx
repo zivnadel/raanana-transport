@@ -44,7 +44,7 @@ const Panel: React.FC = () => {
 				id="dropdownDefault"
 				data-dropdown-toggle="dropdown"
 				className="m-3 inline-flex items-center rounded-lg bg-gradient-to-r from-primary to-secondary px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 md:hidden">
-				תפריט <FaChevronDown className="ml-2" />
+				תפריט הניהול <FaChevronDown className="ml-2" />
 			</button>
 			<div
 				className={`z-10 flex-col ${

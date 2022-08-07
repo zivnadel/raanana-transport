@@ -3,8 +3,12 @@ import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import { DashboardContext } from "../../store/DashboardContext";
 import DateObjectType, { busType } from "../../types/DateObjectType";
 import PricesObjectType from "../../types/PricesObjectType";
-import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
-import { get, patch } from "../../utils/http";
+import {
+	calculateBusType,
+	calculateLearningYear,
+	calculatePrice,
+} from "../../utils/dateUtils";
+import { _get, _patch } from "../../utils/http";
 import Button from "../ui/buttons/Button";
 import ErrorParagraph from "../ui/ErrorParagraph";
 import LoadingSpinner from "../ui/LoadingSpinner";
@@ -35,7 +39,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 	React.useEffect(() => {
 		(async () => {
 			setIsLoading(true);
-			const response = await get<DateObjectType[]>(
+			const response = await _get<DateObjectType[]>(
 				`/api/dates?week=${currentWeekDate}`
 			).catch((error) => setError(error));
 			if (response) {
@@ -98,7 +102,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 
 	const submitClickedHandler = async () => {
 		setIsLoading(true);
-		const prices = await get<PricesObjectType>("/api/prices");
+		const prices = await _get<PricesObjectType>("/api/prices");
 		let weekData: typeof currentWeek = JSON.parse(JSON.stringify(currentWeek));
 
 		for (let day of weekData) {
@@ -115,7 +119,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 						if (
 							!day.transportations[hour as keyof typeof day.transportations]
 						) {
-							const pupils = await get<string[]>(
+							const pupils = await _get<string[]>(
 								`/api/pupils?day=${day.day}&hour=${hour}`
 							);
 
@@ -142,9 +146,9 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 			}
 		}
 
-		await patch("/api/dates", weekData);
+		await _patch("/api/dates", weekData);
 
-		alert("עדכון נתוני השבוע בוצע בהצלחה!")
+		alert("עדכון נתוני השבוע בוצע בהצלחה!");
 
 		setIsLoading(false);
 	};
@@ -163,8 +167,8 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 						/>
 						<input
 							type="date"
-							min="2022-09-01"
-							max="2023-06-20"
+							min={`${calculateLearningYear()}-09-01`}
+							max={`${calculateLearningYear() + 1}-06-20`}
 							onChange={dateChangedHandler}
 							value={`${currentWeekDate.getFullYear()}-${(
 								"0" +

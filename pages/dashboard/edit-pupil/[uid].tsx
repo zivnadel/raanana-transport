@@ -14,7 +14,7 @@ import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import Modal from "../../../components/ui/modals/Modal";
 import clientPromise from "../../../lib/mongodb";
 import PupilObjectType from "../../../types/PupilObjectType";
-import { get, patch } from "../../../utils/http";
+import { _get, _patch } from "../../../utils/http";
 import { authOptions } from "../../api/auth/[...nextauth]";
 
 interface Props {
@@ -86,13 +86,13 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 		event.preventDefault();
 		const filteredHours = hours; // ! TEMP
 		setIsLoading(true);
-		const pupilStillExists = await get<PupilObjectType>(
+		const pupilStillExists = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupil.name}`
 		);
 		setIsLoading(false);
 		if (filteredHours !== null && pupilStillExists) {
 			setIsLoading(true);
-			const response = await patch("/api/pupils", {
+			const response = await _patch("/api/pupils", {
 				name: pupil.name,
 				schedule: filteredHours,
 			});

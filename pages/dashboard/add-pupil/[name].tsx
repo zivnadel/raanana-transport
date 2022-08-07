@@ -13,7 +13,7 @@ import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import Modal from "../../../components/ui/modals/Modal";
 import clientPromise from "../../../lib/mongodb";
 import PupilObjectType from "../../../types/PupilObjectType";
-import { get, post } from "../../../utils/http";
+import { _get, _post } from "../../../utils/http";
 import { authOptions } from "../../api/auth/[...nextauth]";
 
 const AddPupil: NextPage<
@@ -88,11 +88,11 @@ const AddPupil: NextPage<
 		event.preventDefault();
 		setIsLoading(true);
 		const filteredHours = clearEmptyDays();
-		const pupil = await get<PupilObjectType>(`/api/pupils?pupilName=${name}`);
+		const pupil = await _get<PupilObjectType>(`/api/pupils?pupilName=${name}`);
 		setIsLoading(false);
 		if (filteredHours !== null && !pupil) {
 			setIsLoading(true);
-			const response = await post("/api/pupils", {
+			const response = await _post("/api/pupils", {
 				name,
 				schedule: filteredHours,
 			});

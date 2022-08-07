@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { DashboardContext } from "../../store/DashboardContext";
 import PupilObjectType from "../../types/PupilObjectType";
-import { get } from "../../utils/http";
+import { _get } from "../../utils/http";
 import Button from "../ui/buttons/Button";
 import Input from "../ui/inputs/Input";
 import LoadingSpinner from "../ui/LoadingSpinner";
@@ -25,7 +25,7 @@ const AddEditPupil: React.FC = () => {
 	const submitNameClickedHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 		setIsLoading(true);
-		const pupil = await get<PupilObjectType>(
+		const pupil = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupilName}`
 		);
 		setSubmitClicked(true);

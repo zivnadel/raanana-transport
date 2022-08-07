@@ -8,7 +8,7 @@ import DisabledInput from "../components/ui/inputs/DisabledInput";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import Modal from "../components/ui/modals/Modal";
 import PupilObjectType from "../types/PupilObjectType";
-import { get } from "../utils/http";
+import { _get } from "../utils/http";
 
 const Schedule: NextPage = () => {
 	const router = useRouter();
@@ -24,7 +24,7 @@ const Schedule: NextPage = () => {
 			if (storagePupilName) {
 				setShowEnterNameModal(false);
 				setIsLoading(true);
-				const pupil = await get<PupilObjectType>(
+				const pupil = await _get<PupilObjectType>(
 					`/api/pupils?pupilName=${storagePupilName}`
 				);
 				setPupil(pupil);

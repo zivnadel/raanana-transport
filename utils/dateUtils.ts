@@ -1,10 +1,23 @@
 import { busType } from "../types/DateObjectType";
 import PricesObjectType from "../types/PricesObjectType";
 
+export const calculateLearningYear = () => {
+	const today = new Date();
+	const month = today.getMonth() + 1;
+	const date = today.getDate();
+
+	if (month >= 1 && month <= 6) {
+		if (month === 6 && date > 20) {
+			return today.getFullYear();
+		}
+		return today.getFullYear() - 1;
+	} else {
+		return today.getFullYear();
+	}
+};
+
 export const produceYearArray = () => {
-	const currentYear = new Date(
-		new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" })
-	).getFullYear();
+	const currentYear = calculateLearningYear();
 	const start = new Date(`${currentYear}-09-01`);
 	const end = new Date(`${currentYear + 1}-06-20`);
 

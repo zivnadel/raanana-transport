@@ -1,6 +1,6 @@
 import React from "react";
 import PupilObjectType from "../../types/PupilObjectType";
-import { get } from "../../utils/http";
+import { _get } from "../../utils/http";
 import Button from "../ui/buttons/Button";
 import ErrorParagraph from "../ui/ErrorParagraph";
 import Input from "../ui/inputs/Input";
@@ -48,7 +48,7 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 		}
 
 		setIsLoading(true);
-		const pupil = await get<PupilObjectType>(
+		const pupil = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${firstName} ${lastName}`
 		);
 		setIsLoading(false);
