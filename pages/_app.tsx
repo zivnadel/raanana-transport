@@ -18,13 +18,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
 	React.useEffect(() => {
 		const handleChangeStart = (url: string) => {
-			if (url === "/dashboard") {
+			if (url === "/dashboard" || url === "/login") {
 				setIsLoading(true);
 			}
 		};
 
 		const handleChangeEnd = (url: string) => {
-			if (url === "/dashboard") {
+			if (url === "/dashboard" || url === "/login" || url === "/unauthorized") {
 				setIsLoading(false);
 			}
 		};
