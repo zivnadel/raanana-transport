@@ -144,6 +144,8 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 
 		await patch("/api/dates", weekData);
 
+		alert("עדכון נתוני השבוע בוצע בהצלחה!")
+
 		setIsLoading(false);
 	};
 
