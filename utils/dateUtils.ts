@@ -22,8 +22,7 @@ export const produceYearArray = () => {
 };
 
 export const toNormalDateString = (date: Date) => {
-	let newDate = new Date(date.toUTCString());
-	newDate.setHours(newDate.getHours() - 3);
+	const newDate = new Date(date.toUTCString());
 	return `${newDate.getFullYear()}/${
 		newDate.getMonth() + 1
 	}/${newDate.getDate()}`;

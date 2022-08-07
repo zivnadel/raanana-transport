@@ -12,6 +12,7 @@ interface Props {
 		date: string
 	) => void;
 	selected?: { day: number; hours: string[]; date?: string }[];
+	disabled?: boolean;
 }
 
 const SelectHoursCheckbox: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 	onChangeWithDay,
 	onChangeWithDate,
 	selected,
+	disabled,
 }) => {
 	const isSelected = (day: number, hour: string) => {
 		let flag = false;
@@ -58,6 +60,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 							id={`checkbox-morning-${day}`}
 							type="checkbox"
 							value="morning"
+							disabled={disabled}
 							className="h-8 w-8 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
 						/>
 						<label
@@ -75,6 +78,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 							id={`checkbox-15:30-${day}`}
 							type="checkbox"
 							value="15:30"
+							disabled={disabled}
 							className="h-8 w-8 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
 						/>
 						<label
@@ -92,6 +96,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 							id={`checkbox-17:00-${day}`}
 							type="checkbox"
 							value="17:00"
+							disabled={disabled}
 							className="h-8 w-8 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
 						/>
 						<label

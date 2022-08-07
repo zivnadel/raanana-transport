@@ -51,7 +51,8 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 		);
 		setIsLoading(false);
 
-		localStorage.setItem("schedulePupil", JSON.stringify(pupil));
+		localStorage.setItem("schedulePupilName", pupil.name);
+		setPupil(pupil);
 
 		onSubmit();
 	};

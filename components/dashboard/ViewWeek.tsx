@@ -101,11 +101,9 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 		setIsLoading(true);
 		const prices = await get<PricesObjectType>("/api/prices");
 		let weekData: typeof currentWeek = JSON.parse(JSON.stringify(currentWeek));
-		const modeledWeekCopy: typeof modeledWeek = JSON.parse(
-			JSON.stringify(modeledWeek)
-		);
+
 		weekData.map((day) => {
-			modeledWeekCopy.map((modeledDay) => {
+			modeledWeek.map((modeledDay) => {
 				if (day.date === modeledDay.date) {
 					Object.keys(day.transportations).map((hour) => {
 						if (!modeledDay.hours.includes(hour)) {
