@@ -250,7 +250,6 @@ const updateSchedule = async (
 		// } else {
 		// 	throw new Error("Error deleting documents!");
 		// }
-		
 	} catch (error: any) {
 		throw new Error(error);
 	}

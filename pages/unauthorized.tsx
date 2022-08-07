@@ -14,7 +14,7 @@ const UnauthorizedModal: React.FC = () => {
 				}}
 			/>
 			<h1 className="m-5 text-center text-3xl font-semibold text-primary">
-				!אינך יכול לגשת לעמוד זה
+				אינך יכול לגשת לעמוד זה
 			</h1>
 			<div className="w-full text-center">
 				<Button className="my-5" onClick={() => router.push("/")}>
