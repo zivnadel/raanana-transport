@@ -28,7 +28,7 @@ class ErrorBoundary extends Component<Props, State> {
           <h1 className="mb-10 mt-36 text-5xl font-semibold text-primary md:mt-64">
             אופס! אירעה שגיאה
           </h1>
-          <p className="mb-2 text-2xl">.רענן עמוד זה או נסה שנית מאוחר יותר</p>
+          <p className="mb-2 text-2xl">רענן עמוד זה או נסה שנית מאוחר יותר</p>
         </div>
       );
     }

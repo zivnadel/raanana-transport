@@ -6,8 +6,34 @@ import Navbar from "../components/ui/Navbar";
 import Head from "next/head";
 import ErrorBoundary from "../components/ErrorBoundary";
 import Footer from "../components/ui/Footer";
+import { useRouter } from "next/router";
+import React from "react";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
+import Modal from "../components/ui/modals/Modal";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+	const router = useRouter();
+
+	const [isLoading, setIsLoading] = React.useState(false);
+
+	React.useEffect(() => {
+		const handleChangeStart = (url: string) => {
+			if (url === "/dashboard") {
+				setIsLoading(true);
+			}
+		};
+
+		const handleChangeEnd = (url: string) => {
+			if (url === "/dashboard") {
+				setIsLoading(false);
+			}
+		};
+
+		router.events.on("routeChangeStart", handleChangeStart);
+		router.events.on("routeChangeComplete", handleChangeEnd);
+		router.events.on("routeChangeError", handleChangeEnd);
+	}, []);
+
 	return (
 		<ErrorBoundary>
 			<Head>
@@ -22,7 +48,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 			</header>
 			<main className="h-[95vh]">
 				<SessionProvider session={session}>
-					<Component {...pageProps} />
+					{isLoading ? (
+						<Modal>
+							<LoadingSpinner />
+						</Modal>
+					) : (
+						<Component {...pageProps} />
+					)}
 				</SessionProvider>
 			</main>
 			<footer className="h-[5vh]">

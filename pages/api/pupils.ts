@@ -7,7 +7,7 @@ import PupilObjectType from "../../types/PupilObjectType";
 import DateObjectType from "../../types/DateObjectType";
 import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
 import PricesObjectType from "../../types/PricesObjectType";
-import { AnyBulkWriteOperation, Db, Document, WithId } from "mongodb";
+import { AnyBulkWriteOperation, Db, Document } from "mongodb";
 
 const cors = Cors({
 	origin: process.env.VERCEL_URL,

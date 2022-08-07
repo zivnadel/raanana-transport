@@ -1,4 +1,3 @@
-import e from "cors";
 import React from "react";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import { DashboardContext } from "../../store/DashboardContext";
