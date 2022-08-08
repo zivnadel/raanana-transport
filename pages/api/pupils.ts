@@ -9,31 +9,14 @@ import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
 import PricesObjectType from "../../types/PricesObjectType";
 import { AnyBulkWriteOperation, Db, Document } from "mongodb";
 
-const cors = Cors({
-	origin: process.env.VERCEL_URL,
-});
-
-function runMiddleware(
-	req: NextApiRequest,
-	res: NextApiResponse,
-	fn: typeof cors
-) {
-	return new Promise((resolve, reject) => {
-		fn(req, res, (result) => {
-			if (result instanceof Error) {
-				return reject(result);
-			}
-			return resolve(result);
-		});
-	});
-}
-
 const getPupil = async (name?: string | string[]) => {
 	try {
 		const db = (await clientPromise).db();
 		let response;
 		if (name) {
-			response = db.collection("pupils").findOne({ name });
+			response = db
+				.collection("pupils")
+				.findOne({ name }, { projection: { _id: 0 } });
 		} else {
 			response = db.collection("pupils").findOne({});
 		}
@@ -264,6 +247,25 @@ const getPupilsByDayAndHour = async (day: number, hour: string) => {
 	return pupils.map((pupil) => pupil.name);
 };
 
+const cors = Cors({
+	origin: process.env.VERCEL_URL,
+});
+
+function runMiddleware(
+	req: NextApiRequest,
+	res: NextApiResponse,
+	fn: typeof cors
+) {
+	return new Promise((resolve, reject) => {
+		fn(req, res, (result) => {
+			if (result instanceof Error) {
+				return reject(result);
+			}
+			return resolve(result);
+		});
+	});
+}
+
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
@@ -272,11 +274,13 @@ export default async function handler(
 
 	const session = await unstable_getServerSession(req, res, authOptions);
 
-	if (!session) {
-		res.status(401).json({
+	if (
+		!session &&
+		((req.method === "GET" && !req.query.pupilName) || req.method !== "GET")
+	) {
+		return res.status(401).json({
 			message: "You must be logged in and authorized to access this resource!",
 		});
-		return;
 	}
 
 	switch (req.method) {

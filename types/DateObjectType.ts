@@ -14,7 +14,7 @@ export type HourObjectType = {
 
 type DateObjectType = {
 	date: string;
-    day: number;
+	day: number;
 	transportations: {
 		morning?: HourObjectType;
 		"15:30"?: HourObjectType;
