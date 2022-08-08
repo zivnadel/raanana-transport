@@ -1,4 +1,8 @@
-import React, { ForwardRefExoticComponent, useImperativeHandle } from "react";
+import React, {
+	ForwardRefExoticComponent,
+	useEffect,
+	useImperativeHandle,
+} from "react";
 import { Dispatch, SetStateAction, useState, useRef } from "react";
 import DateObjectType from "../../types/DateObjectType";
 import { calculateLearningYear } from "../../utils/dateUtils";
@@ -20,7 +24,7 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 		// is not possible to submit the form, but styles are not yet shows because the
 		// user didn't get a chance to fill the form.
 		const [showErrorStyles, setShowErrorStyles] = useState(false);
-		const [errorMessage, setErrorMessage] = useState("שדה זה הינוי חובה");
+		const [errorMessage, setErrorMessage] = useState("שדה זה הינו חובה");
 
 		// loading state for fetching
 		const [isLoading, setIsLoading] = useState(false);
@@ -30,11 +34,18 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 		// forwarded ref
 		useImperativeHandle(ref, () => dateInputRef.current!);
 
-		const [hours, setHours] = useState<string[]>([]);
+		const [hours, setHours] = useState<string[] | null>(null);
+
+		useEffect(() => {
+			if (hours && hours.length == 0) {
+				setErrorMessage("כרגע, בתאריך זה לא קיימות הסעות");
+				setShowErrorStyles(true);
+			}
+		}, [hours]);
 
 		// this call being invoked from parent
 		formSubmittedWithErrorHandler.current = setShowErrorStyles.bind(null, true);
-		hideHourSelect.current = setHours.bind(null, []);
+		hideHourSelect.current = setHours.bind(null, null);
 
 		const fetchDates = async () => {
 			// setIsEmpty is actually indicator for error so this is used to prevent users from
@@ -124,12 +135,12 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 					</p>
 				)}
 				{/* Will show hours conditinally after receieving date info from db */}
-				{hours.length !== 0 && !isLoading && !showErrorStyles && (
+				{hours && hours.length !== 0 && !isLoading && !showErrorStyles && (
 					<select
 						onChange={hourListChangedHandler}
 						defaultValue="morning"
 						id="chooseHour"
-						className="m-2 w-full appearance-none border-0 border-b-2 border-gray-500 bg-transparent px-0 py-3 text-right text-sm text-gray-900 focus:border-primary focus:outline-none focus:ring-0">
+						className="m-2 w-full appearance-none border-0 border-b-2 border-gray-500 bg-transparent py-3 text-right text-sm text-gray-900 focus:border-primary focus:outline-none focus:ring-0">
 						{hours.map((hour) => (
 							<option key={hour} value={hour}>
 								{hour === "morning" ? "בוקר" : hour}
