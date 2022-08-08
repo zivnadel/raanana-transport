@@ -53,7 +53,9 @@ const UpdateSchedule: React.FC<Props> = ({ initialSchedule }) => {
 
 	const onSubmitHandler = async () => {
 		setIsLoading(true);
-		await _patch("/api/week", schedule).catch((error) => setError(error.message));
+		await _patch("/api/week", schedule).catch((error) =>
+			setError(error.message)
+		);
 		alert(`הלו"ז השבועי עודכן בהצלחה!`);
 		setIsLoading(false);
 		router.reload();
@@ -68,7 +70,7 @@ const UpdateSchedule: React.FC<Props> = ({ initialSchedule }) => {
 				<LoadingSpinner />
 			) : (
 				schedule && (
-					<div className="flex flex-col items-center p-3">
+					<div className="flex flex-col items-center py-2">
 						{schedule && (
 							<>
 								{schedule.map((day) => (

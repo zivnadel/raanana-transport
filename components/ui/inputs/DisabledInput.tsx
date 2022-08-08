@@ -21,13 +21,13 @@ const DisabledInput: React.FC<Props> = ({
 				{label}
 			</label>
 			<div
-				className={`flex w-[70%] cursor-not-allowed flex-row-reverse justify-between rounded-lg border border-gray-300 bg-gray-100 sm:w-3/6 ${
+				className={`flex cursor-not-allowed flex-row-reverse justify-between rounded-lg border border-gray-300 bg-gray-100 sm:w-3/6 ${
 					editBtn ? "py-1.5" : "py-2.5"
 				} px-2.5 text-right text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500`}>
 				<input
 					type=""
 					id={id}
-					className="bg-transparent text-right"
+					className="cursor-not-allowed bg-transparent text-right"
 					value={value}
 					disabled
 					required
