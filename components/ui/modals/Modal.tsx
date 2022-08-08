@@ -33,7 +33,7 @@ const Modal: React.FC<Props> = ({
 			{/* Modal Flex Container */}
 			<div
 				className={twMerge(
-					`flex w-full items-center justify-center py-5 ${className}`
+					`flex h-full w-full items-center justify-center py-5 ${className}`
 				)}>
 				{/* Modal Content */}
 				<div className="my-auto w-10/12 max-w-md rounded-lg bg-white shadow">

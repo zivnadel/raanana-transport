@@ -40,7 +40,7 @@ const Panel: React.FC = () => {
 
 	return (
 		<div className="flex h-screen flex-col items-center text-center">
-			<h1 className="mb-2 mt-36 text-3xl font-semibold text-primary md:mt-20">
+			<h1 className="mb-2 mt-36 text-3xl font-semibold text-primary md:mt-28">
 				לוח הבקרה
 			</h1>
 			<button
@@ -55,29 +55,36 @@ const Panel: React.FC = () => {
 					showMobileMenu ? "flex" : "hidden"
 				} w-44 divide-y divide-gray-100 rounded bg-white shadow md:flex md:w-full md:divide-y-0 md:bg-transparent md:shadow-none`}>
 				<ul
-					className="py-1 text-sm text-gray-700 md:flex md:w-full md:justify-between md:px-10 md:py-0"
+					className="py-1 text-sm text-gray-700 md:flex md:w-full md:flex-col md:items-center md:justify-between md:px-10 md:py-0"
 					aria-labelledby="dropdownDefault">
-					<PanelButton onClick={openPricesButtonClickedHandler}>
-						מחירון
-					</PanelButton>
-					<PanelButton onClick={openUpdateScheduleButtonClickedHandler}>
-						עדכון לו&quot;ז
-					</PanelButton>
-					<PanelButton onClick={openViewWeekButtonClickedHandler}>
-						צפייה בנתוני השבוע
-					</PanelButton>
-					<PanelButton onClick={loadYearButtonClickedHandler}>
-						טעינת שנה&quot;ל
-					</PanelButton>
-					<PanelButton onClick={openRemovePupilButtonClickedHandler}>
-						הסרת תלמיד
-					</PanelButton>
-					<PanelButton onClick={openAddEditPupilButtonClickedHandler}>
-						הוספת\עריכת תלמיד
-					</PanelButton>
-					<PanelButton onClick={() => signOut({ callbackUrl: "/" })}>
-						התנתקות
-					</PanelButton>
+					<div className="md:flex md:w-full md:justify-center">
+						<PanelButton onClick={openPricesButtonClickedHandler}>
+							מחירון
+						</PanelButton>
+						<PanelButton onClick={openPricesButtonClickedHandler}>
+							הדפסת דו&quot;ח
+						</PanelButton>
+						<PanelButton onClick={openUpdateScheduleButtonClickedHandler}>
+							עדכון לו&quot;ז
+						</PanelButton>
+						<PanelButton onClick={openViewWeekButtonClickedHandler}>
+							צפייה בנתוני השבוע
+						</PanelButton>
+					</div>
+					<div className="md:flex md:w-full md:justify-center">
+						<PanelButton onClick={loadYearButtonClickedHandler}>
+							טעינת שנה&quot;ל
+						</PanelButton>
+						<PanelButton onClick={openRemovePupilButtonClickedHandler}>
+							הסרת תלמיד
+						</PanelButton>
+						<PanelButton onClick={openAddEditPupilButtonClickedHandler}>
+							הוספת\עריכת תלמיד
+						</PanelButton>
+						<PanelButton onClick={() => signOut({ callbackUrl: "/" })}>
+							התנתקות
+						</PanelButton>
+					</div>
 				</ul>
 			</div>
 		</div>

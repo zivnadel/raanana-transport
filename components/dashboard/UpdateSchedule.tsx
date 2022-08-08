@@ -53,7 +53,7 @@ const UpdateSchedule: React.FC<Props> = ({ initialSchedule }) => {
 
 	const onSubmitHandler = async () => {
 		setIsLoading(true);
-		await _patch("/api/week", schedule).catch((error) => setError(error));
+		await _patch("/api/week", schedule).catch((error) => setError(error.message));
 		alert(`הלו"ז השבועי עודכן בהצלחה!`);
 		setIsLoading(false);
 		router.reload();

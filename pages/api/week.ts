@@ -85,7 +85,7 @@ export default async function handler(
 
 	const session = await unstable_getServerSession(req, res, authOptions);
 
-	if (!session) {
+	if (!session && req.method !== "GET") {
 		return res.status(401).json({
 			message: "You must be logged in and authorized to access this resource!",
 		});

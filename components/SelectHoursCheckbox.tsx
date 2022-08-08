@@ -1,4 +1,6 @@
 import React from "react";
+import DayObjectType from "../types/DayObjectType";
+import { BiCalendarExclamation } from "react-icons/bi";
 
 interface Props {
 	day: number;
@@ -12,6 +14,7 @@ interface Props {
 		date: string
 	) => void;
 	selected?: { day: number; hours: string[]; date?: string }[];
+	weekSchedule?: DayObjectType[];
 	disabled?: boolean;
 }
 
@@ -21,16 +24,22 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 	onChangeWithDay,
 	onChangeWithDate,
 	selected,
+	weekSchedule,
 	disabled,
 }) => {
-
-	const isSelected = (day: number, hour: string) => {
+	const hourExistsInDay = (
+		day: number,
+		hour: string,
+		schedule:
+			| { day: number; hours: string[]; date?: string }[]
+			| DayObjectType[]
+	) => {
 		let flag = false;
 
-		selected!.map((entry) => {
+		schedule!.forEach((entry) => {
 			if (
 				entry.day === day &&
-				entry.hours.find((entryHour) => entryHour === hour)
+				entry.hours.includes(hour as "morning" | "15:30" | "17:00")
 			) {
 				flag = true;
 			}
@@ -53,16 +62,22 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 				{date ? `${date} - ${mapDayToString(day)}` : mapDayToString(day)}
 			</h3>
 			<ul className="mx-3 mb-2 flex w-5/6 items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900">
-				<li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
-					<div className="flex items-center pl-3">
+				<li className="w-2/6 border-b border-gray-200 sm:border-b-0 sm:border-r">
+					<div className="flex items-center pl-3 pr-2.5">
 						<input
 							onChange={changeHandler}
-							defaultChecked={selected && isSelected(day, "morning")}
+							defaultChecked={
+								selected && hourExistsInDay(day, "morning", selected)
+							}
 							id={`checkbox-morning-${day}`}
 							type="checkbox"
 							value="morning"
 							disabled={disabled}
-							className="h-8 w-8 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
+							className={`${
+								weekSchedule && !hourExistsInDay(day, "morning", weekSchedule)
+									? "text-red-600 disabled:text-red-600"
+									: "text-blue-600 disabled:text-primary"
+							} h-6 w-6 rounded border-gray-300 bg-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500`}
 						/>
 						<label
 							htmlFor={`checkbox-morning-${day}`}
@@ -71,16 +86,22 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 						</label>
 					</div>
 				</li>
-				<li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
-					<div className="flex items-center pl-3">
+				<li className="w-2/6 border-b border-gray-200 sm:border-b-0 sm:border-r">
+					<div className="flex items-center pl-3 pr-2.5">
 						<input
 							onChange={changeHandler}
-							defaultChecked={selected && isSelected(day, "15:30")}
+							defaultChecked={
+								selected && hourExistsInDay(day, "15:30", selected)
+							}
 							id={`checkbox-15:30-${day}`}
 							type="checkbox"
 							value="15:30"
 							disabled={disabled}
-							className="h-8 w-8 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
+							className={`${
+								weekSchedule && !hourExistsInDay(day, "15:30", weekSchedule)
+									? "text-red-600 disabled:text-red-600"
+									: "text-blue-600 disabled:text-primary"
+							} h-6 w-6 rounded border-gray-300 bg-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500`}
 						/>
 						<label
 							htmlFor={`checkbox-15:30-${day}`}
@@ -89,16 +110,22 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 						</label>
 					</div>
 				</li>
-				<li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
-					<div className="flex items-center pl-3">
+				<li className="w-2/6 border-b border-gray-200 sm:border-b-0 sm:border-r">
+					<div className="flex items-center pl-3 pr-2.5">
 						<input
 							onChange={changeHandler}
-							defaultChecked={selected && isSelected(day, "17:00")}
+							defaultChecked={
+								selected && hourExistsInDay(day, "17:00", selected)
+							}
 							id={`checkbox-17:00-${day}`}
 							type="checkbox"
 							value="17:00"
 							disabled={disabled}
-							className="h-8 w-8 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
+							className={`${
+								weekSchedule && !hourExistsInDay(day, "17:00", weekSchedule)
+									? "text-red-600 disabled:text-red-600"
+									: "text-blue-600 disabled:text-primary"
+							} h-6 w-6 rounded border-gray-300 bg-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500`}
 						/>
 						<label
 							htmlFor={`checkbox-17:00-${day}`}

@@ -41,7 +41,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 			setIsLoading(true);
 			const response = await _get<DateObjectType[]>(
 				`/api/dates?week=${currentWeekDate}`
-			).catch((error) => setError(error));
+			).catch((error) => setError(error.message));
 			if (response) {
 				setCurrentWeek(response);
 				let modeledWeekData: { day: number; hours: string[]; date?: string }[] =

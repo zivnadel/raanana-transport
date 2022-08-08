@@ -25,9 +25,9 @@ const DisabledInput: React.FC<Props> = ({
 					editBtn ? "py-1.5" : "py-2.5"
 				} px-2.5 text-right text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500`}>
 				<input
-					type="text"
+					type=""
 					id={id}
-					className="text-right bg-transparent"
+					className="bg-transparent text-right"
 					value={value}
 					disabled
 					required

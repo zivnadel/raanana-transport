@@ -14,7 +14,7 @@ const LoadYear: React.FC = () => {
 
 	const loadYearClickedHandler = async () => {
 		setIsLoading(true);
-		const response = await _put("/api/dates").catch((error) => setError(error));
+		const response = await _put("/api/dates").catch((error) => setError(error.message));
 		alert("טעינת שנת הלימודים בוצעה בהצלחה!");
 		dashboardContext?.action({ type: "setLoadYear", payload: false });
 		setIsLoading(false);
