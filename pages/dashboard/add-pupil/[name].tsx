@@ -6,7 +6,7 @@ import {
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import React from "react";
-import SelectHoursCheckbox from "../../../components/dashboard/SelectHoursCheckbox";
+import SelectHoursCheckbox from "../../../components/SelectHoursCheckbox";
 import Button from "../../../components/ui/buttons/Button";
 import DisabledInput from "../../../components/ui/inputs/DisabledInput";
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";

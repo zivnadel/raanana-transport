@@ -15,11 +15,11 @@ import { authOptions } from "../api/auth/[...nextauth]";
 
 const Dashboard: NextPage<
 	InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ initialPrices, initialDate }) => {
+> = ({ initialPrices, initialSchedule, initialDate }) => {
 	return (
 		<DashboardContextProvider>
 			<Panel />
-			<ActiveWindow initialPrices={initialPrices} initialDate={initialDate} />
+			<ActiveWindow initialPrices={initialPrices} initialSchedule={initialSchedule} initialDate={initialDate} />
 		</DashboardContextProvider>
 	);
 };
@@ -51,6 +51,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 				.toArray()
 		)[0];
 
+		// fetching the initial week schedule
+		const initialSchedule = await db
+			.collection("week")
+			.find({}, { projection: { _id: 0 } })
+			.toArray();
+
 		// fetching the current date if in the range from db, for edit week and edit day
 		let initialDate: WithId<DateObjectType> | null;
 		const today = new Date();
@@ -71,6 +77,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 			props: {
 				session,
 				initialPrices,
+				initialSchedule,
 				initialDate,
 			},
 		};

@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import SelectHoursCheckbox from "../components/dashboard/SelectHoursCheckbox";
+import SelectHoursCheckbox from "../components/SelectHoursCheckbox";
 import EnterNameModal from "../components/schedule/EnterNameModal";
 import Button from "../components/ui/buttons/Button";
 import DisabledInput from "../components/ui/inputs/DisabledInput";

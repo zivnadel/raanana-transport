@@ -14,9 +14,7 @@ const getPupil = async (name?: string | string[]) => {
 		const db = (await clientPromise).db();
 		let response;
 		if (name) {
-			response = db
-				.collection("pupils")
-				.findOne({ name }, { projection: { _id: 0 } });
+			response = db.collection("pupils").findOne({ name });
 		} else {
 			response = db.collection("pupils").findOne({});
 		}

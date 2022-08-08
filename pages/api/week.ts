@@ -62,7 +62,7 @@ const updateWeek = async (data: string) => {
 					filter: { day: day.day },
 					update: {
 						$set: {
-							transportations: day.transportations,
+							hours: day.hours,
 						},
 					},
 				},
@@ -71,6 +71,9 @@ const updateWeek = async (data: string) => {
 	);
 
 	const response = await db.collection("week").bulkWrite(bulkData);
+
+	// TODO: Update date collection with new / removed data.
+
 	return response;
 };
 

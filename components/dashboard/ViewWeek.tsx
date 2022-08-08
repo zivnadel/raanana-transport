@@ -13,7 +13,7 @@ import Button from "../ui/buttons/Button";
 import ErrorParagraph from "../ui/ErrorParagraph";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
-import SelectHoursCheckbox from "./SelectHoursCheckbox";
+import SelectHoursCheckbox from "../SelectHoursCheckbox";
 
 interface Props {
 	initialDate: DateObjectType;

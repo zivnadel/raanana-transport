@@ -23,6 +23,7 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 	selected,
 	disabled,
 }) => {
+
 	const isSelected = (day: number, hour: string) => {
 		let flag = false;
 
