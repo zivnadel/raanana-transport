@@ -1,10 +1,12 @@
 import { twMerge } from "tailwind-merge";
+import BackModalButton from "../buttons/BackModalButton";
 import CloseModalButton from "../buttons/CloseModalButton";
 import ErrorAlert from "./ErrorAlert";
 
 interface Props {
 	children?: React.ReactNode;
-	onDismiss?: React.MouseEventHandler<SVGElement>;
+	onDismiss?: React.MouseEventHandler<SVGElement> | undefined;
+	onBackPresses?: React.MouseEventHandler<SVGElement> | undefined;
 	heading?: string;
 	className?: string;
 	error?: string;
@@ -13,6 +15,7 @@ interface Props {
 const Modal: React.FC<Props> = ({
 	children,
 	onDismiss,
+	onBackPresses,
 	heading,
 	className,
 	error,
@@ -37,7 +40,10 @@ const Modal: React.FC<Props> = ({
 				)}>
 				{/* Modal Content */}
 				<div className="my-auto w-10/12 max-w-md rounded-lg bg-white shadow">
-					{onDismiss && <CloseModalButton onClick={onDismiss} />}
+					<div className="flex">
+						{onBackPresses && <BackModalButton onClick={onBackPresses} />}
+						{onDismiss && <CloseModalButton onClick={onDismiss} />}
+					</div>
 					<h2 className="p-2 text-center text-2xl text-primary">{heading}</h2>
 					{children}
 				</div>

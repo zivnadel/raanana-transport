@@ -1,4 +1,4 @@
-import { FaWindowClose } from "react-icons/fa";
+import { AiFillCloseCircle } from "react-icons/ai"
 
 interface Props {
 	onClick: React.MouseEventHandler<SVGElement>;
@@ -6,9 +6,9 @@ interface Props {
 
 const CloseModalButton: React.FC<Props> = ({ onClick }) => {
 	return (
-		<FaWindowClose
+		<AiFillCloseCircle
 			onClick={onClick}
-			className="ml-auto mt-3 mr-3 cursor-pointer text-2xl text-primary hover:opacity-80"
+			className="ml-auto mt-3 mr-3 cursor-pointer text-3xl text-primary hover:opacity-80"
 		/>
 	);
 };

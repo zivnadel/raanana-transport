@@ -4,6 +4,7 @@ import AddEditPupil from "./AddEditPupil";
 import LoadYear from "./LoadYear";
 import PricesForm from "./PricesForm";
 import RemovePupil from "./RemovePupil";
+import Report from "./Report";
 import UpdateSchedule from "./UpdateSchedule";
 import ViewWeek from "./ViewWeek";
 
@@ -21,11 +22,12 @@ const ActiveWindow: React.FC<any> = ({
 			)}
 			{dashboardContext!.showAddEditPupil && <AddEditPupil />}
 			{dashboardContext!.showRemovePupil && <RemovePupil />}
-			{dashboardContext!.loadYear && <LoadYear />}
 			{dashboardContext!.showViewWeek && <ViewWeek initialDate={initialDate} />}
 			{dashboardContext!.showUpdateSchedule && (
 				<UpdateSchedule initialSchedule={initialSchedule} />
 			)}
+			{dashboardContext!.showReport && <Report />}
+			{dashboardContext!.loadYear && <LoadYear />}
 		</>
 	);
 };

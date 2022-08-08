@@ -26,7 +26,7 @@ const Panel: React.FC = () => {
 		dashboardContext?.action({ type: "setShowRemovePupil", payload: true });
 	};
 
-	const loadYearButtonClickedHandler = () => {
+	const openLoadYearButtonClickedHandler = () => {
 		dashboardContext?.action({ type: "setLoadYear", payload: true });
 	};
 
@@ -36,6 +36,10 @@ const Panel: React.FC = () => {
 
 	const openUpdateScheduleButtonClickedHandler = () => {
 		dashboardContext?.action({ type: "setShowUpdateSchedule", payload: true });
+	};
+
+	const openReportButtonClickedHandler = () => {
+		dashboardContext?.action({ type: "setShowReport", payload: true });
 	};
 
 	return (
@@ -61,7 +65,7 @@ const Panel: React.FC = () => {
 						<PanelButton onClick={openPricesButtonClickedHandler}>
 							מחירון
 						</PanelButton>
-						<PanelButton onClick={openPricesButtonClickedHandler}>
+						<PanelButton onClick={openReportButtonClickedHandler}>
 							הדפסת דו&quot;ח
 						</PanelButton>
 						<PanelButton onClick={openUpdateScheduleButtonClickedHandler}>
@@ -72,7 +76,7 @@ const Panel: React.FC = () => {
 						</PanelButton>
 					</div>
 					<div className="md:flex md:w-full md:justify-center">
-						<PanelButton onClick={loadYearButtonClickedHandler}>
+						<PanelButton onClick={openLoadYearButtonClickedHandler}>
 							טעינת שנה&quot;ל
 						</PanelButton>
 						<PanelButton onClick={openRemovePupilButtonClickedHandler}>
