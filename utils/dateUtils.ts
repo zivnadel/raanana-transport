@@ -1,4 +1,4 @@
-import { busType } from "../types/DateObjectType";
+import DateObjectType, { busType } from "../types/DateObjectType";
 import PricesObjectType from "../types/PricesObjectType";
 
 export const calculateLearningYear = () => {
@@ -32,6 +32,34 @@ export const produceYearArray = () => {
 	}
 
 	return yearArray;
+};
+
+export const produceMonthArray = (month: number, year: number) => {
+	let monthArray: Date[] = new Array();
+	let currentDate = new Date(`${year}-${month}-01`);
+
+	while (currentDate.getMonth() === month - 1) {
+		if (currentDate.getDay() !== 5 && currentDate.getDay() !== 6) {
+			monthArray.push(new Date(currentDate));
+		}
+		currentDate.setDate(currentDate.getDate() + 1);
+	}
+
+	return monthArray.map((date: Date) => toNormalDateString(date));
+};
+
+// create a function which will iterate over array of dates and divide them into weeks
+export const produceWeeksFromMonth = (month: DateObjectType[]) => {
+	let weeksArray: DateObjectType[][] = new Array();
+	let currentWeek: DateObjectType[] = new Array();
+	month.forEach((date: DateObjectType) => {
+		currentWeek.push(date);
+		if (date.day === 5) {
+			weeksArray.push([...currentWeek]);
+			currentWeek = new Array();
+		}
+	});
+	return weeksArray;
 };
 
 export const toNormalDateString = (date: Date) => {

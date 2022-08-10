@@ -60,6 +60,8 @@ const Report: React.FC = () => {
 			setError("!חודש לא תקין");
 			return;
 		}
+
+		router.push(`/dashboard/report/month/${year}-${month}`);
 	};
 
 	const onWeekSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,16 +77,17 @@ const Report: React.FC = () => {
 			setError("!חודש לא תקין");
 			return;
 		}
+		router.push(`/dashboard/report/month/${e.target.value}`);
 	};
 
 	return (
 		<Modal
 			heading={
 				weekClicked
-					? `הדפסת דו"ח שבועי`
+					? `הצגת דו"ח שבועי`
 					: monthClicked
-					? `הדפסת דו"ח חודשי`
-					: `הדפסת דו"ח`
+					? `הצגת דו"ח חודשי`
+					: `הצגת דו"ח`
 			}
 			error={error ? error : ""}
 			onDismiss={modalDismissedHandler}

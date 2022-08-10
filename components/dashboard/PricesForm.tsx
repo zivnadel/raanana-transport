@@ -5,7 +5,7 @@ import { DashboardContext } from "../../store/DashboardContext";
 import PricesObjectType from "../../types/PricesObjectType";
 import Button from "../ui/buttons/Button";
 
-import EditableInput from "../ui/inputs/EditableInput";
+import InputWithIcon from "../ui/inputs/InputWithIcon";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
 
@@ -67,7 +67,7 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 				<div className="flex flex-col items-center">
 					{Object.entries(initialPrices).map((price: any) => {
 						return (
-							<EditableInput
+							<InputWithIcon
 								onChange={priceChangedHandler}
 								key={price[0]}
 								name={price[0]}
