@@ -66,7 +66,7 @@ const Panel: React.FC = () => {
 							מחירון
 						</PanelButton>
 						<PanelButton onClick={openReportButtonClickedHandler}>
-							הדפסת דו&quot;ח
+							הצגת דו&quot;ח
 						</PanelButton>
 						<PanelButton onClick={openUpdateScheduleButtonClickedHandler}>
 							עדכון לו&quot;ז
