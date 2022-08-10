@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 			<header>
 				<Navbar />
 			</header>
-			<main className="h-[95vh]">
+			<main className="h-[96vh]">
 				<SessionProvider session={session}>
 					{isLoading ? (
 						<Modal>
@@ -57,7 +57,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 					)}
 				</SessionProvider>
 			</main>
-			<footer className="h-[5vh]">
+			<footer className="h-[4vh]">
 				<Footer />
 			</footer>
 		</ErrorBoundary>

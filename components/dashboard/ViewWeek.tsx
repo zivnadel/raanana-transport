@@ -160,7 +160,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 			{isLoading && <LoadingSpinner />}
 			{!isLoading && (
 				<div className="w-full px-3">
-					<div className="flex w-full items-center justify-between rounded-full bg-primary/50 py-3 px-8">
+					<div className="shadow-md flex w-full items-center justify-between rounded-full bg-primary/50 py-3 px-8">
 						<FaChevronCircleLeft
 							onClick={leftChevronClickedHandler}
 							className="cursor-pointer text-2xl text-green-800 hover:text-green-800/70"

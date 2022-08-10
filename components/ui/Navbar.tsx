@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
 	const [showMobileMenu, setShowMobileMenu] = React.useState(false);
 
 	return (
-		<nav className="z-40 fixed flex w-full flex-col items-center justify-center bg-[#595959] py-5 px-7 text-white md:flex-row-reverse md:items-center md:justify-end md:py-4">
+		<nav className="z-40 shadow-lg fixed flex w-full flex-col items-center justify-center bg-green-800 py-5 px-7 text-white md:flex-row-reverse md:items-center md:justify-end md:py-4">
 			<Link href="/">
 				<a className="mb-1 w-56 text-center text-2xl md:mb-0 md:text-right">
 					<span className="text-primary">הסעות </span>רעננה

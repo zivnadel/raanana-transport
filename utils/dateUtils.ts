@@ -41,6 +41,47 @@ export const toNormalDateString = (date: Date) => {
 	}/${newDate.getDate()}`;
 };
 
+export const validateWeek = (date: Date) => {
+	if (
+		date < new Date(`${calculateLearningYear()}-09-01`) ||
+		date > new Date(`${calculateLearningYear() + 1}-06-20`)
+	) {
+		return false;
+	}
+	return true;
+};
+
+export const validateMonth = (monthWithYear: string) => {
+	let [year, month]: any = monthWithYear.split("-");
+	year = +year;
+	month = +month;
+
+	if (year === calculateLearningYear() && month < 9) {
+		return false;
+	}
+
+	if (year === calculateLearningYear() + 1 && month > 6) {
+		return false;
+	}
+
+	return true;
+};
+
+export const mapDayToString = (day: number) => {
+	switch (day) {
+		case 1:
+			return "יום ראשון";
+		case 2:
+			return "יום שני";
+		case 3:
+			return "יום שלישי";
+		case 4:
+			return "יום רביעי";
+		case 5:
+			return "יום חמישי";
+	}
+};
+
 // export const toIsraelDate = (normalDate: string | Date) => {
 // 	let date: Date;
 // 	if (typeof normalDate === "string") {

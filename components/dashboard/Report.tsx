@@ -1,6 +1,13 @@
+import { useRouter } from "next/router";
 import React from "react";
 import { DashboardContext } from "../../store/DashboardContext";
+import {
+	calculateLearningYear,
+	validateMonth,
+	validateWeek,
+} from "../../utils/dateUtils";
 import Button from "../ui/buttons/Button";
+import RoundedDatepicker from "../ui/datepickers/RoundedDatepicker";
 import Modal from "../ui/modals/Modal";
 
 const MONTH_NAMES = [
@@ -21,16 +28,65 @@ const MONTH_NAMES = [
 const Report: React.FC = () => {
 	const dashboardContext = React.useContext(DashboardContext);
 
+	const router = useRouter();
+
 	const [weekClicked, setWeekClicked] = React.useState(false);
 	const [monthClicked, setMonthClicked] = React.useState(false);
+	const [error, setError] = React.useState("");
 
 	const modalDismissedHandler = () => {
+		if (error) {
+			setError("");
+			return;
+		}
 		dashboardContext?.action({ type: "setShowReport", payload: false });
+	};
+
+	const onCurrentWeekSelected = () => {
+		const today = new Date();
+		if (!validateWeek(today)) {
+			setError("!תאריך לא תקין");
+			return;
+		}
+		router.push(`/dashboard/report/week/${today}`);
+	};
+
+	const onCurrentMonthSelected = () => {
+		const today = new Date();
+		const month = today.getMonth() + 1;
+		const year = today.getFullYear();
+
+		if (!validateMonth(`${year}-${month}`)) {
+			setError("!חודש לא תקין");
+			return;
+		}
+	};
+
+	const onWeekSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (!validateWeek(new Date(e.target.value))) {
+			setError("!תאריך לא תקין");
+			return;
+		}
+		router.push(`/dashboard/report/week/${e.target.value}`);
+	};
+
+	const onMonthSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (!validateMonth(e.target.value)) {
+			setError("!חודש לא תקין");
+			return;
+		}
 	};
 
 	return (
 		<Modal
-			heading={`הדפסת דו"ח`}
+			heading={
+				weekClicked
+					? `הדפסת דו"ח שבועי`
+					: monthClicked
+					? `הדפסת דו"ח חודשי`
+					: `הדפסת דו"ח`
+			}
+			error={error ? error : ""}
 			onDismiss={modalDismissedHandler}
 			onBackPresses={
 				weekClicked
@@ -51,12 +107,51 @@ const Report: React.FC = () => {
 					</Button>
 				</div>
 			) : weekClicked ? (
-				<></>
+				<div className="flex flex-col items-center">
+					<Button
+						onClick={onCurrentWeekSelected}
+						disabled={isDisabled("week")}
+						className="my-5">
+						שבוע נוכחי
+					</Button>
+					<RoundedDatepicker
+						min={`${calculateLearningYear()}-09-01`}
+						max={`${calculateLearningYear() + 1}-06-20`}
+						onChange={onWeekSelected}
+						className="mb-5"
+					/>
+				</div>
 			) : (
-				monthClicked && <></>
+				monthClicked && (
+					<div className="flex flex-col items-center">
+						<Button
+							onClick={onCurrentMonthSelected}
+							disabled={isDisabled("month")}
+							className="my-5">
+							חודש {MONTH_NAMES[new Date().getMonth()]}
+						</Button>
+						<RoundedDatepicker
+							min={`${calculateLearningYear()}-09`}
+							max={`${calculateLearningYear() + 1}-06`}
+							onChange={onMonthSelected}
+							month={true}
+							className="mb-5"
+						/>
+					</div>
+				)
 			)}
 		</Modal>
 	);
+};
+
+const isDisabled = (type: "week" | "month") => {
+	const today = new Date();
+	if (type === "month") {
+		return !validateMonth(`${today.getFullYear()}-${today.getMonth() + 1}`);
+	}
+	if (type === "week") {
+		return !validateWeek(today);
+	}
 };
 
 export default Report;

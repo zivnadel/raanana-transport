@@ -1,6 +1,7 @@
 import React from "react";
 import DayObjectType from "../types/DayObjectType";
 import { BiCalendarExclamation } from "react-icons/bi";
+import { mapDayToString } from "../utils/dateUtils";
 
 interface Props {
 	day: number;
@@ -137,21 +138,6 @@ const SelectHoursCheckbox: React.FC<Props> = ({
 			</ul>
 		</div>
 	);
-};
-
-const mapDayToString = (day: number) => {
-	switch (day) {
-		case 1:
-			return "יום ראשון";
-		case 2:
-			return "יום שני";
-		case 3:
-			return "יום שלישי";
-		case 4:
-			return "יום רביעי";
-		case 5:
-			return "יום חמישי";
-	}
 };
 
 export default SelectHoursCheckbox;

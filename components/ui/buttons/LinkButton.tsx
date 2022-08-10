@@ -10,12 +10,20 @@ interface Props {
 	className?: string;
 }
 
-const LinkButton: React.FC<Props> = ({ text, href, chevron, type, className }) => {
+const LinkButton: React.FC<Props> = ({
+	text,
+	href,
+	chevron,
+	type,
+	className,
+}) => {
 	return (
 		<Link href={href}>
 			<a
 				type={type}
-				className={twMerge(`mt-10 w-44 rounded-full bg-gradient-to-r from-primary to-red-500 p-4 text-white hover:opacity-80 ${className}`)}>
+				className={twMerge(
+					`mt-10 w-44 rounded-full bg-gradient-to-r from-primary to-red-500 p-4 text-white shadow-md hover:opacity-80 ${className}`
+				)}>
 				{text} {chevron && <FaChevronLeft className="inline" />}
 			</a>
 		</Link>
