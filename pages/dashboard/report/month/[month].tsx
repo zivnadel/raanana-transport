@@ -1,8 +1,11 @@
+import React from "react";
+
 import { GetServerSideProps, NextPage } from "next";
 import { unstable_getServerSession } from "next-auth";
 import clientPromise from "../../../../lib/mongodb";
 import DateObjectType from "../../../../types/DateObjectType";
 import {
+	MONTH_NAMES,
 	produceMonthArray,
 	produceWeeksFromMonth,
 	validateMonth,
@@ -14,47 +17,126 @@ import Modal from "../../../../components/ui/modals/Modal";
 import ErrorParagraph from "../../../../components/ui/ErrorParagraph";
 import { useRouter } from "next/router";
 import { ChartData } from "chart.js";
+import ReportHeading from "../../../../components/dashboard/report/ReportHeading";
+import MobileNotSupported from "../../../../components/dashboard/report/MobileNotSupported";
+import Button from "../../../../components/ui/buttons/Button";
+import TotalPriceInput from "../../../../components/dashboard/report/TotalPriceInput";
+import TransparentButton from "../../../../components/ui/buttons/TransparentButton";
+import PupilsTable from "../../../../components/dashboard/report/PupilsTable";
 
 interface Props {
 	valid: boolean;
 	monthData: DateObjectType[];
+	month: number;
 }
 
-const MonthReport: NextPage<Props> = ({ valid, monthData }) => {
+const MonthReport: NextPage<Props> = ({ valid, monthData, month }) => {
 	const router = useRouter();
+
+	const [showPupilsTable, setShowPupilsTable] = React.useState(false);
 
 	const monthWeeksArray = produceWeeksFromMonth(monthData);
 
-	const pricesChartData: ChartData<"pie"> = {
-		labels: monthWeeksArray.map((_, index) => `שבוע ${index + 1}`),
-		datasets: [
-			{
-				label: "מחיר כולל לכל השבוע",
-				backgroundColor: ["rgba(32, 145, 245, 0.4)", "rgba(39, 32, 245, 0.4)"],
-				borderColor: "rgba(32, 145, 245, 0.8)",
-				borderWidth: 1,
-				hoverBackgroundColor: "rgba(32, 145, 245, 0.6)",
-				hoverBorderColor: "rgba(32, 145, 245, 1)",
-				data: monthWeeksArray.map((week) =>
-					week.reduce((acc, day) => acc + day.totalAmount, 0)
-				),
-			},
-		],
-	};
+	console.log(monthData);
+	console.log(monthWeeksArray);
+
+	let pricesChartData: ChartData<"bar">;
+
+	if (valid) {
+		pricesChartData = {
+			labels: monthWeeksArray.map((_, index) => `שבוע ${index + 1}`),
+			datasets: [
+				{
+					label: "מחיר כולל לכל השבוע",
+					backgroundColor: [
+						"rgb(41, 52, 98, 0.8)",
+						"rgb(31, 70, 144, 0.8)",
+						"rgb(214, 28, 78, 0.8)",
+						"rgb(254, 177, 57, 0.8)",
+						"rgb(255, 248, 10, 0.8)",
+					],
+					borderColor: [
+						"rgb(41, 52, 98)",
+						"rgb(31, 70, 144)",
+						"rgb(214, 28, 78)",
+						"rgb(254, 177, 57)",
+						"rgb(255, 248, 10)",
+					],
+					borderWidth: 1,
+					hoverBackgroundColor: [
+						"rgb(41, 52, 98, 0.6)",
+						"rgb(31, 70, 144, 0.6)",
+						"rgb(214, 28, 78, 0.6)",
+						"rgb(254, 177, 57, 0.6)",
+						"rgb(255, 248, 10, 0.6)",
+					],
+					hoverBorderColor: [
+						"rgb(41, 52, 98)",
+						"rgb(31, 70, 144)",
+						"rgb(214, 28, 78)",
+						"rgb(254, 177, 57)",
+						"rgb(255, 248, 10)",
+					],
+					data: monthWeeksArray.map((week) =>
+						week.reduce((acc, day) => acc + day.totalAmount, 0)
+					),
+				},
+			],
+		};
+	}
 
 	return (
 		<>
 			{valid ? (
 				<>
 					{/* Charts container */}
-					<div className="hidden h-full w-full flex-col md:flex">
-						<Chart type="pie" data={pricesChartData} />
+					<div className="overflow-x-hidden overflow-y-scroll hidden h-screen w-full flex-col items-center p-10 md:flex">
+						<ReportHeading>חודש {MONTH_NAMES[month - 1]}</ReportHeading>
+						<div className="flex w-full flex-row-reverse items-center justify-center">
+							<div className="w-2/6 flex-col items-center p-5">
+							<TransparentButton
+									onClick={() => setShowPupilsTable(true)}
+									className="mb-4 w-5/6 p-3">
+									דו&quot;ח תלמידים
+								</TransparentButton>
+								<div className="w-[90%]">
+									<Chart type="pie" data={pricesChartData!} />
+								</div>
+								
+							</div>
+							<div className="flex flex-col items-center">
+								{monthWeeksArray.map((week, index) => (
+									<Button
+										className="mb-4 w-5/6"
+										onClick={() =>
+											router.push(
+												`/dashboard/report/week/${week[0].date.replaceAll(
+													"/",
+													"-"
+												)}`
+											)
+										}>
+										דו&quot;ח לשבוע ה-{index + 1} של החודש
+									</Button>
+								))}
+								<TotalPriceInput
+									className="w-full"
+									name="monthlyPrice"
+									heading="מחיר חודשי כולל (בשקלים)"
+									value={monthData
+										.reduce((prev, cur) => prev + cur.totalAmount, 0)
+										.toString()}
+								/>
+							</div>
+						</div>
 					</div>
-					<div className="md:hidden">
-						<Modal onDismiss={() => router.push("/dashboard")}>
-							<ErrorParagraph error={"עמוד זה אינו נתמך במובייל"} />
-						</Modal>
-					</div>
+					{showPupilsTable && (
+						<PupilsTable
+							onDismiss={() => setShowPupilsTable(false)}
+							monthData={monthData}
+						/>
+					)}
+					<MobileNotSupported />
 				</>
 			) : (
 				<Modal
@@ -116,6 +198,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 			props: {
 				valid: true,
 				monthData,
+				month: +month,
 			},
 		};
 	} catch (error: any) {

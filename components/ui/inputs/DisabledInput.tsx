@@ -1,4 +1,5 @@
 import React from "react";
+import ContainerButton from "../buttons/ContainerButton";
 
 interface Props {
 	id: string;
@@ -33,11 +34,7 @@ const DisabledInput: React.FC<Props> = ({
 					required
 				/>
 				{editBtn && (
-					<button
-						onClick={onClick}
-						className="rounded-md bg-gray-300 p-1.5 text-left hover:bg-gray-400">
-						ערוך
-					</button>
+					<ContainerButton onClick={onClick}>ערוך</ContainerButton>
 				)}
 			</div>
 		</div>

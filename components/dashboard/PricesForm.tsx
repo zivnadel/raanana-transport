@@ -84,7 +84,7 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 					)}
 					<Button
 						onClick={pricesSubmittedHandler}
-						className="mt-6 mb-3 p-3 md:w-8/12">
+						className="mt-6 mb-3 p-3 md:w-5/12">
 						אישור
 					</Button>
 				</div>

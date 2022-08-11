@@ -118,7 +118,7 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 							? "border-secondary text-secondary focus:border-secondary"
 							: "border-gray-500 focus:border-primary"
 					} appearance-none focus:outline-none focus:ring-0`}
-					placeholder="Select date"
+					placeholder="בחר תאריך"
 				/>
 				{isLoading && (
 					<p

@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 interface Props {
 	className?: string;
 	min?: string;
@@ -5,6 +7,7 @@ interface Props {
 	onChange?: React.ChangeEventHandler<HTMLInputElement>;
 	value?: string;
 	month?: boolean;
+	placeholder?: string;
 }
 
 const RoundedDatepicker: React.FC<Props> = ({
@@ -14,6 +17,7 @@ const RoundedDatepicker: React.FC<Props> = ({
 	onChange,
 	value,
 	month,
+	placeholder,
 }) => {
 	return (
 		<>
@@ -24,7 +28,8 @@ const RoundedDatepicker: React.FC<Props> = ({
 				max={max}
 				onChange={onChange}
 				value={value}
-				className={`w-44 rounded-full border-2 border-gray-800 bg-transparent p-4 text-center text-black shadow-lg hover:border-opacity-80 hover:opacity-80 ${className}`}></input>
+				defaultValue={placeholder || "תאריך"}
+				className={twMerge(`w-44 rounded-full border-2 border-gray-800 bg-transparent p-4 text-center text-black shadow-lg hover:border-opacity-80 hover:opacity-80 ${className}`)}></input>
 		</>
 	);
 };

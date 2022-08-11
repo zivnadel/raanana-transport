@@ -69,7 +69,7 @@ const RemovePupil: React.FC = () => {
 					{showError && (
 						<ErrorParagraph error="!תלמיד זה אינו קיים"/>
 					)}
-					<Button type="submit" className="my-5">
+					<Button type="submit" className="mt-5">
 						הסרה
 					</Button>
 				</form>

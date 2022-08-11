@@ -52,9 +52,9 @@ export const produceMonthArray = (month: number, year: number) => {
 export const produceWeeksFromMonth = (month: DateObjectType[]) => {
 	let weeksArray: DateObjectType[][] = new Array();
 	let currentWeek: DateObjectType[] = new Array();
-	month.forEach((date: DateObjectType) => {
+	month.forEach((date: DateObjectType, index) => {
 		currentWeek.push(date);
-		if (date.day === 5) {
+		if (date.day === 5 || index === month.length - 1) {
 			weeksArray.push([...currentWeek]);
 			currentWeek = new Array();
 		}
@@ -109,6 +109,21 @@ export const mapDayToString = (day: number) => {
 			return "יום חמישי";
 	}
 };
+
+export const MONTH_NAMES = [
+	"ינואר",
+	"פברואר",
+	"מרץ",
+	"אפריל",
+	"מאי",
+	"יוני",
+	"יולי",
+	"אוגוסט",
+	"ספטמבר",
+	"אוקטובר",
+	"נובמבר",
+	"דצמבר",
+];
 
 // export const toIsraelDate = (normalDate: string | Date) => {
 // 	let date: Date;

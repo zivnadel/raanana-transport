@@ -3,8 +3,8 @@ import LinkButton from "../components/ui/buttons/LinkButton";
 
 const Home: NextPage = () => {
 	return (
-		<div className="align-center flex flex-col items-center p-5 text-center">
-			<h1 className="mb-10 mt-36 text-3xl sm:text-5xl font-semibold text-primary md:mt-64">
+		<div className="align-center flex flex-col items-center justify-center h-full p-5 text-center">
+			<h1 className="mb-10 text-3xl sm:text-5xl font-semibold text-primary">
 				דיווח על עדכון ושינוי שעות ההסעה
 			</h1>
 			<p className="mb-2 text-xl sm:text-2xl">אנא הקפידו על הכנסת שם מלא ופרטים מדויקים</p>

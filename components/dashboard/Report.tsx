@@ -3,27 +3,13 @@ import React from "react";
 import { DashboardContext } from "../../store/DashboardContext";
 import {
 	calculateLearningYear,
+	MONTH_NAMES,
 	validateMonth,
 	validateWeek,
 } from "../../utils/dateUtils";
 import Button from "../ui/buttons/Button";
 import RoundedDatepicker from "../ui/datepickers/RoundedDatepicker";
 import Modal from "../ui/modals/Modal";
-
-const MONTH_NAMES = [
-	"ינואר",
-	"פברואר",
-	"מרץ",
-	"אפריל",
-	"מאי",
-	"יוני",
-	"יולי",
-	"אוגוסט",
-	"ספטמבר",
-	"אוקטובר",
-	"נובמבר",
-	"דצמבר",
-];
 
 const Report: React.FC = () => {
 	const dashboardContext = React.useContext(DashboardContext);
@@ -120,6 +106,7 @@ const Report: React.FC = () => {
 					<RoundedDatepicker
 						min={`${calculateLearningYear()}-09-01`}
 						max={`${calculateLearningYear() + 1}-06-20`}
+						placeholder="בחר תאריך"
 						onChange={onWeekSelected}
 						className="mb-5"
 					/>
@@ -137,6 +124,7 @@ const Report: React.FC = () => {
 							min={`${calculateLearningYear()}-09`}
 							max={`${calculateLearningYear() + 1}-06`}
 							onChange={onMonthSelected}
+							placeholder="בחר חודש"
 							month={true}
 							className="mb-5"
 						/>

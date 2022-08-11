@@ -34,7 +34,7 @@ const InputWithIcon: React.FC<Props> = ({
 					defaultValue={value}
 					id={name}
 					onChange={onChange}
-					className="block disabled:cursor-not-allowed w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+					className="block disabled:cursor-not-allowed w-full flex-1 rounded-none rounded-r-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
 				/>
 			</div>
 		</div>

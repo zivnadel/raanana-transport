@@ -16,6 +16,9 @@ import { authOptions } from "../../../api/auth/[...nextauth]";
 import Chart from "../../../../utils/chartJSImports";
 import InputWithIcon from "../../../../components/ui/inputs/InputWithIcon";
 import { ChartData, ChartOptions } from "chart.js";
+import ReportHeading from "../../../../components/dashboard/report/ReportHeading";
+import MobileNotSupported from "../../../../components/dashboard/report/MobileNotSupported";
+import TotalPriceInput from "../../../../components/dashboard/report/TotalPriceInput";
 
 interface Props {
 	valid: boolean;
@@ -210,12 +213,10 @@ const WeekReport: NextPage<Props> = ({ valid, weekData }) => {
 			{valid ? (
 				<>
 					{/* Charts container */}
-					<div className="hidden h-full w-full flex-col items-center justify-center p-10 md:flex">
-						<div className="mb-5 mt-12 rounded-full bg-opacity-50 bg-gradient-to-r from-primary to-secondary px-5 py-3 shadow-md">
-							<h1 className="text-center text-3xl font-semibold text-gray-300">{`השבוע שבין ה-${
-								weekData[0].date
-							} ל-${weekData[weekData.length - 1].date}`}</h1>
-						</div>
+					<div className="hidden h-full w-full flex-col items-center overflow-x-hidden overflow-y-scroll p-10 md:flex">
+						<ReportHeading>{`השבוע שבין ה-${weekData[0].date} ל-${
+							weekData[weekData.length - 1].date
+						}`}</ReportHeading>
 						<div className="flex w-full justify-between">
 							<div className="mx-3 h-[45%] w-[45%]">
 								<h2 className="mb-5 w-full text-center text-3xl font-semibold text-primary">
@@ -237,26 +238,16 @@ const WeekReport: NextPage<Props> = ({ valid, weekData }) => {
 							</div>
 						</div>
 						<div className="flex w-full flex-col items-center">
-							<div className="w-[20%]">
-								<h2 className="mt-5 mb-3 w-full text-center text-2xl font-semibold text-primary">
-									מחיר שבועי כולל (בשקלים)
-								</h2>
-								<InputWithIcon
-									disabled={true}
-									name="weeklyAmount"
-									type="text"
-									value={weekData
-										.reduce((prev, cur) => prev + cur.totalAmount, 0)
-										.toString()}
-								/>
-							</div>
+							<TotalPriceInput
+								name="weeklyTotal"
+								heading="המחיר השבועי הכולל (בשקלים)"
+								value={weekData
+									.reduce((prev, cur) => prev + cur.totalAmount, 0)
+									.toString()}
+							/>
 						</div>
 					</div>
-					<div className="md:hidden">
-						<Modal onDismiss={() => router.push("/dashboard")}>
-							<ErrorParagraph error={"עמוד זה אינו נתמך במובייל"} />
-						</Modal>
-					</div>
+					<MobileNotSupported />
 				</>
 			) : (
 				<Modal

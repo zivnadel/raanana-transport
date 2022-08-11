@@ -100,7 +100,7 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 						className="w-full"
 					/>
 					{pupilDoesntExist && <ErrorParagraph error="!תלמיד זה אינו קיים" />}
-					<Button type="submit" className={pupilDoesntExist ? "mt-0" : ""}>
+					<Button type="submit" className={pupilDoesntExist ? "mt-0" : "my-5 mb-0"}>
 						אישור
 					</Button>
 				</form>

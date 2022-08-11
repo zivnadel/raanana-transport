@@ -121,7 +121,7 @@ const ReportHours: NextPage = () => {
 					formSubmittedWithErrorHandler={invokeDateErrorStyles}
 					hideHourSelect={hideHourSelect}
 				/>
-				<Button type="submit" chevron={true} className="z-[-1] md:z-0">
+				<Button type="submit" chevron={true} className="z-[-1] mt-10 md:z-0">
 					שלח
 				</Button>
 			</form>
