@@ -1,56 +1,100 @@
+import React from "react";
+import exportFromJSON from "export-from-json";
+
 import DateObjectType from "../../../types/DateObjectType";
+import Button from "../../ui/buttons/Button";
 import ContainerButton from "../../ui/buttons/ContainerButton";
-import TransparentButton from "../../ui/buttons/TransparentButton";
 import Modal from "../../ui/modals/Modal";
+import Table from "../../ui/Table";
 
 interface Props {
 	monthData: DateObjectType[];
 	onDismiss: () => void;
+	month: string;
 }
 
-const PupilsTable: React.FC<Props> = ({ monthData, onDismiss }) => {
+const PupilsTable: React.FC<Props> = ({ monthData, onDismiss, month }) => {
 	const pupilsMonthlyData = produceMonthlyPupilData(monthData);
 
+	const [pupilIndex, setPupilIndex] = React.useState<number | null>(null);
+
+	const exportMonthReportToExcel = () => {
+		const newData = pupilsMonthlyData.map((pupil) => ({
+			"שם התלמיד": pupil.name,
+			"מחיר חודשי": pupil.monthlyPrice,
+		}));
+
+		exportFromJSON({
+			data: newData,
+			fileName: `דוח תלמידים חודשי - ${month}`,
+			exportType: "xls",
+		});
+	};
+
+	const exportPupilMonthDataToExcel = () => {
+		const pupilData = pupilsMonthlyData[pupilIndex!].dates.map((date) => ({
+			תאריך: date.date,
+			הסעות: date.hours.join(", ").replace("morning", "בוקר"),
+		}));
+
+		exportFromJSON({
+			data: pupilData,
+			fileName: pupilsMonthlyData[pupilIndex!].name,
+			exportType: "xls",
+		});
+	};
+
 	return (
-		<Modal onDismiss={onDismiss} heading='דו"ח תלמידים'>
-			<div className="relative w-full rounded-lg p-5 shadow-md">
-				<table className="w-full text-center text-sm text-gray-500">
-					<thead className="bg-gray-50 text-xs text-gray-700">
-						<th scope="col" className="py-3 px-6">
-							פירוט הסעות
-						</th>
-						<th scope="col" className="py-3 px-6">
-							מחיר חודשי
-						</th>
-						<th scope="col" className="py-3 px-6">
-							שם התלמיד
-						</th>
-					</thead>
-					<tbody>
-						{pupilsMonthlyData.map((pupil) => (
-							<tr
-								key={pupil.name}
-								className="border-b bg-white hover:bg-gray-50">
-								<th
-									scope="row"
-									className="whitespace-nowrap py-4 px-6 font-medium">
-									<ContainerButton>פתיחת הפירוט</ContainerButton>
-								</th>
-								<td className="py-4 px-6">{pupil.monthlyPrice} ₪</td>
-								<td className="py-4 px-6">{pupil.name}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
-		</Modal>
+		<>
+			<Modal
+				onDismiss={onDismiss}
+				onBackPressed={
+					pupilIndex !== null ? () => setPupilIndex(null) : undefined
+				}
+				heading='דו"ח תלמידים'>
+				{pupilIndex === null ? (
+					<div className="w-full text-center">
+						<Button
+							className="mb-0 mt-3 p-3"
+							onClick={exportMonthReportToExcel}>
+							ייצוא לאקסל
+						</Button>
+						<Table
+							labels={["פירוט הסעות", "מחיר חודשי", "שם התלמיד"]}
+							tableBody={pupilsMonthlyData.map((pupil, index) => [
+								<ContainerButton onClick={() => setPupilIndex(index)}>
+									פתיחת הפירוט
+								</ContainerButton>,
+								pupil.monthlyPrice,
+								pupil.name,
+							])}
+						/>
+					</div>
+				) : (
+					<div className="w-full text-center">
+						<Button
+							className="mb-0 mt-3 p-3"
+							onClick={exportPupilMonthDataToExcel}>
+							ייצוא לאקסל
+						</Button>
+						<Table
+							labels={["הסעות", "תאריך"]}
+							tableBody={pupilsMonthlyData[pupilIndex].dates.map((date) => [
+								date.hours.join(", ").replace("morning", "בוקר"),
+								date.date,
+							])}
+						/>
+					</div>
+				)}
+			</Modal>
+		</>
 	);
 };
 
 const produceMonthlyPupilData = (monthData: DateObjectType[]) => {
 	type DateWithHours = {
 		date: string;
-		hour: ("morning" | "15:30" | "17:00")[];
+		hours: ("morning" | "15:30" | "17:00")[];
 	};
 
 	type pupilData = {
@@ -71,9 +115,9 @@ const produceMonthlyPupilData = (monthData: DateObjectType[]) => {
 						(existingDate) => existingDate.date === date.date
 					);
 					if (existingDate) {
-						existingDate.hour.push(hour);
+						existingDate.hours.push(hour);
 					} else {
-						pupil.dates.push({ date: date.date, hour: [hour] });
+						pupil.dates.push({ date: date.date, hours: [hour] });
 					}
 					pupil.monthlyPrice +=
 						date.transportations[hour]!.price /
@@ -87,7 +131,7 @@ const produceMonthlyPupilData = (monthData: DateObjectType[]) => {
 						dates: [
 							{
 								date: date.date,
-								hour: [hour],
+								hours: [hour],
 							},
 						],
 					});

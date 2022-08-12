@@ -77,7 +77,7 @@ const Report: React.FC = () => {
 			}
 			error={error ? error : ""}
 			onDismiss={modalDismissedHandler}
-			onBackPresses={
+			onBackPressed={
 				weekClicked
 					? () => setWeekClicked(false)
 					: monthClicked

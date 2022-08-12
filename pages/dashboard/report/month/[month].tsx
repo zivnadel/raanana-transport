@@ -37,9 +37,6 @@ const MonthReport: NextPage<Props> = ({ valid, monthData, month }) => {
 
 	const monthWeeksArray = produceWeeksFromMonth(monthData);
 
-	console.log(monthData);
-	console.log(monthWeeksArray);
-
 	let pricesChartData: ChartData<"bar">;
 
 	if (valid) {
@@ -90,11 +87,11 @@ const MonthReport: NextPage<Props> = ({ valid, monthData, month }) => {
 			{valid ? (
 				<>
 					{/* Charts container */}
-					<div className="overflow-x-hidden overflow-y-scroll hidden h-screen w-full flex-col items-center p-10 md:flex">
+					<div className="hidden h-screen w-full flex-col items-center overflow-x-hidden overflow-y-scroll p-10 md:flex">
 						<ReportHeading>חודש {MONTH_NAMES[month - 1]}</ReportHeading>
 						<div className="flex w-full flex-row-reverse items-center justify-center">
 							<div className="w-2/6 flex-col items-center p-5">
-							<TransparentButton
+								<TransparentButton
 									onClick={() => setShowPupilsTable(true)}
 									className="mb-4 w-5/6 p-3">
 									דו&quot;ח תלמידים
@@ -102,7 +99,6 @@ const MonthReport: NextPage<Props> = ({ valid, monthData, month }) => {
 								<div className="w-[90%]">
 									<Chart type="pie" data={pricesChartData!} />
 								</div>
-								
 							</div>
 							<div className="flex flex-col items-center">
 								{monthWeeksArray.map((week, index) => (
@@ -134,6 +130,7 @@ const MonthReport: NextPage<Props> = ({ valid, monthData, month }) => {
 						<PupilsTable
 							onDismiss={() => setShowPupilsTable(false)}
 							monthData={monthData}
+							month={MONTH_NAMES[month - 1]}
 						/>
 					)}
 					<MobileNotSupported />

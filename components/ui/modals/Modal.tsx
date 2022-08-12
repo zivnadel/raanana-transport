@@ -6,7 +6,7 @@ import ErrorAlert from "./ErrorAlert";
 interface Props {
 	children?: React.ReactNode;
 	onDismiss?: React.MouseEventHandler<SVGElement> | undefined;
-	onBackPresses?: React.MouseEventHandler<SVGElement> | undefined;
+	onBackPressed?: React.MouseEventHandler<SVGElement> | undefined;
 	heading?: string;
 	className?: string;
 	error?: string;
@@ -15,7 +15,7 @@ interface Props {
 const Modal: React.FC<Props> = ({
 	children,
 	onDismiss,
-	onBackPresses,
+	onBackPressed,
 	heading,
 	className,
 	error,
@@ -41,7 +41,7 @@ const Modal: React.FC<Props> = ({
 				{/* Modal Content */}
 				<div className="my-auto w-10/12 max-w-md rounded-lg bg-white shadow">
 					<div className="flex">
-						{onBackPresses && <BackModalButton onClick={onBackPresses} />}
+						{onBackPressed && <BackModalButton onClick={onBackPressed} />}
 						{onDismiss && <CloseModalButton onClick={onDismiss} />}
 					</div>
 					<h2 className="p-2 text-center text-2xl text-primary">{heading}</h2>
