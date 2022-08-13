@@ -6,6 +6,7 @@ import Button from "../../ui/buttons/Button";
 import ContainerButton from "../../ui/buttons/ContainerButton";
 import Modal from "../../ui/modals/Modal";
 import Table from "../../ui/Table";
+import SearchInput from "../../ui/inputs/SearchInput";
 
 interface Props {
 	monthData: DateObjectType[];
@@ -15,6 +16,8 @@ interface Props {
 
 const PupilsTable: React.FC<Props> = ({ monthData, onDismiss, month }) => {
 	const pupilsMonthlyData = produceMonthlyPupilData(monthData);
+
+	const [filteredPupils, setFilteredPupils] = React.useState(pupilsMonthlyData);
 
 	const [pupilIndex, setPupilIndex] = React.useState<number | null>(null);
 
@@ -44,6 +47,19 @@ const PupilsTable: React.FC<Props> = ({ monthData, onDismiss, month }) => {
 		});
 	};
 
+	const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFilteredPupils(
+			pupilsMonthlyData.filter((pupil) => {
+				const [firstName, lastName] = pupil.name.split(" ");
+				return (
+					firstName.startsWith(e.target.value) ||
+					lastName.startsWith(e.target.value) ||
+					pupil.name.startsWith(e.target.value)
+				);
+			})
+		);
+	};
+
 	return (
 		<>
 			<Modal
@@ -55,13 +71,17 @@ const PupilsTable: React.FC<Props> = ({ monthData, onDismiss, month }) => {
 				{pupilIndex === null ? (
 					<div className="w-full text-center">
 						<Button
-							className="mb-0 mt-3 p-3"
+							className="mb-2 mt-3 p-3"
 							onClick={exportMonthReportToExcel}>
 							ייצוא לאקסל
 						</Button>
+						<div className="flex w-full justify-center p-3">
+							<SearchInput onChange={onSearch} className="w-4/6" />
+						</div>
 						<Table
+							className="pt-2"
 							labels={["פירוט הסעות", "מחיר חודשי", "שם התלמיד"]}
-							tableBody={pupilsMonthlyData.map((pupil, index) => [
+							tableBody={filteredPupils.map((pupil, index) => [
 								<ContainerButton onClick={() => setPupilIndex(index)}>
 									פתיחת הפירוט
 								</ContainerButton>,

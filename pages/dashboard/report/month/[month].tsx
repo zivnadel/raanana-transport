@@ -16,7 +16,7 @@ import Chart from "../../../../utils/chartJSImports";
 import Modal from "../../../../components/ui/modals/Modal";
 import ErrorParagraph from "../../../../components/ui/ErrorParagraph";
 import { useRouter } from "next/router";
-import { ChartData } from "chart.js";
+import { ChartData, ChartOptions } from "chart.js";
 import ReportHeading from "../../../../components/dashboard/report/ReportHeading";
 import MobileNotSupported from "../../../../components/dashboard/report/MobileNotSupported";
 import Button from "../../../../components/ui/buttons/Button";
@@ -37,7 +37,8 @@ const MonthReport: NextPage<Props> = ({ valid, monthData, month }) => {
 
 	const monthWeeksArray = produceWeeksFromMonth(monthData);
 
-	let pricesChartData: ChartData<"bar">;
+	let pricesChartData: ChartData<"pie">;
+	let pricesChartOptions: ChartOptions<"pie">;
 
 	if (valid) {
 		pricesChartData = {
@@ -80,6 +81,36 @@ const MonthReport: NextPage<Props> = ({ valid, monthData, month }) => {
 				},
 			],
 		};
+
+		pricesChartOptions = {
+			plugins: {
+				tooltip: {
+					callbacks: {
+						beforeFooter: () => {
+							return ":השבוע שבין";
+						},
+						footer: (tooltipItems) => {
+							const week = monthWeeksArray[tooltipItems[0].dataIndex];
+							return `${week[week.length - 1].date} - ${week[0].date}`;
+						},
+					},
+					footerAlign: "center" as "center" | "left" | "right",
+					titleAlign: "center" as "center" | "left" | "right",
+					bodyAlign: "center" as "center" | "left" | "right",
+					titleMarginBottom: 8,
+					footerSpacing: 3,
+					titleFont: {
+						size: 16,
+					},
+					bodyFont: {
+						size: 16,
+					},
+					footerFont: {
+						size: 14,
+					},
+				},
+			},
+		};
 	}
 
 	return (
@@ -97,12 +128,17 @@ const MonthReport: NextPage<Props> = ({ valid, monthData, month }) => {
 									דו&quot;ח תלמידים
 								</TransparentButton>
 								<div className="w-[90%]">
-									<Chart type="pie" data={pricesChartData!} />
+									<Chart
+										type="pie"
+										data={pricesChartData!}
+										options={pricesChartOptions!}
+									/>
 								</div>
 							</div>
 							<div className="flex flex-col items-center">
 								{monthWeeksArray.map((week, index) => (
 									<Button
+										key={index}
 										className="mb-4 w-5/6"
 										onClick={() =>
 											router.push(

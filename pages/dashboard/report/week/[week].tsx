@@ -121,26 +121,30 @@ const WeekReport: NextPage<Props> = ({ valid, weekData }) => {
 			plugins: {
 				tooltip: {
 					callbacks: {
-						beforeFooter: (tooltipItems: any) => {
+						beforeFooter: (tooltipItems) => {
 							if (tooltipItems[0].datasetIndex === 0) {
 								return "";
 							}
 							return ":כלי רכב";
 						},
-						footer: (tooltipItems: any) => {
+						footer: (tooltipItems) => {
 							const day: DateObjectType = weekData[tooltipItems[0].dataIndex];
 
 							if (tooltipItems[0].datasetIndex === 0) {
 								return "";
 							}
 
-							let hour = tooltipItems[0].dataset.label.split(" ").at(-1);
-							if (hour === "בוקר") hour = "morning";
+							if (tooltipItems[0].dataset.label) {
+								let hour = tooltipItems[0].dataset.label.split(" ").at(-1);
+								if (hour === "בוקר") hour = "morning";
 
-							return mapBusTypeToString(
-								day.transportations[hour as keyof typeof day.transportations]!
-									.busType
-							);
+								return mapBusTypeToString(
+									day.transportations[hour as keyof typeof day.transportations]!
+										.busType
+								);
+							}
+
+							return "";
 						},
 					},
 					footerAlign: "center" as "center" | "left" | "right",
@@ -168,26 +172,30 @@ const WeekReport: NextPage<Props> = ({ valid, weekData }) => {
 						beforeFooter: () => {
 							return ":נוסעים";
 						},
-						footer: (tooltipItems: any) => {
+						footer: (tooltipItems) => {
 							const day: DateObjectType = weekData[tooltipItems[0].dataIndex];
-							let hour = tooltipItems[0].dataset.label.split(" ").at(-1);
-							if (hour === "בוקר") hour = "morning";
-							let stringData = "";
-							day.transportations[
-								hour as keyof typeof day.transportations
-							]?.pupils.forEach((pupil, index) => {
-								if (
-									index ===
-									day.transportations[hour as keyof typeof day.transportations]!
-										.pupils.length -
-										1
-								) {
-									stringData += pupil;
-								} else {
-									stringData += pupil + ", ";
-								}
-							});
-							return stringData;
+							if (tooltipItems[0].dataset.label) {
+								let hour = tooltipItems[0].dataset.label.split(" ").at(-1);
+								if (hour === "בוקר") hour = "morning";
+								let stringData = "";
+								day.transportations[
+									hour as keyof typeof day.transportations
+								]?.pupils.forEach((pupil, index) => {
+									if (
+										index ===
+										day.transportations[
+											hour as keyof typeof day.transportations
+										]!.pupils.length -
+											1
+									) {
+										stringData += pupil;
+									} else {
+										stringData += pupil + ", ";
+									}
+								});
+								return stringData;
+							}
+							return "";
 						},
 					},
 					footerAlign: "center" as "center" | "left" | "right",
