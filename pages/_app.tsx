@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 			<header>
 				<Navbar />
 			</header>
-			<main className="h-[95vh]">
+			<main className="h-[95vh] mt-32 lg:mt-0">
 				<SessionProvider session={session}>
 					{isLoading ? (
 						<Modal>

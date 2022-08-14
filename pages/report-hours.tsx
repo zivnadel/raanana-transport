@@ -83,47 +83,49 @@ const ReportHours: NextPage = () => {
 	};
 
 	return (
-		<div className="flex h-screen items-center justify-center overflow-x-hidden overflow-y-scroll pb-24">
+		<div className="flex h-screen w-full items-center lg:justify-center overflow-x-hidden overflow-y-scroll">
 			<form
 				onSubmit={submitReportHoursHandler}
-				className="w-12/12 m-3 mt-32 flex h-5/6 flex-col items-center rounded-3xl p-2 text-center md:mt-5 md:w-4/12">
-				<h1 className="mt-10 mb-5 text-3xl font-semibold text-primary md:mt-24">
+				className="m-3 flex h-5/6 w-full flex-col items-center rounded-3xl p-2 text-center md:mt-5">
+				<h1 className="mb-5 w-full text-3xl font-semibold text-primary md:mt-20">
 					דיווח על עדכון ושינוי שעות ההסעה
 				</h1>
 				<p className="mb-5 text-2xl">!נא להכניס פרטים מדויקים</p>
-				<ReportHoursInput
-					ref={firstNameInputRef}
-					clear={clearFirstNameInput}
-					formSubmittedWithErrorHandler={invokeFirstNameErrorStyles}
-					label="שם פרטי"
-					name="firstName"
-					type="text"
-					regex={/^[\u0590-\u05FF]+$/}
-					errorMessage="הכנס שם פרטי תקין"
-					setError={setFirstNameInvalid}
-				/>
-				<ReportHoursInput
-					ref={lastNameInputRef}
-					clear={clearLastNameInput}
-					formSubmittedWithErrorHandler={invokeLastNameErrorStyles}
-					label="שם משפחה"
-					name="lastName"
-					type="text"
-					regex={/^[\u0590-\u05FF]+$/}
-					errorMessage="הכנס שם משפחה תקין"
-					setError={setLastNameInvalid}
-				/>
-				<DoubleRadioGroup action={action} setAction={setAction} />
-				<DateAndHours
-					ref={dateInputRef}
-					setIsEmpty={setDateIsEmpty}
-					setHour={setHour}
-					formSubmittedWithErrorHandler={invokeDateErrorStyles}
-					hideHourSelect={hideHourSelect}
-				/>
-				<Button type="submit" chevron={true} className="z-[-1] mt-10 md:z-0">
-					שלח
-				</Button>
+				<div className="md:w-2/6 w-full flex flex-col items-center justify-center">
+					<ReportHoursInput
+						ref={firstNameInputRef}
+						clear={clearFirstNameInput}
+						formSubmittedWithErrorHandler={invokeFirstNameErrorStyles}
+						label="שם פרטי"
+						name="firstName"
+						type="text"
+						regex={/^[\u0590-\u05FF]+$/}
+						errorMessage="הכנס שם פרטי תקין"
+						setError={setFirstNameInvalid}
+					/>
+					<ReportHoursInput
+						ref={lastNameInputRef}
+						clear={clearLastNameInput}
+						formSubmittedWithErrorHandler={invokeLastNameErrorStyles}
+						label="שם משפחה"
+						name="lastName"
+						type="text"
+						regex={/^[\u0590-\u05FF]+$/}
+						errorMessage="הכנס שם משפחה תקין"
+						setError={setLastNameInvalid}
+					/>
+					<DoubleRadioGroup action={action} setAction={setAction} />
+					<DateAndHours
+						ref={dateInputRef}
+						setIsEmpty={setDateIsEmpty}
+						setHour={setHour}
+						formSubmittedWithErrorHandler={invokeDateErrorStyles}
+						hideHourSelect={hideHourSelect}
+					/>
+					<Button type="submit" chevron={true} className="z-[-1] mt-10 md:z-0">
+						שלח
+					</Button>
+				</div>
 			</form>
 		</div>
 	);

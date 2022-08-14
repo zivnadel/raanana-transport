@@ -44,7 +44,7 @@ const Panel: React.FC = () => {
 
 	return (
 		<div className="flex h-screen flex-col items-center text-center">
-			<h1 className="mb-2 mt-36 text-3xl font-semibold text-primary md:mt-28">
+			<h1 className="mb-2 mt-5 text-3xl font-semibold text-primary lg:mt-24">
 				לוח הבקרה
 			</h1>
 			<button
