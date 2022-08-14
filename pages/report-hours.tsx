@@ -83,11 +83,11 @@ const ReportHours: NextPage = () => {
 	};
 
 	return (
-		<div className="flex w-full items-center lg:justify-center overflow-x-hidden overflow-y-scroll">
+		<div className="flex w-full items-center lg:justify-center lg:h-full overflow-x-hidden overflow-y-scroll">
 			<form
 				onSubmit={submitReportHoursHandler}
-				className="m-3 flex h-5/6 w-full flex-col items-center rounded-3xl p-2 text-center md:mt-5">
-				<h1 className="mb-5 w-full text-3xl font-semibold text-primary md:mt-20">
+				className="m-3 flex h-5/6 w-full flex-col items-center lg:justify-center rounded-3xl p-2 text-center md:mt-5">
+				<h1 className="mb-5 w-full text-3xl font-semibold text-primary lg:mt-0">
 					דיווח על עדכון ושינוי שעות ההסעה
 				</h1>
 				<p className="mb-5 text-2xl">!נא להכניס פרטים מדויקים</p>
@@ -122,7 +122,7 @@ const ReportHours: NextPage = () => {
 						formSubmittedWithErrorHandler={invokeDateErrorStyles}
 						hideHourSelect={hideHourSelect}
 					/>
-					<Button type="submit" chevron={true} className="z-[-1] mt-10 md:z-0">
+					<Button type="submit" chevron={true} className="mt-10 md:z-0">
 						שלח
 					</Button>
 				</div>
