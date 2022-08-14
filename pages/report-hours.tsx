@@ -83,7 +83,7 @@ const ReportHours: NextPage = () => {
 	};
 
 	return (
-		<div className="flex h-screen w-full items-center lg:justify-center overflow-x-hidden overflow-y-scroll">
+		<div className="flex w-full items-center lg:justify-center overflow-x-hidden overflow-y-scroll">
 			<form
 				onSubmit={submitReportHoursHandler}
 				className="m-3 flex h-5/6 w-full flex-col items-center rounded-3xl p-2 text-center md:mt-5">
