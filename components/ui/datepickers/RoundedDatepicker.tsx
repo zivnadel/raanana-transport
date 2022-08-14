@@ -26,6 +26,7 @@ const RoundedDatepicker: React.FC<Props> = ({
 				type={month ? "month" : "date"}
 				min={min}
 				max={max}
+				onClick={(e: any) => e.target.showPicker()}
 				onChange={onChange}
 				value={value}
 				defaultValue={placeholder || "תאריך"}

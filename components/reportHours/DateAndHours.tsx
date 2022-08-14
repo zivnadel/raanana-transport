@@ -106,20 +106,31 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 		};
 
 		return (
-			<div className="flex w-10/12 flex-col items-center justify-center">
+			<div className="relative flex w-10/12 flex-col items-center justify-center mt-5 md:mt-0">
 				<input
 					ref={dateInputRef}
+					id="date"
+					onClick={(e: any) => e.target.showPicker()}
 					onChange={dateChangedHandler}
 					type="date"
 					min={`${calculateLearningYear()}-09-01`}
 					max={`${calculateLearningYear() + 1}-06-20`}
-					className={`mb-2 block w-full border-0 border-b-2 bg-transparent px-0 py-3 text-right text-sm text-gray-900 ${
+					className={`peer block w-full appearance-none border-0 border-b-2 bg-transparent py-2.5 px-0 text-right text-sm text-gray-900 ${
 						showErrorStyles
-							? "border-secondary text-secondary focus:border-secondary"
+							? "border-secondary focus:border-secondary"
 							: "border-gray-500 focus:border-primary"
-					} appearance-none focus:outline-none focus:ring-0`}
-					placeholder="בחר תאריך"
+					} focus:outline-none focus:ring-0`}
+					data-placeholder="בחר תאריך"
 				/>
+				<label
+					htmlFor="date"
+					className={`md:hidden absolute right-0 top-3 -z-10 -translate-y-8 scale-75 transform text-lg duration-500 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-8 peer-focus:scale-75 ${
+						showErrorStyles
+							? "text-secondary peer-focus:text-secondary"
+							: "text-gray-700 peer-focus:text-primary"
+					}`}>
+					תאריך
+				</label>
 				{isLoading && (
 					<p
 						id="standard_error_help"
