@@ -4,6 +4,7 @@ import Button from "../components/ui/buttons/Button";
 import ReportHoursInput from "../components/reportHours/ReportHoursInput";
 import DoubleRadioGroup from "../components/reportHours/DoubleRadioGroup";
 import DateAndHours from "../components/reportHours/DateAndHours";
+import { toNormalDateString } from "../utils/dateUtils";
 
 // ! IMPORTANT: This form uses state mechanism of multiple refs and states for storing
 // ! and managing values. This is a bit bloated but works well !-MAY-! change in the future
@@ -83,15 +84,15 @@ const ReportHours: NextPage = () => {
 	};
 
 	return (
-		<div className="flex w-full items-center lg:justify-center lg:h-full overflow-x-hidden overflow-y-scroll">
+		<div className="flex w-full items-center overflow-x-hidden overflow-y-scroll lg:h-full lg:justify-center">
 			<form
 				onSubmit={submitReportHoursHandler}
-				className="m-3 flex h-5/6 w-full flex-col items-center lg:justify-center rounded-3xl p-2 text-center md:mt-5">
+				className="m-3 flex h-5/6 w-full flex-col items-center rounded-3xl p-2 text-center md:mt-5 lg:justify-center">
 				<h1 className="mb-5 w-full text-3xl font-semibold text-primary lg:mt-0">
 					דיווח על עדכון ושינוי שעות ההסעה
 				</h1>
 				<p className="mb-5 text-2xl">!נא להכניס פרטים מדויקים</p>
-				<div className="md:w-2/6 w-full flex flex-col items-center justify-center">
+				<div className="flex w-full flex-col items-center justify-center md:w-2/6">
 					<ReportHoursInput
 						ref={firstNameInputRef}
 						clear={clearFirstNameInput}
