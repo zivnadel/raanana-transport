@@ -16,6 +16,14 @@ export const calculateLearningYear = () => {
 	}
 };
 
+export const calculateMin = () => {
+	const today = new Date();
+	if (today < new Date(`${calculateLearningYear()}-09-01`)) {
+		return new Date(`${calculateLearningYear()}-09-01`);
+	}
+	return today;
+};
+
 export const produceYearArray = () => {
 	const currentYear = calculateLearningYear();
 	const start = new Date(`${currentYear}-09-01`);
@@ -64,9 +72,9 @@ export const produceWeeksFromMonth = (month: DateObjectType[]) => {
 
 export const toNormalDateString = (date: Date) => {
 	const newDate = new Date(date.toUTCString());
-	return `${newDate.getFullYear()}/${
-		newDate.getMonth() + 1
-	}/${newDate.getDate()}`;
+	return `${newDate.getFullYear()}/${("0" + (newDate.getMonth() + 1)).slice(
+		-2
+	)}/${("0" + newDate.getDate()).slice(-2)}`;
 };
 
 export const validateWeek = (date: Date) => {
@@ -124,17 +132,6 @@ export const MONTH_NAMES = [
 	"נובמבר",
 	"דצמבר",
 ];
-
-// export const toIsraelDate = (normalDate: string | Date) => {
-// 	let date: Date;
-// 	if (typeof normalDate === "string") {
-// 		date = new Date(new Date(normalDate).toUTCString());
-// 	} else {
-// 		date = normalDate;
-// 	}
-// 	date.setHours(date.getHours() - 3);
-// 	return date;
-// };
 
 export const calculateBusType = (numOfPupils: number): busType[] => {
 	if (numOfPupils === 0) {

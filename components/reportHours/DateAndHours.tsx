@@ -5,7 +5,11 @@ import React, {
 } from "react";
 import { Dispatch, SetStateAction, useState, useRef } from "react";
 import DateObjectType from "../../types/DateObjectType";
-import { calculateLearningYear } from "../../utils/dateUtils";
+import {
+	calculateLearningYear,
+	calculateMin,
+	toNormalDateString,
+} from "../../utils/dateUtils";
 import { _get } from "../../utils/http";
 
 interface Props {
@@ -53,7 +57,7 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 			setIsEmpty(true);
 			setIsLoading(true);
 
-			const response = await _get<DateObjectType>(
+			const { response } = await _get<DateObjectType>(
 				`/api/dates/?date=${new Date(dateInputRef.current?.value!)}`
 			);
 
@@ -80,13 +84,24 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 			const date = new Date(dateInputRef.current!.value);
 			const day = date.getDay() + 1;
 			const year = calculateLearningYear();
+
 			if (
 				day === 6 ||
 				day === 7 ||
-				date < new Date(`${year}-09-01`) ||
+				date < calculateMin() ||
 				date > new Date(`${year + 1}-06-20`)
 			) {
-				setErrorMessage("בתאריך זה אין הסעות! הכנס תאריך מתאים");
+				if (
+					day !== 6 &&
+					day !== 7 &&
+					date >= new Date(`${year}-09-01`) &&
+					date < calculateMin()
+				) {
+					setErrorMessage("לא ניתן לערוך שינויים בתאריכים שעברו");
+				} else {
+					setErrorMessage("בתאריך זה אין הסעות! הכנס תאריך מתאים");
+				}
+
 				setShowErrorStyles(true);
 
 				// setIsEmpty is actually indicator for error so
@@ -95,6 +110,7 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 				setErrorMessage("שדה זה הינו חובה");
 				setShowErrorStyles(false);
 				setIsEmpty(false);
+				setHour("morning");
 				fetchDates();
 			}
 		};
@@ -106,25 +122,22 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 		};
 
 		return (
-			<div className="relative flex w-10/12 flex-col items-center justify-center mt-5 md:mt-0">
+			<div className="relative mt-5 flex w-10/12 flex-col items-center justify-center md:mt-0">
 				<input
 					ref={dateInputRef}
 					id="date"
 					onClick={(e: any) => e.target.showPicker()}
 					onChange={dateChangedHandler}
 					type="date"
-					min={`${calculateLearningYear()}-09-01`}
-					max={`${calculateLearningYear() + 1}-06-20`}
 					className={`peer block w-full appearance-none border-0 border-b-2 bg-transparent py-2.5 px-0 text-right text-sm text-gray-900 ${
 						showErrorStyles
 							? "border-secondary focus:border-secondary"
 							: "border-gray-500 focus:border-primary"
 					} focus:outline-none focus:ring-0`}
-					data-placeholder="בחר תאריך"
 				/>
 				<label
 					htmlFor="date"
-					className={`md:hidden absolute right-0 top-3 -z-10 -translate-y-8 scale-75 transform text-lg duration-500 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-8 peer-focus:scale-75 ${
+					className={`absolute right-0 top-3 -z-10 -translate-y-8 scale-75 transform text-lg duration-500 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-8 peer-focus:scale-75 md:hidden ${
 						showErrorStyles
 							? "text-secondary peer-focus:text-secondary"
 							: "text-gray-700 peer-focus:text-primary"

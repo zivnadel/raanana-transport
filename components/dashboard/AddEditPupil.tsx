@@ -25,7 +25,7 @@ const AddEditPupil: React.FC = () => {
 	const submitNameClickedHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 		setIsLoading(true);
-		const pupil = await _get<PupilObjectType>(
+		const { response: pupil } = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupilName}`
 		);
 		setSubmitClicked(true);

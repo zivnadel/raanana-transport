@@ -10,7 +10,7 @@ import {
 } from "../../utils/dateUtils";
 import { _get, _patch } from "../../utils/http";
 import Button from "../ui/buttons/Button";
-import ErrorParagraph from "../ui/ErrorParagraph";
+import ErrorParagraph from "../ui/paragraphs/ErrorParagraph";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
 import SelectHoursCheckbox from "../SelectHoursCheckbox";
@@ -39,23 +39,30 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 	React.useEffect(() => {
 		(async () => {
 			setIsLoading(true);
-			const response = await _get<DateObjectType[]>(
-				`/api/dates?week=${currentWeekDate}`
-			).catch((error) => setError(error.message));
-			if (response) {
-				setCurrentWeek(response);
-				let modeledWeekData: { day: number; hours: string[]; date?: string }[] =
-					[];
-				response.map((date) => {
-					modeledWeekData.push({
-						day: date.day,
-						hours: Object.keys(date.transportations),
-						date: date.date,
+			try {
+				const { response } = await _get<DateObjectType[]>(
+					`/api/dates?week=${currentWeekDate}`
+				);
+				if (response) {
+					setCurrentWeek(response);
+					let modeledWeekData: {
+						day: number;
+						hours: string[];
+						date?: string;
+					}[] = [];
+					response.map((date) => {
+						modeledWeekData.push({
+							day: date.day,
+							hours: Object.keys(date.transportations),
+							date: date.date,
+						});
 					});
-				});
-				setModeledWeek(modeledWeekData);
+					setModeledWeek(modeledWeekData);
+				}
+				setIsLoading(false);
+			} catch (error: any) {
+				throw new Error(error);
 			}
-			setIsLoading(false);
 		})();
 	}, [currentWeekDate]);
 
@@ -102,7 +109,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 
 	const submitClickedHandler = async () => {
 		setIsLoading(true);
-		const prices = await _get<PricesObjectType>("/api/prices");
+		const { response: prices } = await _get<PricesObjectType>("/api/prices");
 		let weekData: typeof currentWeek = JSON.parse(JSON.stringify(currentWeek));
 
 		for (let day of weekData) {
@@ -119,7 +126,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 						if (
 							!day.transportations[hour as keyof typeof day.transportations]
 						) {
-							const pupils = await _get<string[]>(
+							const { response: pupils } = await _get<string[]>(
 								`/api/pupils?day=${day.day}&hour=${hour}`
 							);
 
@@ -160,7 +167,7 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 			{isLoading && <LoadingSpinner />}
 			{!isLoading && (
 				<div className="w-full px-3">
-					<div className="shadow-md flex w-full items-center justify-between rounded-full bg-primary/50 py-3 px-8">
+					<div className="flex w-full items-center justify-between rounded-full bg-primary/50 py-3 px-8 shadow-md">
 						<FaChevronCircleLeft
 							onClick={leftChevronClickedHandler}
 							className="cursor-pointer text-2xl text-green-800 hover:text-green-800/70"

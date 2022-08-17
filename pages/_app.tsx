@@ -36,6 +36,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
 	return (
 		<ErrorBoundary>
+			<Head>
+				<title>הסעות רעננה</title>
+				<meta name="robots" content="noindex, nofollow" />
+				<meta
+					name="viewport"
+					content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+			</Head>
 			<header>
 				<Navbar />
 			</header>

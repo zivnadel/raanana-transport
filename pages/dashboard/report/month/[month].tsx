@@ -14,7 +14,7 @@ import { authOptions } from "../../../api/auth/[...nextauth]";
 
 import Chart from "../../../../utils/chartJSImports";
 import Modal from "../../../../components/ui/modals/Modal";
-import ErrorParagraph from "../../../../components/ui/ErrorParagraph";
+import ErrorParagraph from "../../../../components/ui/paragraphs/ErrorParagraph";
 import { useRouter } from "next/router";
 import { ChartData, ChartOptions } from "chart.js";
 import ReportHeading from "../../../../components/dashboard/report/ReportHeading";

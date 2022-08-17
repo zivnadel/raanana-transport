@@ -5,7 +5,7 @@ import DayObjectType from "../../types/DayObjectType";
 import { _patch } from "../../utils/http";
 import SelectHoursCheckbox from "../SelectHoursCheckbox";
 import Button from "../ui/buttons/Button";
-import ErrorParagraph from "../ui/ErrorParagraph";
+import ErrorParagraph from "../ui/paragraphs/ErrorParagraph";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
 

@@ -2,7 +2,7 @@ import React from "react";
 import { DashboardContext } from "../../store/DashboardContext";
 import { _delete } from "../../utils/http";
 import Button from "../ui/buttons/Button";
-import ErrorParagraph from "../ui/ErrorParagraph";
+import ErrorParagraph from "../ui/paragraphs/ErrorParagraph";
 import Input from "../ui/inputs/Input";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";

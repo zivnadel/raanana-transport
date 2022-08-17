@@ -86,13 +86,13 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 		event.preventDefault();
 		const filteredHours = hours; // ! TEMP
 		setIsLoading(true);
-		const pupilStillExists = await _get<PupilObjectType>(
+		const { response: pupilStillExists } = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupil.name}`
 		);
 		setIsLoading(false);
 		if (filteredHours !== null && pupilStillExists) {
 			setIsLoading(true);
-			const response = await _patch("/api/pupils", {
+			await _patch("/api/pupils", {
 				name: pupil.name,
 				schedule: filteredHours,
 			});

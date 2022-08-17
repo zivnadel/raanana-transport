@@ -10,7 +10,10 @@ import Panel from "../../components/dashboard/Panel";
 import clientPromise from "../../lib/mongodb";
 import { DashboardContextProvider } from "../../store/DashboardContext";
 import DateObjectType from "../../types/DateObjectType";
-import { toNormalDateString } from "../../utils/dateUtils";
+import {
+	calculateLearningYear,
+	toNormalDateString,
+} from "../../utils/dateUtils";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 const Dashboard: NextPage<
@@ -19,7 +22,11 @@ const Dashboard: NextPage<
 	return (
 		<DashboardContextProvider>
 			<Panel />
-			<ActiveWindow initialPrices={initialPrices} initialSchedule={initialSchedule} initialDate={initialDate} />
+			<ActiveWindow
+				initialPrices={initialPrices}
+				initialSchedule={initialSchedule}
+				initialDate={initialDate}
+			/>
 		</DashboardContextProvider>
 	);
 };
@@ -70,7 +77,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		} else {
 			initialDate = await db
 				.collection<DateObjectType>("dates")
-				.findOne({ date: "2022/9/1" }, { projection: { _id: 0 } });
+				.findOne(
+					{ date: `${calculateLearningYear()}/09/01` },
+					{ projection: { _id: 0 } }
+				);
 		}
 
 		return {

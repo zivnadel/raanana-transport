@@ -2,7 +2,7 @@ import React from "react";
 import PupilObjectType from "../../types/PupilObjectType";
 import { _get } from "../../utils/http";
 import Button from "../ui/buttons/Button";
-import ErrorParagraph from "../ui/ErrorParagraph";
+import ErrorParagraph from "../ui/paragraphs/ErrorParagraph";
 import Input from "../ui/inputs/Input";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
@@ -48,7 +48,7 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 		}
 
 		setIsLoading(true);
-		const pupil = await _get<PupilObjectType>(
+		const { response: pupil } = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${firstName} ${lastName}`
 		);
 		setIsLoading(false);
@@ -100,7 +100,9 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 						className="w-full"
 					/>
 					{pupilDoesntExist && <ErrorParagraph error="!תלמיד זה אינו קיים" />}
-					<Button type="submit" className={pupilDoesntExist ? "mt-0" : "my-5 mb-0"}>
+					<Button
+						type="submit"
+						className={pupilDoesntExist ? "mt-0" : "my-5 mb-0"}>
 						אישור
 					</Button>
 				</form>

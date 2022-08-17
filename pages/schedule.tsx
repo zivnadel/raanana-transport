@@ -10,7 +10,7 @@ import Modal from "../components/ui/modals/Modal";
 import PupilObjectType from "../types/PupilObjectType";
 import { _get } from "../utils/http";
 import DayObjectType from "../types/DayObjectType";
-import ErrorParagraph from "../components/ui/ErrorParagraph";
+import ErrorParagraph from "../components/ui/paragraphs/ErrorParagraph";
 
 const Schedule: NextPage = () => {
 	const router = useRouter();
@@ -26,16 +26,23 @@ const Schedule: NextPage = () => {
 	React.useEffect(() => {
 		(async () => {
 			try {
-				const storagePupilName = localStorage.getItem("schedulePupilName");
+				const pupilName = localStorage.getItem("schedulePupilName");
 
-				if (storagePupilName) {
+				if (pupilName) {
 					setShowEnterNameModal(false);
 					setIsLoading(true);
 
-					const pupil = await _get<PupilObjectType>(
-						`/api/pupils?pupilName=${storagePupilName}`
+					const { response: pupil } = await _get<PupilObjectType>(
+						`/api/pupils?pupilName=${pupilName}`
 					);
-					const week = await _get<DayObjectType[]>("/api/week");
+
+					if (!pupil) {
+						setIsLoading(false);
+						setError("תלמיד זה אינו קיים במערכת");
+						return;
+					}
+
+					const { response: week } = await _get<DayObjectType[]>("/api/week");
 
 					setPupil(pupil);
 					setWeekSchedule(week);
@@ -47,7 +54,7 @@ const Schedule: NextPage = () => {
 				setIsLoading(false);
 			}
 		})();
-	}, []);
+	}, [showEnterNameModal]);
 
 	const nameFormSubmittedHandler = () => {
 		setShowEnterNameModal(false);
@@ -70,7 +77,12 @@ const Schedule: NextPage = () => {
 			) : (
 				<Modal
 					heading={isLoading || error ? "" : "צפייה במערכת השעות"}
-					onDismiss={() => router.back()}
+					onDismiss={() => {
+						if (error) {
+							localStorage.removeItem("schedulePupilName");
+						}
+						router.back();
+					}}
 					error={error}>
 					{isLoading && <LoadingSpinner />}
 					{!isLoading && !error && pupil && (
@@ -110,7 +122,7 @@ const Schedule: NextPage = () => {
 							</div>
 						</>
 					)}
-					{error && <ErrorParagraph error={error}/>}
+					{error && <ErrorParagraph error={error} />}
 				</Modal>
 			)}
 		</>

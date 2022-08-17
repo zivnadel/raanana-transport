@@ -88,11 +88,13 @@ const AddPupil: NextPage<
 		event.preventDefault();
 		setIsLoading(true);
 		const filteredHours = clearEmptyDays();
-		const pupil = await _get<PupilObjectType>(`/api/pupils?pupilName=${name}`);
+		const { response: pupil } = await _get<PupilObjectType>(
+			`/api/pupils?pupilName=${name}`
+		);
 		setIsLoading(false);
 		if (filteredHours !== null && !pupil) {
 			setIsLoading(true);
-			const response = await _post("/api/pupils", {
+			const { response } = await _post("/api/pupils", {
 				name,
 				schedule: filteredHours,
 			});

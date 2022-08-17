@@ -2,7 +2,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import React from "react";
-import ErrorParagraph from "../../../../components/ui/ErrorParagraph";
+import ErrorParagraph from "../../../../components/ui/paragraphs/ErrorParagraph";
 import Modal from "../../../../components/ui/modals/Modal";
 import clientPromise from "../../../../lib/mongodb";
 import DateObjectType, { busType } from "../../../../types/DateObjectType";

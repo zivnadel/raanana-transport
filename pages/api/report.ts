@@ -3,8 +3,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../lib/mongodb";
 import DateObjectType, { busType } from "../../types/DateObjectType";
 import PricesObjectType from "../../types/PricesObjectType";
+import PupilObjectType from "../../types/PupilObjectType";
 import ReportObjectType from "../../types/ReportObjectType";
-import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
+import {
+	calculateBusType,
+	calculateLearningYear,
+	calculateMin,
+	calculatePrice,
+} from "../../utils/dateUtils";
 
 const cors = Cors({
 	origin: process.env.VERCEL_URL,
@@ -34,23 +40,34 @@ const updateDate = async (
 	try {
 		const db = (await clientPromise).db();
 
+		const pupilExists = await db
+			.collection<PupilObjectType>("pupils")
+			.findOne({ name });
+
+		if (!pupilExists) {
+			return {
+				error: true,
+				message: "!תלמיד זה אינו קיים במערכת",
+			};
+		}
+
 		const dateData = await db
 			.collection<DateObjectType>("dates")
 			.findOne({ date });
 
-		const prices = await db.collection<PricesObjectType>("prices").findOne({});
-
 		if (!dateData) {
 			return {
 				error: true,
-				message: "תאריך לא קיים במערכת",
+				message: "!תאריך זה לא קיים במערכת",
 			};
 		}
+
+		const prices = await db.collection<PricesObjectType>("prices").findOne({});
 
 		if (!dateData.transportations[hour]) {
 			return {
 				error: true,
-				message: "שעה לא תקינה",
+				message: "!שעה לא תקינה",
 			};
 		}
 
@@ -87,10 +104,16 @@ const updateDate = async (
 			);
 		}
 
-		newBusType = calculateBusType(newPupils.length);
-		newPrice = calculatePrice(newBusType, prices!);
-		newTotalAmount =
-			dateData.totalAmount - dateData.transportations[hour]!.price + newPrice;
+		if (hour !== "morning") {
+			newBusType = calculateBusType(newPupils.length);
+			newPrice = calculatePrice(newBusType, prices!);
+			newTotalAmount =
+				dateData.totalAmount - dateData.transportations[hour]!.price + newPrice;
+		} else {
+			newBusType = dateData.transportations[hour]!.busType;
+			newPrice = dateData.transportations[hour]!.price;
+			newTotalAmount = dateData.totalAmount;
+		}
 
 		const response = db.collection("dates").updateOne(
 			{
@@ -120,14 +143,14 @@ export default async function handler(
 
 	switch (req.method) {
 		case "POST": {
-			const body: ReportObjectType = req.body;
+			const body: ReportObjectType = JSON.parse(req.body);
 
 			if (!validateRequestBody(body)) {
 				return res.status(406).json({ message: "Invalid request body" });
 			}
 
 			const { action, hour, name } = body;
-			const date = body.date.replace("-", "/");
+			const date = body.date.replaceAll("-", "/");
 
 			const response = await updateDate(action, hour, name, date).catch(
 				(error) => {
@@ -135,7 +158,11 @@ export default async function handler(
 				}
 			);
 
-			return response;
+			if ((response as any).error) {
+				return res.status(406).json({ message: (response as any).message });
+			}
+
+			return res.status(200).json(response);
 		}
 		default: {
 			return res
@@ -160,6 +187,8 @@ function validateRequestBody(body: any) {
 		body.date.split("-").length === 3 &&
 		body.date.split("-")[0].length === 4 &&
 		body.date.split("-")[1].length === 2 &&
-		body.date.split("-")[2].length === 2
+		body.date.split("-")[2].length === 2 &&
+		new Date(body.date) >= calculateMin() &&
+		new Date(body.date) <= new Date(`${calculateLearningYear() + 1}-06-20`)
 	);
 }

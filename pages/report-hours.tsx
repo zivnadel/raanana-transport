@@ -4,11 +4,15 @@ import Button from "../components/ui/buttons/Button";
 import ReportHoursInput from "../components/reportHours/ReportHoursInput";
 import DoubleRadioGroup from "../components/reportHours/DoubleRadioGroup";
 import DateAndHours from "../components/reportHours/DateAndHours";
-import { toNormalDateString } from "../utils/dateUtils";
+import { _post } from "../utils/http";
+import Modal from "../components/ui/modals/Modal";
+import ErrorParagraph from "../components/ui/paragraphs/ErrorParagraph";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
+import SuccessParagraph from "../components/ui/paragraphs/SuccessParagraph";
 
 // ! IMPORTANT: This form uses state mechanism of multiple refs and states for storing
-// ! and managing values. This is a bit bloated but works well !-MAY-! change in the future
-// ! to a store (context/redux) based solution in the future
+// ! and managing values. This is a bit bloated but works well and !-MAY-! be change in the future
+// ! to a store (context/redux) based solution.
 
 const ReportHours: NextPage = () => {
 	// States for managing validation of form
@@ -35,13 +39,17 @@ const ReportHours: NextPage = () => {
 	const invokeDateErrorStyles = useRef<Function>(null);
 	const hideHourSelect = useRef<Function>(null);
 
+	const [fetchError, setFetchError] = useState("");
+	const [fetchSuccess, setFetchSuccess] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+
 	const invokeErrorStyles = (flag: boolean, ref: RefObject<Function>) => {
 		if (flag && ref.current !== null) {
 			ref.current();
 		}
 	};
 
-	const submitReportHoursHandler = (
+	const submitReportHoursHandler = async (
 		event: React.FormEvent<HTMLFormElement>
 	) => {
 		event.preventDefault();
@@ -51,9 +59,9 @@ const ReportHours: NextPage = () => {
 			invokeErrorStyles(lastNameInvalid, invokeLastNameErrorStyles);
 			invokeErrorStyles(dateIsEmpty, invokeDateErrorStyles);
 		} else {
-			// TODO: handle form submission
-			console.log({
-				fullName:
+			setIsLoading(true);
+			const { response, status } = await _post("/api/report", {
+				name:
 					firstNameInputRef.current?.value +
 					" " +
 					lastNameInputRef.current?.value,
@@ -61,6 +69,14 @@ const ReportHours: NextPage = () => {
 				date: dateInputRef.current?.value,
 				hour: hour,
 			});
+			setIsLoading(false);
+
+			if (status === 406) {
+				setFetchError(response.message);
+				return;
+			}
+
+			setFetchSuccess(true);
 			if (
 				clearFirstNameInput.current !== null &&
 				clearLastNameInput.current !== null &&
@@ -80,6 +96,7 @@ const ReportHours: NextPage = () => {
 			setFirstNameInvalid(true);
 			setLastNameInvalid(true);
 			setDateIsEmpty(true);
+			setHour("morning");
 		}
 	};
 
@@ -127,6 +144,20 @@ const ReportHours: NextPage = () => {
 						שלח
 					</Button>
 				</div>
+				{(fetchError || fetchSuccess || isLoading) && (
+					<Modal
+						onDismiss={
+							fetchError
+								? () => setFetchError("")
+								: fetchSuccess
+								? () => setFetchSuccess(false)
+								: undefined
+						}>
+						{isLoading && <LoadingSpinner />}
+						{fetchError && <ErrorParagraph error={fetchError} />}
+						{fetchSuccess && <SuccessParagraph message="!המידע עודכן בהצלחה" />}
+					</Modal>
+				)}
 			</form>
 		</div>
 	);

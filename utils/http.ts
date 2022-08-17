@@ -1,10 +1,10 @@
 export async function _get<T>(url: string, headers?: HeadersInit) {
 	const response = await fetch(url, { method: "GET", headers });
-	if (!response.ok) {
+	if (!response.ok && response.status !== 406) {
 		throw new Error(response.statusText);
 	} else {
 		const data = await (response.json() as Promise<T>);
-		return data;
+		return { response: data, status: response.status };
 	}
 }
 
@@ -14,11 +14,11 @@ export async function _post(url: string, body: any, headers?: HeadersInit) {
 		headers,
 		body: JSON.stringify(body),
 	});
-	if (!response.ok) {
+	if (!response.ok && response.status !== 406) {
 		throw new Error(response.statusText);
 	} else {
 		const data = await response.json();
-		return data;
+		return { response: data, status: response.status };
 	}
 }
 
@@ -28,11 +28,11 @@ export async function _patch(url: string, body: any, headers?: HeadersInit) {
 		headers,
 		body: JSON.stringify(body),
 	});
-	if (!response.ok) {
+	if (!response.ok && response.status !== 406) {
 		throw new Error(response.statusText);
 	} else {
 		const data = await response.json();
-		return data;
+		return { response: data, status: response.status };
 	}
 }
 
@@ -43,11 +43,11 @@ export async function _put(url: string, body?: any, headers?: HeadersInit) {
 		body: JSON.stringify(body),
 	});
 
-	if (!response.ok) {
+	if (!response.ok && response.status !== 406) {
 		throw new Error(response.statusText);
 	} else {
 		const data = await response.json();
-		return data;
+		return { response: data, status: response.status };
 	}
 }
 
@@ -57,10 +57,10 @@ export async function _delete(url: string, body: any, headers?: HeadersInit) {
 		headers,
 		body: JSON.stringify(body),
 	});
-	if (!response.ok) {
+	if (!response.ok && response.status !== 406) {
 		throw new Error(response.statusText);
 	} else {
 		const data = await response.json();
-		return data;
+		return { response: data, status: response.status };
 	}
 }

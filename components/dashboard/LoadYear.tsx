@@ -2,7 +2,7 @@ import React from "react";
 import { DashboardContext } from "../../store/DashboardContext";
 import { _put } from "../../utils/http";
 import Button from "../ui/buttons/Button";
-import ErrorParagraph from "../ui/ErrorParagraph";
+import ErrorParagraph from "../ui/paragraphs/ErrorParagraph";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
 
@@ -14,7 +14,7 @@ const LoadYear: React.FC = () => {
 
 	const loadYearClickedHandler = async () => {
 		setIsLoading(true);
-		const response = await _put("/api/dates").catch((error) => setError(error.message));
+		await _put("/api/dates").catch((error) => setError(error.message));
 		alert("טעינת שנת הלימודים בוצעה בהצלחה!");
 		dashboardContext?.action({ type: "setLoadYear", payload: false });
 		setIsLoading(false);
@@ -37,9 +37,19 @@ const LoadYear: React.FC = () => {
 			{isLoading && <LoadingSpinner />}
 			{error && <ErrorParagraph error={error} />}
 			{!error && !isLoading && (
-				<Button className="my-5" onClick={loadYearClickedHandler}>
-					טעינת שנה&quot;ל
-				</Button>
+				<>
+					<div className="m-2 mx-4 rounded-full bg-primary/50 p-3">
+						<p className="mb-2 font-medium">
+							פעולה זו נדרשת לביצוע פעם אחת בלבד בתחילת השנה
+						</p>
+						<p className="font-bold text-green-900">
+							שימי לב שאתחול השנה דורס את הנתונים הקיימים
+						</p>
+					</div>
+					<Button className="mt-2.5 mb-5" onClick={loadYearClickedHandler}>
+						טעינת שנה&quot;ל
+					</Button>
+				</>
 			)}
 		</Modal>
 	);
