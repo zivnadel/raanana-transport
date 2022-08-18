@@ -29,6 +29,7 @@ const Schedule: NextPage = () => {
 
 				if (pupilName) {
 					setShowEnterNameModal(false);
+
 					setIsLoading(true);
 
 					const { response: pupil } = await _get<PupilObjectType>(
