@@ -10,10 +10,9 @@ import Modal from "../ui/modals/Modal";
 interface Props {
 	onDismiss: () => void;
 	onSubmit: () => void;
-	setPupil: React.Dispatch<React.SetStateAction<PupilObjectType | null>>;
 }
 
-const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
+const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit }) => {
 	const [firstName, setFirstName] = React.useState("");
 	const [lastName, setLastName] = React.useState("");
 
@@ -58,7 +57,6 @@ const EnterNameModal: React.FC<Props> = ({ onDismiss, onSubmit, setPupil }) => {
 		}
 
 		localStorage.setItem("schedulePupilName", pupil.name);
-		setPupil(pupil);
 
 		onSubmit();
 	};

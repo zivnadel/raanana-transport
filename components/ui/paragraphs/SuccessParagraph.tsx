@@ -4,7 +4,7 @@ interface Props {
 	message: string;
 }
 
-const ErrorParagraph: React.FC<Props> = ({ message }) => {
+const SuccessParagraph: React.FC<Props> = ({ message }) => {
 	return (
 		<div className="mt-3 flex w-full flex-col items-center p-3">
 			<BsCheckCircleFill className="mb-1 h-6 w-6 text-green-700" />
@@ -13,4 +13,4 @@ const ErrorParagraph: React.FC<Props> = ({ message }) => {
 	);
 };
 
-export default ErrorParagraph;
+export default SuccessParagraph;

@@ -22,7 +22,7 @@ const Modal: React.FC<Props> = ({
 }) => {
 	return (
 		// Modal backdrop
-		<div className="modal-open fixed top-0 left-0 z-50 flex h-full w-full flex-col justify-center overflow-y-auto overflow-x-hidden bg-gray-600 bg-opacity-40">
+		<div className="fixed top-0 left-0 z-50 flex h-full w-full flex-col justify-center overflow-y-auto overflow-x-hidden bg-gray-600 bg-opacity-40">
 			{error && (
 				<div className="fixed top-0 left-0 flex w-full justify-center">
 					<ErrorAlert
