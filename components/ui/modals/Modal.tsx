@@ -1,3 +1,4 @@
+import React from "react";
 import { twMerge } from "tailwind-merge";
 import BackModalButton from "../buttons/BackModalButton";
 import CloseModalButton from "../buttons/CloseModalButton";
@@ -20,6 +21,13 @@ const Modal: React.FC<Props> = ({
 	className,
 	error,
 }) => {
+	React.useEffect(() => {
+		document.body.classList.add("overflow-hidden");
+		return () => {
+			document.body.classList.remove("overflow-hidden");
+		};
+	}, []);
+
 	return (
 		// Modal backdrop
 		<div className="fixed top-0 left-0 z-50 flex h-full w-full flex-col justify-center overflow-y-auto overflow-x-hidden bg-gray-600 bg-opacity-40">
