@@ -1,9 +1,8 @@
 import { GetServerSideProps, NextPage } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
-import React from "react";
-import ErrorParagraph from "../../../../components/ui/paragraphs/ErrorParagraph";
 import Modal from "../../../../components/ui/modals/Modal";
+import ErrorParagraph from "../../../../components/ui/paragraphs/ErrorParagraph";
 import clientPromise from "../../../../lib/mongodb";
 import DateObjectType, { busType } from "../../../../types/DateObjectType";
 import {
@@ -13,12 +12,11 @@ import {
 } from "../../../../utils/dateUtils";
 import { authOptions } from "../../../api/auth/[...nextauth]";
 
-import Chart from "../../../../utils/chartJSImports";
-import InputWithIcon from "../../../../components/ui/inputs/InputWithIcon";
 import { ChartData, ChartOptions } from "chart.js";
-import ReportHeading from "../../../../components/dashboard/report/ReportHeading";
 import MobileNotSupported from "../../../../components/dashboard/report/MobileNotSupported";
+import ReportHeading from "../../../../components/dashboard/report/ReportHeading";
 import TotalPriceInput from "../../../../components/dashboard/report/TotalPriceInput";
+import Chart from "../../../../utils/chartJSImports";
 
 interface Props {
 	valid: boolean;
@@ -181,16 +179,17 @@ const WeekReport: NextPage<Props> = ({ valid, weekData }) => {
 								day.transportations[
 									hour as keyof typeof day.transportations
 								]?.pupils.forEach((pupil, index) => {
-									if (
-										index ===
+									const length =
 										day.transportations[
 											hour as keyof typeof day.transportations
-										]!.pupils.length -
-											1
-									) {
+										]!.pupils.length;
+									if (index === length - 1 || (index + 1) % 4 === 0) {
 										stringData += pupil;
 									} else {
 										stringData += pupil + ", ";
+									}
+									if ((index + 1) % 4 === 0 && index !== length - 1) {
+										stringData += "\n";
 									}
 								});
 								return stringData;
@@ -200,6 +199,7 @@ const WeekReport: NextPage<Props> = ({ valid, weekData }) => {
 					},
 					footerAlign: "center" as "center" | "left" | "right",
 					titleAlign: "center" as "center" | "left" | "right",
+					bodyAlign: "center" as "center" | "left" | "right",
 					titleMarginBottom: 8,
 					footerSpacing: 3,
 					titleFont: {

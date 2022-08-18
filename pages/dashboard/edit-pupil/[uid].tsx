@@ -84,17 +84,16 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 
 	const submitHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
-		const filteredHours = hours; // ! TEMP
 		setIsLoading(true);
 		const { response: pupilStillExists } = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupil.name}`
 		);
 		setIsLoading(false);
-		if (filteredHours !== null && pupilStillExists) {
+		if (hours !== null && pupilStillExists) {
 			setIsLoading(true);
 			await _patch("/api/pupils", {
 				name: pupil.name,
-				schedule: filteredHours,
+				schedule: hours,
 			});
 			setShowError(false);
 			alert("התלמיד עודכן בהצלחה!");

@@ -10,9 +10,8 @@ const getPrices = async () => {
 		const db = (await clientPromise).db();
 		const prices = await db
 			.collection("prices")
-			.find({}, { projection: { _id: 0 } })
-			.toArray();
-		return prices[0];
+			.findOne({}, { projection: { _id: 0 } });
+		return prices;
 	} catch (error: any) {
 		throw new Error(error);
 	}

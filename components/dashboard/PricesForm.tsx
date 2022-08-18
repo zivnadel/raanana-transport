@@ -49,7 +49,6 @@ const PricesForm: React.FC<any> = ({ initialPrices }) => {
 			dashboardContext!.action({ type: "setShowPrices", payload: false });
 			if (response.status === 201) {
 				dashboardContext!.action({ type: "setPrices", payload: currentPrices });
-				// TODO: maybe use component instead of alert.
 				alert("המידע עודכן בהצלחה!");
 				router.reload();
 			} else {

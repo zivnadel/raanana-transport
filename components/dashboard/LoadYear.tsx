@@ -38,7 +38,7 @@ const LoadYear: React.FC = () => {
 			{error && <ErrorParagraph error={error} />}
 			{!error && !isLoading && (
 				<>
-					<div className="m-2 mx-4 rounded-full bg-primary/50 p-3">
+					<div className="m-2 mx-4 rounded-2xl bg-primary/50 p-4">
 						<p className="mb-2 font-medium">
 							פעולה זו נדרשת לביצוע פעם אחת בלבד בתחילת השנה
 						</p>

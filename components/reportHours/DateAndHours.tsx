@@ -1,15 +1,6 @@
-import React, {
-	ForwardRefExoticComponent,
-	useEffect,
-	useImperativeHandle,
-} from "react";
+import React, { useEffect, useImperativeHandle } from "react";
 import { Dispatch, SetStateAction, useState, useRef } from "react";
-import DateObjectType from "../../types/DateObjectType";
-import {
-	calculateLearningYear,
-	calculateMin,
-	toNormalDateString,
-} from "../../utils/dateUtils";
+import { calculateLearningYear, calculateMin } from "../../utils/dateUtils";
 import { _get } from "../../utils/http";
 
 interface Props {
@@ -57,25 +48,13 @@ const DateAndHours = React.forwardRef<HTMLInputElement, Props>(
 			setIsEmpty(true);
 			setIsLoading(true);
 
-			const { response } = await _get<DateObjectType>(
-				`/api/dates/?date=${new Date(dateInputRef.current?.value!)}`
+			const { response: hours } = await _get<string[]>(
+				`/api/dates/?hours=${new Date(dateInputRef.current?.value!)}`
 			);
 
 			setIsEmpty(false);
 			setShowErrorStyles(false);
 			setIsLoading(false);
-
-			let hours: string[] = [];
-			const transportations = response.transportations;
-			if (transportations.hasOwnProperty("morning")) {
-				hours.push("morning");
-			}
-			if (transportations.hasOwnProperty("15:30")) {
-				hours.push("15:30");
-			}
-			if (transportations.hasOwnProperty("17:00")) {
-				hours.push("17:00");
-			}
 
 			return setHours(hours);
 		};

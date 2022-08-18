@@ -196,6 +196,17 @@ const updateDates = async (dates: WithId<DateObjectType>[]) => {
 	return response;
 };
 
+const getHours = async (date: Date) => {
+	const db = (await clientPromise).db();
+	const response = await db
+		.collection<DateObjectType>("dates")
+		.findOne({ date: toNormalDateString(date) });
+	if (response) {
+		return Object.keys(response.transportations);
+	}
+	return { error: true };
+};
+
 const cors = Cors({
 	origin: process.env.VERCEL_URL,
 });
@@ -225,7 +236,8 @@ export default async function handler(
 
 	if (
 		!session &&
-		((req.method === "GET" && !req.query.week) || req.method !== "GET")
+		((req.method === "GET" && !req.query.week && !req.query.hours) ||
+			req.method !== "GET")
 	) {
 		return res.status(401).json({
 			message: "You must be logged in and authorized to access this resource!",
@@ -234,12 +246,20 @@ export default async function handler(
 
 	switch (req.method) {
 		case "GET": {
-			const { date, week } = req.query;
+			const { date, week, hours } = req.query;
 			let response: any;
 			if (date) {
 				response = await getDate(new Date(date!.toLocaleString())).catch(
 					(error) => res.status(500).json({ message: error.message })
 				);
+			}
+			if (hours) {
+				response = await getHours(new Date(hours!.toLocaleString())).catch(
+					(error) => res.status(500).json({ message: error.message })
+				);
+				if (response.error) {
+					return res.status(406).json({ message: "Invalid date!" });
+				}
 			}
 			if (week) {
 				response = await getWeek(new Date(week!.toLocaleString())).catch(

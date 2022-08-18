@@ -1,7 +1,7 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from "../../../lib/mongodb";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import clientPromise from "../../../lib/mongodb";
 
 export const authOptions: NextAuthOptions = {
 	adapter: MongoDBAdapter(clientPromise),
@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
 		signIn: "/login",
 	},
 	callbacks: {
-		async signIn({ user, account, profile, email, credentials }) {
+		async signIn({ profile }) {
 			if (profile.email === process.env.NEXT_PUBLIC_EMAIL_OF_ADMIN) {
 				return true;
 			}

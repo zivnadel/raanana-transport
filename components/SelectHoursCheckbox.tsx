@@ -1,6 +1,5 @@
 import React from "react";
 import DayObjectType from "../types/DayObjectType";
-import { BiCalendarExclamation } from "react-icons/bi";
 import { mapDayToString } from "../utils/dateUtils";
 
 interface Props {

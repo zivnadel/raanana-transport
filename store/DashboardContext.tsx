@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction, useReducer } from "react";
+import { createContext, Dispatch, useReducer } from "react";
 import PricesObjectType from "../types/PricesObjectType";
 
 export interface DashboardContextType {

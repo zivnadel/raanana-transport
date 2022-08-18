@@ -1,16 +1,15 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import SelectHoursCheckbox from "../components/SelectHoursCheckbox";
 import EnterNameModal from "../components/schedule/EnterNameModal";
-import Button from "../components/ui/buttons/Button";
+import SelectHoursCheckbox from "../components/SelectHoursCheckbox";
 import DisabledInput from "../components/ui/inputs/DisabledInput";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import Modal from "../components/ui/modals/Modal";
+import ErrorParagraph from "../components/ui/paragraphs/ErrorParagraph";
+import DayObjectType from "../types/DayObjectType";
 import PupilObjectType from "../types/PupilObjectType";
 import { _get } from "../utils/http";
-import DayObjectType from "../types/DayObjectType";
-import ErrorParagraph from "../components/ui/paragraphs/ErrorParagraph";
 
 const Schedule: NextPage = () => {
 	const router = useRouter();

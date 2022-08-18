@@ -51,12 +51,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		const db = (await clientPromise).db();
 
 		// fetching the initial prices for edit prices
-		const initialPrices = (
-			await db
-				.collection("prices")
-				.find({}, { projection: { _id: 0 } })
-				.toArray()
-		)[0];
+		const initialPrices = await db
+			.collection("prices")
+			.findOne({}, { projection: { _id: 0 } });
 
 		// fetching the initial week schedule
 		const initialSchedule = await db
