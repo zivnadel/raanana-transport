@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { DashboardContext } from "../../store/DashboardContext";
+import { LoadingContext } from "../../store/LoadingContext";
 import PupilObjectType from "../../types/PupilObjectType";
 import { _get } from "../../utils/http";
 import Button from "../ui/buttons/Button";
 import Input from "../ui/inputs/Input";
-import LoadingSpinner from "../ui/LoadingSpinner";
 import Modal from "../ui/modals/Modal";
 
 const AddEditPupil: React.FC = () => {
@@ -15,7 +15,7 @@ const AddEditPupil: React.FC = () => {
 
 	const router = useRouter();
 
-	const [isLoading, setIsLoading] = React.useState(false);
+	const loadingContext = React.useContext(LoadingContext);
 	const dashboardContext = React.useContext(DashboardContext);
 
 	const onModalDismissedHandler = () => {
@@ -24,7 +24,7 @@ const AddEditPupil: React.FC = () => {
 
 	const submitNameClickedHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
-		setIsLoading(true);
+		loadingContext?.setIsLoading(true);
 		const { response: pupil } = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupilName}`
 		);
@@ -39,7 +39,7 @@ const AddEditPupil: React.FC = () => {
 		} else {
 			setPupilExists(false);
 		}
-		setIsLoading(false);
+		loadingContext?.setIsLoading(false);
 	};
 
 	const addPupilClickedHandler = (event: React.SyntheticEvent) => {
@@ -54,16 +54,13 @@ const AddEditPupil: React.FC = () => {
 				<Modal
 					onDismiss={onModalDismissedHandler}
 					heading={
-						isLoading
-							? ""
-							: !submitClicked && !pupilExists
+						!submitClicked && !pupilExists
 							? "הוספת/עריכת תלמיד במאגר הנתונים"
 							: submitClicked && !pupilExists
 							? "הוספת תלמיד חדש"
 							: ""
 					}>
-					{isLoading && <LoadingSpinner />}
-					{!isLoading && (
+					{!loadingContext?.isLoading && (
 						<form className="mt-5 flex w-full flex-col items-center justify-center">
 							{!submitClicked && !pupilExists && (
 								<>
