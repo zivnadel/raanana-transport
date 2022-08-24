@@ -8,7 +8,7 @@ import DateObjectType, { busType } from "../../../../types/DateObjectType";
 import {
 	mapDayToString,
 	toNormalDateString,
-	validateWeek,
+	validateWeek
 } from "../../../../utils/dateUtils";
 import { authOptions } from "../../../api/auth/[...nextauth]";
 

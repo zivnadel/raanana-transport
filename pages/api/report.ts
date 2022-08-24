@@ -9,7 +9,7 @@ import {
 	calculateBusType,
 	calculateLearningYear,
 	calculateMin,
-	calculatePrice,
+	calculatePrice
 } from "../../utils/dateUtils";
 
 const cors = Cors({

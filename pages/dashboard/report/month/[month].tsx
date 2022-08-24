@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import React from "react";
 
 import { GetServerSideProps, NextPage } from "next";
@@ -8,21 +9,24 @@ import {
 	MONTH_NAMES,
 	produceMonthArray,
 	produceWeeksFromMonth,
-	validateMonth,
+	validateMonth
 } from "../../../../utils/dateUtils";
 import { authOptions } from "../../../api/auth/[...nextauth]";
 
-import Chart from "../../../../utils/chartJSImports";
+import { ChartData, ChartOptions } from "chart.js";
+import { useRouter } from "next/router";
+import MobileNotSupported from "../../../../components/dashboard/report/MobileNotSupported";
+import ReportHeading from "../../../../components/dashboard/report/ReportHeading";
+import TotalPriceInput from "../../../../components/dashboard/report/TotalPriceInput";
+import Button from "../../../../components/ui/buttons/Button";
+import TransparentButton from "../../../../components/ui/buttons/TransparentButton";
 import Modal from "../../../../components/ui/modals/Modal";
 import ErrorParagraph from "../../../../components/ui/paragraphs/ErrorParagraph";
-import { useRouter } from "next/router";
-import { ChartData, ChartOptions } from "chart.js";
-import ReportHeading from "../../../../components/dashboard/report/ReportHeading";
-import MobileNotSupported from "../../../../components/dashboard/report/MobileNotSupported";
-import Button from "../../../../components/ui/buttons/Button";
-import TotalPriceInput from "../../../../components/dashboard/report/TotalPriceInput";
-import TransparentButton from "../../../../components/ui/buttons/TransparentButton";
-import PupilsTable from "../../../../components/dashboard/report/PupilsTable";
+import Chart from "../../../../utils/chartJSImports";
+
+const PupilsTable = dynamic(
+	() => import("../../../../components/dashboard/report/PupilsTable")
+);
 
 interface Props {
 	valid: boolean;

@@ -15,7 +15,7 @@ const AddEditPupil: React.FC = () => {
 
 	const router = useRouter();
 
-	const loadingContext = React.useContext(LoadingContext);
+	const { isLoading, setIsLoading } = React.useContext(LoadingContext)!;
 	const dashboardContext = React.useContext(DashboardContext);
 
 	const onModalDismissedHandler = () => {
@@ -24,7 +24,7 @@ const AddEditPupil: React.FC = () => {
 
 	const submitNameClickedHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
-		loadingContext?.setIsLoading(true);
+		setIsLoading(true);
 		const { response: pupil } = await _get<PupilObjectType>(
 			`/api/pupils?pupilName=${pupilName}`
 		);
@@ -39,7 +39,7 @@ const AddEditPupil: React.FC = () => {
 		} else {
 			setPupilExists(false);
 		}
-		loadingContext?.setIsLoading(false);
+		setIsLoading(false);
 	};
 
 	const addPupilClickedHandler = (event: React.SyntheticEvent) => {
@@ -50,7 +50,7 @@ const AddEditPupil: React.FC = () => {
 
 	return (
 		<>
-			{!(pupilExists && submitClicked) && (
+			{!(pupilExists && submitClicked) && !isLoading && (
 				<Modal
 					onDismiss={onModalDismissedHandler}
 					heading={
@@ -60,40 +60,38 @@ const AddEditPupil: React.FC = () => {
 							? "הוספת תלמיד חדש"
 							: ""
 					}>
-					{!loadingContext?.isLoading && (
-						<form className="mt-5 flex w-full flex-col items-center justify-center">
-							{!submitClicked && !pupilExists && (
-								<>
-									<Input
-										onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-											setPupilName(event.target.value);
-										}}
-										value={pupilName}
-										type="text"
-										name="name"
-										label="שם התלמיד"
-										required={true}
-									/>
-									<Button
-										type="submit"
-										className="my-5"
-										onClick={submitNameClickedHandler}>
-										אישור
-									</Button>
-								</>
-							)}
-							{submitClicked && !pupilExists && (
-								<>
-									<p className="p-3 text-center text-lg font-medium">
-										תלמיד זה אינו קיים. להוספת תלמיד זה, לחצי למטה
-									</p>
-									<Button className="my-5" onClick={addPupilClickedHandler}>
-										לחצי כאן
-									</Button>
-								</>
-							)}
-						</form>
-					)}
+					<form className="mt-5 flex w-full flex-col items-center justify-center">
+						{!submitClicked && !pupilExists && (
+							<>
+								<Input
+									onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+										setPupilName(event.target.value);
+									}}
+									value={pupilName}
+									type="text"
+									name="name"
+									label="שם התלמיד"
+									required={true}
+								/>
+								<Button
+									type="submit"
+									className="my-5"
+									onClick={submitNameClickedHandler}>
+									אישור
+								</Button>
+							</>
+						)}
+						{submitClicked && !pupilExists && (
+							<>
+								<p className="p-3 text-center text-lg font-medium">
+									תלמיד זה אינו קיים. להוספת תלמיד זה, לחצי למטה
+								</p>
+								<Button className="my-5" onClick={addPupilClickedHandler}>
+									לחצי כאן
+								</Button>
+							</>
+						)}
+					</form>
 				</Modal>
 			)}
 		</>

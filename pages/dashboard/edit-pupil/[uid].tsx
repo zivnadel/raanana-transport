@@ -1,8 +1,6 @@
 import { ObjectId } from "mongodb";
 import {
-	GetServerSideProps,
-	InferGetServerSidePropsType,
-	NextPage,
+	GetServerSideProps, NextPage
 } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
@@ -10,9 +8,9 @@ import React from "react";
 import SelectHoursCheckbox from "../../../components/SelectHoursCheckbox";
 import Button from "../../../components/ui/buttons/Button";
 import DisabledInput from "../../../components/ui/inputs/DisabledInput";
-import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import Modal from "../../../components/ui/modals/Modal";
 import clientPromise from "../../../lib/mongodb";
+import { LoadingContext } from "../../../store/LoadingContext";
 import PupilObjectType from "../../../types/PupilObjectType";
 import { _get, _patch } from "../../../utils/http";
 import { authOptions } from "../../api/auth/[...nextauth]";
@@ -31,7 +29,7 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 		  }[]
 		| null
 	>(pupil.schedule);
-	const [isLoading, setIsLoading] = React.useState(false);
+	const { isLoading, setIsLoading } = React.useContext(LoadingContext)!;
 	const [showError, setShowError] = React.useState(false);
 
 	const onCheckboxCheckedHandler = (
@@ -69,19 +67,6 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 		});
 	};
 
-	// const clearEmptyDays = () => {
-	// 	if (!hours || hours.length === 0) {
-	// 		return [];
-	// 	}
-	// 	const filteredHours = hours!.filter((day) => day.hours.length > 0);
-	// 	console.log(filteredHours)
-	// 	if (filteredHours.length === 0) {
-	// 		return [];
-	// 	}
-	// 	return filteredHours;
-
-	// };
-
 	const submitHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 		setIsLoading(true);
@@ -105,34 +90,39 @@ const EditPupil: NextPage<Props> = ({ pupil }) => {
 	};
 
 	return (
-		<Modal
-			onDismiss={() => router.push("/dashboard")}
-			heading={!isLoading ? "עריכת פרטי תלמיד" : ""}
-			className="text-center">
-			{isLoading && <LoadingSpinner />}
+		<>
 			{!isLoading && (
-				<form onSubmit={submitHandler}>
-					<DisabledInput id="pupilName" value={pupil.name} label="שם התלמיד" />
-					{[1, 2, 3, 4, 5].map((day) => (
-						<SelectHoursCheckbox
-							onChangeWithDay={onCheckboxCheckedHandler}
-							day={day}
-							key={day}
-							selected={pupil.schedule}
+				<Modal
+					onDismiss={() => router.push("/dashboard")}
+					heading={!isLoading ? "עריכת פרטי תלמיד" : ""}
+					className="text-center">
+					<form onSubmit={submitHandler}>
+						<DisabledInput
+							id="pupilName"
+							value={pupil.name}
+							label="שם התלמיד"
 						/>
-					))}
-					{showError && (
-						<p className="p-3 font-medium text-red-500">
-							נא למלא לפחות שדה אחד, אם שדה אחד כבר מלא ייתכן שארעה שגיאה. נא
-							לרענן ולנסות שוב
-						</p>
-					)}
-					<Button type="submit" className="mt-2 mb-5">
-						שלחי
-					</Button>
-				</form>
+						{[1, 2, 3, 4, 5].map((day) => (
+							<SelectHoursCheckbox
+								onChangeWithDay={onCheckboxCheckedHandler}
+								day={day}
+								key={day}
+								selected={pupil.schedule}
+							/>
+						))}
+						{showError && (
+							<p className="p-3 font-medium text-red-500">
+								נא למלא לפחות שדה אחד, אם שדה אחד כבר מלא ייתכן שארעה שגיאה. נא
+								לרענן ולנסות שוב
+							</p>
+						)}
+						<Button type="submit" className="mt-2 mb-5">
+							שלחי
+						</Button>
+					</form>
+				</Modal>
 			)}
-		</Modal>
+		</>
 	);
 };
 

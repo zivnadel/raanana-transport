@@ -1,83 +1,76 @@
 import React from "react";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
+import { useFetch } from "../../hooks/useFetch";
 import { DashboardContext } from "../../store/DashboardContext";
+import { LoadingContext } from "../../store/LoadingContext";
 import DateObjectType, { busType } from "../../types/DateObjectType";
 import PricesObjectType from "../../types/PricesObjectType";
 import {
 	calculateBusType,
 	calculateLearningYear,
-	calculatePrice,
+	calculatePrice
 } from "../../utils/dateUtils";
 import { _get, _patch } from "../../utils/http";
-import Button from "../ui/buttons/Button";
-import ErrorParagraph from "../ui/paragraphs/ErrorParagraph";
-import LoadingSpinner from "../ui/LoadingSpinner";
-import Modal from "../ui/modals/Modal";
 import SelectHoursCheckbox from "../SelectHoursCheckbox";
+import Button from "../ui/buttons/Button";
+import Modal from "../ui/modals/Modal";
+import ErrorParagraph from "../ui/paragraphs/ErrorParagraph";
 
-interface Props {
-	initialDate: DateObjectType;
-}
-
-const ViewWeek: React.FC<Props> = ({ initialDate }) => {
+const ViewWeek: React.FC = () => {
 	const dashboardContext = React.useContext(DashboardContext);
 
-	const [currentWeekDate, setCurrentWeekDate] = React.useState(
-		new Date(initialDate.date)
+	const [currentWeekDate, setCurrentWeekDate] = React.useState<Date>(
+		calculateInitialDate()
 	);
+
+	const { response, error } = useFetch<DateObjectType[]>(
+		`/api/dates?week=${currentWeekDate}`,
+		React.useMemo(() => ({ method: "GET" }), [])
+	);
+
 	const [currentWeek, setCurrentWeek] = React.useState<DateObjectType[]>([]);
 	const [modeledWeek, setModeledWeek] = React.useState<
 		{ day: number; hours: string[]; date?: string }[]
 	>([]);
-	const [error, setError] = React.useState<Error | null>(null);
-	const [isLoading, setIsLoading] = React.useState(false);
+	const { isLoading, setIsLoading } = React.useContext(LoadingContext)!;
+
+	React.useEffect(() => {
+		if (currentWeekDate) {
+			if (response) {
+				setCurrentWeek(response);
+				let modeledWeekData: {
+					day: number;
+					hours: string[];
+					date?: string;
+				}[] = [];
+				response.map((date) => {
+					modeledWeekData.push({
+						day: date.day,
+						hours: Object.keys(date.transportations),
+						date: date.date,
+					});
+				});
+				setModeledWeek(modeledWeekData);
+			}
+		}
+	}, [currentWeekDate, response]);
 
 	const onModalDismissedHandler = () => {
 		dashboardContext?.action({ type: "setShowViewWeek", payload: false });
 	};
 
-	React.useEffect(() => {
-		(async () => {
-			setIsLoading(true);
-			try {
-				const { response } = await _get<DateObjectType[]>(
-					`/api/dates?week=${currentWeekDate}`
-				);
-				if (response) {
-					setCurrentWeek(response);
-					let modeledWeekData: {
-						day: number;
-						hours: string[];
-						date?: string;
-					}[] = [];
-					response.map((date) => {
-						modeledWeekData.push({
-							day: date.day,
-							hours: Object.keys(date.transportations),
-							date: date.date,
-						});
-					});
-					setModeledWeek(modeledWeekData);
-				}
-				setIsLoading(false);
-			} catch (error: any) {
-				throw new Error(error);
-			}
-		})();
-	}, [currentWeekDate]);
-
 	const leftChevronClickedHandler = () => {
 		setCurrentWeekDate((prevWeekDate) => {
-			const nextWeekDate = new Date(prevWeekDate);
-			nextWeekDate.setDate(prevWeekDate.getDate() + 7);
+			const nextWeekDate = new Date(prevWeekDate!);
+			nextWeekDate.setDate(prevWeekDate!.getDate() + 7);
 			return nextWeekDate;
 		});
 	};
 
 	const rightChevronClickedHandler = () => {
 		setCurrentWeekDate((prevWeekDate) => {
-			const nextWeekDate = new Date(prevWeekDate);
-			nextWeekDate.setDate(prevWeekDate.getDate() - 7);
+			const nextWeekDate = new Date(prevWeekDate!);
+			nextWeekDate.setDate(prevWeekDate!.getDate() - 7);
 			return nextWeekDate;
 		});
 	};
@@ -161,60 +154,69 @@ const ViewWeek: React.FC<Props> = ({ initialDate }) => {
 	};
 
 	return (
-		<Modal
-			onDismiss={onModalDismissedHandler}
-			error={error ? error.message : ""}>
-			{isLoading && <LoadingSpinner />}
-			{!isLoading && (
-				<div className="w-full px-3">
-					<div className="flex w-full items-center justify-between rounded-full bg-primary/50 py-3 px-8 shadow-md">
-						<FaChevronCircleLeft
-							onClick={leftChevronClickedHandler}
-							className="cursor-pointer text-2xl text-green-800 hover:text-green-800/70"
-						/>
-						<input
-							type="date"
-							min={`${calculateLearningYear()}-09-01`}
-							max={`${calculateLearningYear() + 1}-06-20`}
-							onChange={dateChangedHandler}
-							value={`${currentWeekDate.getFullYear()}-${(
-								"0" +
-								(currentWeekDate.getMonth() + 1)
-							).slice(-2)}-${("0" + currentWeekDate.getDate()).slice(-2)}`}
-							className={`border-0 border-b-2 border-green-800 bg-transparent px-0 py-1 text-center text-sm text-gray-900 selection:appearance-none focus:outline-none focus:ring-0`}
-						/>
-						<FaChevronCircleRight
-							onClick={rightChevronClickedHandler}
-							className="cursor-pointer text-2xl text-green-800 hover:text-green-800/70"
-						/>
-					</div>
-				</div>
-			)}
-			{!isLoading && currentWeek.length !== 0 && (
-				<>
-					<div className="py-6">
-						{modeledWeek.map((day) => (
-							<SelectHoursCheckbox
-								onChangeWithDate={onCheckboxCheckedHandler}
-								day={day.day}
-								date={day.date}
-								key={day.date}
-								selected={modeledWeek}
+		<>
+			{!isLoading && currentWeek && (
+				<Modal
+					onDismiss={onModalDismissedHandler}
+					error={error ? error.message : ""}>
+					<div className="w-full px-3">
+						<div className="flex w-full items-center justify-between rounded-full bg-primary/50 py-3 px-8 shadow-md">
+							<FaChevronCircleLeft
+								onClick={leftChevronClickedHandler}
+								className="cursor-pointer text-2xl text-green-800 hover:text-green-800/70"
 							/>
-						))}
+							<input
+								type="date"
+								min={`${calculateLearningYear()}-09-01`}
+								max={`${calculateLearningYear() + 1}-06-20`}
+								onChange={dateChangedHandler}
+								value={`${currentWeekDate.getFullYear()}-${(
+									"0" +
+									(currentWeekDate.getMonth() + 1)
+								).slice(-2)}-${("0" + currentWeekDate.getDate()).slice(-2)}`}
+								className={`border-0 border-b-2 border-green-800 bg-transparent px-0 py-1 text-center text-sm text-gray-900 selection:appearance-none focus:outline-none focus:ring-0`}
+							/>
+							<FaChevronCircleRight
+								onClick={rightChevronClickedHandler}
+								className="cursor-pointer text-2xl text-green-800 hover:text-green-800/70"
+							/>
+						</div>
 					</div>
-					<div className="w-full text-center">
-						<Button onClick={submitClickedHandler} className="mt-0 mb-5">
-							שלחי
-						</Button>
-					</div>
-				</>
+					{currentWeek.length !== 0 && (
+						<>
+							<div className="py-6">
+								{modeledWeek.map((day) => (
+									<SelectHoursCheckbox
+										onChangeWithDate={onCheckboxCheckedHandler}
+										day={day.day}
+										date={day.date}
+										key={day.date}
+										selected={modeledWeek}
+									/>
+								))}
+							</div>
+							<div className="w-full text-center">
+								<Button onClick={submitClickedHandler} className="mt-0 mb-5">
+									שלחי
+								</Button>
+							</div>
+						</>
+					)}
+					{currentWeek.length === 0 && (
+						<ErrorParagraph error="תאריך זה אינו בתחום שנת הלימודים! בחרי תאריך אחר" />
+					)}
+				</Modal>
 			)}
-			{!isLoading && currentWeek.length === 0 && (
-				<ErrorParagraph error="תאריך זה אינו בתחום שנת הלימודים! בחרי תאריך אחר" />
-			)}
-		</Modal>
+		</>
 	);
+};
+
+const calculateInitialDate = () => {
+	const today = new Date();
+	if (today <= new Date("2023-06-20") && today >= new Date("2022-09-01")) {
+		return today;
+	}
+	return new Date("2022-09-01");
 };
 
 export default ViewWeek;

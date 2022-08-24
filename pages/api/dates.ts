@@ -1,22 +1,21 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "../../lib/mongodb";
 import Cors from "cors";
+import { AnyBulkWriteOperation, Document, WithId } from "mongodb";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "./auth/[...nextauth]";
-import {
-	calculateBusType,
-	calculatePrice,
-	produceYearArray,
-	toNormalDateString,
-} from "../../utils/dateUtils";
+import clientPromise from "../../lib/mongodb";
 import DateObjectType, {
 	busType,
-	HourObjectType,
+	HourObjectType
 } from "../../types/DateObjectType";
-import PupilObjectType from "../../types/PupilObjectType";
-import PricesObjectType from "../../types/PricesObjectType";
-import { AnyBulkWriteOperation, Document, WithId } from "mongodb";
 import DayObjectType from "../../types/DayObjectType";
+import PricesObjectType from "../../types/PricesObjectType";
+import PupilObjectType from "../../types/PupilObjectType";
+import {
+	calculateBusType, calculatePrice,
+	produceYearArray,
+	toNormalDateString
+} from "../../utils/dateUtils";
+import { authOptions } from "./auth/[...nextauth]";
 
 // This function retrieves a date from the database.
 // If no date was specified, it returns all dates.

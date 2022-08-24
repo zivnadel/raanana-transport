@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction, forwardRef } from 'react';
+import React, { Dispatch, forwardRef, SetStateAction, useState } from 'react';
 
 interface Props {
   label: string;

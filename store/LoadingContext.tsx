@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
+import ReactDOM from "react-dom";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import Modal from "../components/ui/modals/Modal";
 
@@ -24,13 +25,17 @@ export const LoadingContextProvider: React.FC = ({ children }) => {
 
 	React.useEffect(() => {
 		const handleChangeStart = (url: string) => {
-			if (url === "/dashboard" || url === "/login") {
+			if (url.startsWith("/dashboard/") || url === "/login") {
 				setIsLoading(true);
 			}
 		};
 
 		const handleChangeEnd = (url: string) => {
-			if (url === "/dashboard" || url === "/login" || url === "/unauthorized") {
+			if (
+				url.startsWith("/dashboard/") ||
+				url === "/login" ||
+				url === "/unauthorized"
+			) {
 				setIsLoading(false);
 			}
 		};
@@ -42,16 +47,14 @@ export const LoadingContextProvider: React.FC = ({ children }) => {
 
 	return (
 		<LoadingContext.Provider value={dashboardContext}>
-			{isLoading ? (
-				<>
+			{isLoading &&
+				ReactDOM.createPortal(
 					<Modal>
 						<LoadingSpinner />
-					</Modal>
-					{router.route === "/dashboard" && children}
-				</>
-			) : (
-				children
-			)}
+					</Modal>,
+					document.getElementById("_loading")!
+				)}
+			{children}
 		</LoadingContext.Provider>
 	);
 };

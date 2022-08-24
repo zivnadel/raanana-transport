@@ -5,7 +5,7 @@ import {
 	calculateLearningYear,
 	MONTH_NAMES,
 	validateMonth,
-	validateWeek,
+	validateWeek
 } from "../../utils/dateUtils";
 import Button from "../ui/buttons/Button";
 import RoundedDatepicker from "../ui/datepickers/RoundedDatepicker";
@@ -35,6 +35,7 @@ const Report: React.FC = () => {
 			return;
 		}
 		router.push(`/dashboard/report/week/${today}`);
+		dashboardContext?.action({ type: "setShowReport", payload: false });
 	};
 
 	const onCurrentMonthSelected = () => {
@@ -48,6 +49,7 @@ const Report: React.FC = () => {
 		}
 
 		router.push(`/dashboard/report/month/${year}-${month}`);
+		dashboardContext?.action({ type: "setShowReport", payload: false });
 	};
 
 	const onWeekSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +58,7 @@ const Report: React.FC = () => {
 			return;
 		}
 		router.push(`/dashboard/report/week/${e.target.value}`);
+		dashboardContext?.action({ type: "setShowReport", payload: false });
 	};
 
 	const onMonthSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +67,7 @@ const Report: React.FC = () => {
 			return;
 		}
 		router.push(`/dashboard/report/month/${e.target.value}`);
+		dashboardContext?.action({ type: "setShowReport", payload: false });
 	};
 
 	return (

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
-import ErrorParagraph from "../../ui/paragraphs/ErrorParagraph";
 import Modal from "../../ui/modals/Modal";
+import ErrorParagraph from "../../ui/paragraphs/ErrorParagraph";
 
 const MobileNotSupported: React.FC = () => {
 	const router = useRouter();

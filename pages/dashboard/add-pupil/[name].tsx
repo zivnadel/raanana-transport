@@ -1,7 +1,7 @@
 import {
 	GetServerSideProps,
 	InferGetServerSidePropsType,
-	NextPage,
+	NextPage
 } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
@@ -9,9 +9,9 @@ import React from "react";
 import SelectHoursCheckbox from "../../../components/SelectHoursCheckbox";
 import Button from "../../../components/ui/buttons/Button";
 import DisabledInput from "../../../components/ui/inputs/DisabledInput";
-import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import Modal from "../../../components/ui/modals/Modal";
 import clientPromise from "../../../lib/mongodb";
+import { LoadingContext } from "../../../store/LoadingContext";
 import PupilObjectType from "../../../types/PupilObjectType";
 import { _get, _post } from "../../../utils/http";
 import { authOptions } from "../../api/auth/[...nextauth]";
@@ -29,7 +29,7 @@ const AddPupil: NextPage<
 		  }[]
 		| null
 	>(null);
-	const [isLoading, setIsLoading] = React.useState(false);
+	const { isLoading, setIsLoading } = React.useContext(LoadingContext)!;
 	const [showError, setShowError] = React.useState(false);
 
 	React.useEffect(() => {
@@ -94,7 +94,7 @@ const AddPupil: NextPage<
 		setIsLoading(false);
 		if (filteredHours !== null && !pupil) {
 			setIsLoading(true);
-			const { response } = await _post("/api/pupils", {
+			await _post("/api/pupils", {
 				name,
 				schedule: filteredHours,
 			});
@@ -109,27 +109,26 @@ const AddPupil: NextPage<
 
 	return (
 		<>
-			{existing && (
-				<Modal
-					className="text-center"
-					heading="שגיאה"
-					onDismiss={() => router.push("/dashboard")}>
-					<p className="p-3 text-center text-lg font-medium">
-						אין אפשרות להוסיף תלמיד זה כי הוא כבר קיים במאגר הנתונים. לחזרה ללוח
-						הבקרה לחצי מטה או סגרי חלון זה
-					</p>
-					<Button className="my-5" onClick={() => router.push("/dashboard")}>
-						לחצי כאן
-					</Button>
-				</Modal>
-			)}
-			{!existing && name && (
-				<Modal
-					onDismiss={() => router.push("/dashboard")}
-					heading={!isLoading ? "הוספת תלמיד" : ""}
-					className="text-center">
-					{isLoading && <LoadingSpinner />}
-					{!isLoading && (
+			{!isLoading && <>
+				{existing && (
+					<Modal
+						className="text-center"
+						heading="שגיאה"
+						onDismiss={() => router.push("/dashboard")}>
+						<p className="p-3 text-center text-lg font-medium">
+							אין אפשרות להוסיף תלמיד זה כי הוא כבר קיים במאגר הנתונים. לחזרה
+							ללוח הבקרה לחצי מטה או סגרי חלון זה
+						</p>
+						<Button className="my-5" onClick={() => router.push("/dashboard")}>
+							לחצי כאן
+						</Button>
+					</Modal>
+				)}
+				{!existing && name && (
+					<Modal
+						onDismiss={() => router.push("/dashboard")}
+						heading={!isLoading ? "הוספת תלמיד" : ""}
+						className="text-center">
 						<form onSubmit={submitHandler}>
 							<DisabledInput
 								id="pupilName"
@@ -153,9 +152,9 @@ const AddPupil: NextPage<
 								שלחי
 							</Button>
 						</form>
-					)}
-				</Modal>
-			)}
+					</Modal>
+				)}
+			</>}
 		</>
 	);
 };

@@ -1,7 +1,7 @@
 import {
 	GetServerSideProps,
 	InferGetServerSidePropsType,
-	NextPage,
+	NextPage
 } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { getProviders, signIn } from "next-auth/react";

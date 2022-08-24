@@ -1,14 +1,14 @@
 import { NextPage } from "next";
-import { RefObject, useRef, useState } from "react";
-import Button from "../components/ui/buttons/Button";
-import ReportHoursInput from "../components/reportHours/ReportHoursInput";
-import DoubleRadioGroup from "../components/reportHours/DoubleRadioGroup";
+import { RefObject, useContext, useRef, useState } from "react";
 import DateAndHours from "../components/reportHours/DateAndHours";
-import { _post } from "../utils/http";
+import DoubleRadioGroup from "../components/reportHours/DoubleRadioGroup";
+import ReportHoursInput from "../components/reportHours/ReportHoursInput";
+import Button from "../components/ui/buttons/Button";
 import Modal from "../components/ui/modals/Modal";
 import ErrorParagraph from "../components/ui/paragraphs/ErrorParagraph";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
 import SuccessParagraph from "../components/ui/paragraphs/SuccessParagraph";
+import { LoadingContext } from "../store/LoadingContext";
+import { _post } from "../utils/http";
 
 // ! IMPORTANT: This form uses state mechanism of multiple refs and states for storing
 // ! and managing values. This is a bit bloated but works well and !-MAY-! be change in the future
@@ -41,7 +41,7 @@ const ReportHours: NextPage = () => {
 
 	const [fetchError, setFetchError] = useState("");
 	const [fetchSuccess, setFetchSuccess] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
+	const { isLoading, setIsLoading } = useContext(LoadingContext)!;
 
 	const invokeErrorStyles = (flag: boolean, ref: RefObject<Function>) => {
 		if (flag && ref.current !== null) {
@@ -144,7 +144,7 @@ const ReportHours: NextPage = () => {
 						שלח
 					</Button>
 				</div>
-				{(fetchError || fetchSuccess || isLoading) && (
+				{(fetchError || fetchSuccess) && (
 					<Modal
 						onDismiss={
 							fetchError
@@ -153,7 +153,6 @@ const ReportHours: NextPage = () => {
 								? () => setFetchSuccess(false)
 								: undefined
 						}>
-						{isLoading && <LoadingSpinner />}
 						{fetchError && <ErrorParagraph error={fetchError} />}
 						{fetchSuccess && <SuccessParagraph message="!המידע עודכן בהצלחה" />}
 					</Modal>

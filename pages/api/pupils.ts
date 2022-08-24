@@ -1,13 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "../../lib/mongodb";
 import Cors from "cors";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "./auth/[...nextauth]";
-import PupilObjectType from "../../types/PupilObjectType";
-import DateObjectType from "../../types/DateObjectType";
-import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
-import PricesObjectType from "../../types/PricesObjectType";
 import { AnyBulkWriteOperation, Db, Document } from "mongodb";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { unstable_getServerSession } from "next-auth";
+import clientPromise from "../../lib/mongodb";
+import DateObjectType from "../../types/DateObjectType";
+import PricesObjectType from "../../types/PricesObjectType";
+import PupilObjectType from "../../types/PupilObjectType";
+import { calculateBusType, calculatePrice } from "../../utils/dateUtils";
+import { authOptions } from "./auth/[...nextauth]";
 
 const getPupil = async (name?: string | string[]) => {
 	try {

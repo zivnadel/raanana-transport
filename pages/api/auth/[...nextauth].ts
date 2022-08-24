@@ -16,7 +16,10 @@ export const authOptions: NextAuthOptions = {
 	},
 	callbacks: {
 		async signIn({ profile }) {
-			if (profile.email === process.env.NEXT_PUBLIC_EMAIL_OF_ADMIN) {
+			if (
+				profile.email &&
+				process.env.ADMINS?.split(",").includes(profile.email)
+			) {
 				return true;
 			}
 			return "/unauthorized";
