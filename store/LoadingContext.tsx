@@ -25,16 +25,17 @@ export const LoadingContextProvider: React.FC = ({ children }) => {
 
 	React.useEffect(() => {
 		const handleChangeStart = (url: string) => {
-			if (url.startsWith("/dashboard/") || url === "/login") {
+			if (url.startsWith("/dashboard") || url === "/login" || url === "schedule") {
 				setIsLoading(true);
 			}
 		};
 
 		const handleChangeEnd = (url: string) => {
 			if (
-				url.startsWith("/dashboard/") ||
+				url.startsWith("/dashboard") ||
 				url === "/login" ||
-				url === "/unauthorized"
+				url === "/unauthorized" ||
+				url === "schedule"
 			) {
 				setIsLoading(false);
 			}

@@ -1,14 +1,36 @@
 import dynamic from "next/dynamic";
 import { useContext } from "react";
 import { DashboardContext } from "../../store/DashboardContext";
+import LoadingSpinner from "../ui/LoadingSpinner";
+import Modal from "../ui/modals/Modal";
 
-const AddEditPupil = dynamic(() => import("./AddEditPupil"));
-const LoadYear = dynamic(() => import("./LoadYear"));
-const PricesForm = dynamic(() => import("./PricesForm"));
-const RemovePupil = dynamic(() => import("./RemovePupil"));
-const Report = dynamic(() => import("./Report"));
-const UpdateSchedule = dynamic(() => import("./UpdateSchedule"));
-const ViewWeek = dynamic(() => import("./ViewWeek"));
+const loadingElement = (
+	<Modal>
+		<LoadingSpinner />
+	</Modal>
+);
+
+const AddEditPupil = dynamic(() => import("./AddEditPupil"), {
+	loading: () => loadingElement,
+});
+const LoadYear = dynamic(() => import("./LoadYear"), {
+	loading: () => loadingElement,
+});
+const PricesForm = dynamic(() => import("./PricesForm"), {
+	loading: () => loadingElement,
+});
+const RemovePupil = dynamic(() => import("./RemovePupil"), {
+	loading: () => loadingElement,
+});
+const Report = dynamic(() => import("./Report"), {
+	loading: () => loadingElement,
+});
+const UpdateSchedule = dynamic(() => import("./UpdateSchedule"), {
+	loading: () => loadingElement,
+});
+const ViewWeek = dynamic(() => import("./ViewWeek"), {
+	loading: () => loadingElement,
+});
 
 const ActiveWindow: React.FC = () => {
 	const dashboardContext = useContext(DashboardContext);

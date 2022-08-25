@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
+import { useFetch } from "../../hooks/useFetch";
 import { LoadingContext } from "../../store/LoadingContext";
 import DayObjectType from "../../types/DayObjectType";
 import PupilObjectType from "../../types/PupilObjectType";
@@ -25,10 +26,18 @@ const ScheduleModal: React.FC<Props> = ({ setShowEnterNameModal }) => {
 	React.useEffect(() => {
 		const initialFetch = async () => {
 			const pupilName = localStorage.getItem("schedulePupilName");
-			const pupilData = localStorage.getItem("initialSchedulePupilData");
-			if (pupilData) {
-				setPupil(JSON.parse(pupilData));
+			const initialPupilData = localStorage.getItem("initialSchedulePupilData");
+
+			if (initialPupilData) {
+				setPupil(JSON.parse(initialPupilData));
 				localStorage.removeItem("schedulePupilData");
+
+				setIsLoading(true);
+				const { response: week } = await _get<DayObjectType[]>("/api/week");
+				setIsLoading(false);
+				
+				setWeekSchedule(week);
+
 				return;
 			}
 			if (pupilName) {

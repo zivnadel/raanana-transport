@@ -28,7 +28,7 @@ const ViewWeek: React.FC = () => {
 		React.useMemo(() => ({ method: "GET" }), [])
 	);
 
-	const [currentWeek, setCurrentWeek] = React.useState<DateObjectType[]>([]);
+	const [currentWeek, setCurrentWeek] = React.useState<DateObjectType[]>();
 	const [modeledWeek, setModeledWeek] = React.useState<
 		{ day: number; hours: string[]; date?: string }[]
 	>([]);
@@ -105,7 +105,7 @@ const ViewWeek: React.FC = () => {
 		const { response: prices } = await _get<PricesObjectType>("/api/prices");
 		let weekData: typeof currentWeek = JSON.parse(JSON.stringify(currentWeek));
 
-		for (let day of weekData) {
+		for (let day of weekData!) {
 			for (let modeledDay of modeledWeek) {
 				if (day.date === modeledDay.date) {
 					Object.keys(day.transportations).map((hour) => {
