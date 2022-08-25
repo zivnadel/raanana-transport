@@ -1,14 +1,8 @@
 import { NextPage } from "next";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
-
-const EnterNameModal = dynamic(
-	() => import("../components/schedule/EnterNameModal")
-);
-const ScheduleModal = dynamic(
-	() => import("../components/schedule/ScheduleModal")
-);
+import EnterNameModal from "../components/schedule/EnterNameModal";
+import ScheduleModal from "../components/schedule/ScheduleModal";
 
 const Schedule: NextPage = () => {
 	const router = useRouter();
