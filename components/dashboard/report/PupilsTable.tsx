@@ -112,6 +112,7 @@ const PupilsTable: React.FC<Props> = ({ monthData, onDismiss, month }) => {
 };
 
 const produceMonthlyPupilData = (monthData: DateObjectType[]) => {
+	console.log(monthData)
 	type DateWithHours = {
 		date: string;
 		hours: ("morning" | "15:30" | "17:00")[];
