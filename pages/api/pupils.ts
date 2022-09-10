@@ -291,21 +291,21 @@ export default async function handler(
       const response = await addPupil(req.body).catch((error) => {
         return res.status(500).json({ message: error.message });
       });
-      return res.status(201).json({ response });
+      return res.status(201).json(response);
     }
 
     case "PATCH": {
       const response = await updatePupil(req.body).catch((error) => {
         return res.status(500).json({ message: error.message });
       });
-      return res.status(200).json({ response });
+      return res.status(200).json(response);
     }
 
     case "DELETE": {
       const response = await deletePupil(req.body).catch((error) => {
         return res.status(500).json({ message: error.message });
       });
-      return res.status(200).json({ response });
+      return res.status(200).json(response);
     }
 
     default: {
