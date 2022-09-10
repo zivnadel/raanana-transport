@@ -1,4 +1,19 @@
 {
+  "name": "raanana-transport",
+  "version": "0.1.0",
+  "description": "An app to manage the transports from Oranit to the Technology school in Raanana",
+  "author": "zivnadel",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zivnadel/raanana-transport.git"
+  },
+  "keywords": [
+    "transports",
+    "raanana",
+    "oranit",
+    "school",
+    "technology"
+  ],
   "private": true,
   "scripts": {
     "dev": "next dev",
