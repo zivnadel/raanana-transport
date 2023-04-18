@@ -1161,8 +1161,8 @@ isexe@^2.0.0:
   resolved "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz"
 
 jose@^4.1.4, jose@^4.3.7:
-  version "4.8.3"
-  resolved "https://registry.npmjs.org/jose/-/jose-4.8.3.tgz"
+  version "4.14.0"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.14.0.tgz#c8c03579a0ba3598194c92ccca777d96adca8f48"
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
